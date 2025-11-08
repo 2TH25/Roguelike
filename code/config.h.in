@@ -1,0 +1,6 @@
+#ifndef RogueCMI_CONFIG_H
+#define RogueCMI_CONFIG_H
+
+#define RogueCMI_DATA_DIR "@RogueCMI_DATA_DIR@"
+
+#endif // RogueCMI_CONFIG_H
