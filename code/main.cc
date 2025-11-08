@@ -1,6 +1,6 @@
 /*
  * RogueCMI
- * Copyright (C) 2019 CMI_les_meilleurs team
+ * Copyright (C) 2025 CMI_KMS team
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,33 +20,24 @@
 
 #include <gf/Action.h>
 #include <gf/Clock.h>
+#include <gf/Collision.h>
 #include <gf/Color.h>
 #include <gf/Cursor.h>
+#include <gf/Curves.h>
 #include <gf/EntityContainer.h>
 #include <gf/Event.h>
 #include <gf/Log.h>
 #include <gf/ModelContainer.h>
 #include <gf/RenderWindow.h>
+#include <gf/Shapes.h>
 #include <gf/Singleton.h>
 #include <gf/Tmx.h>
+#include <gf/VectorOps.h>
+#include <gf/Vertex.h>
 #include <gf/ViewContainer.h>
 #include <gf/Views.h>
 #include <gf/Window.h>
-#include <gf/Color.h>
-#include <gf/Event.h>
-#include <gf/RenderWindow.h>
-#include <gf/Vertex.h>
-#include <gf/Window.h>
-#include <gf/Clock.h>
-#include <gf/Collision.h>
-#include <gf/Color.h>
-#include <gf/Curves.h>
-#include <gf/Event.h>
-#include <gf/RenderWindow.h>
-#include <gf/Shapes.h>
-#include <gf/VectorOps.h>
-#include <gf/Views.h>
-#include <gf/Window.h>
+
 
 // TODO : ajouter local/*.h
 
