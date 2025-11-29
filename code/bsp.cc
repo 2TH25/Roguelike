@@ -1,6 +1,7 @@
 // code basique aidé du github de gf, intitulé : "DungeonGenerator_BinarySpacePartitioning.cc"
 
 #include "bsp.h"
+#include <gf/Rect.h>
 
 
 
@@ -42,5 +43,19 @@ bool BSPTree::split(gf::Random& random, int leafSizeMinimum) { // méthode split
 
     }
 
+    int max = splitHorizontally ? space.getHeight() : space.getWidth();
+    //dimension maximale du split (en fonction de si on split horizontalement ou pas)
 
+
+    if (max <= 2 * leafSizeMinimum) {
+      return false;
+    }
+    // on ne split pas si la taille max dispo pour un split es trop petit
+
+    assert(leafSizeMinimum <= max - leafSizeMinimum);
+    //on vérifie que le max soit suffisamment grand
+
+        int split = random.computeUniformInteger(leafSizeMinimum, max - leafSizeMinimum);
+        // détermination aléatoire de la position de l'endroit d'où on splitera
 }
+

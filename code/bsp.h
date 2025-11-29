@@ -2,6 +2,7 @@
 // code basique aidé du github de gf, intitulé : "DungeonGenerator_BinarySpacePartitioning.h"
 
 #include <gf/Rect.h>
+#include <memory>
 
 struct BSPTree{
     std::unique_ptr<BSPTree> left;
