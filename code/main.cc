@@ -1,199 +1,230 @@
+#include <cstdlib>
+#include <cstdio>
+
 #include <iostream>
 
-#include <gf/Action.h>
+#include <gf/AnimatedSprite.h>
+#include <gf/Animation.h>
 #include <gf/Clock.h>
-#include <gf/Collision.h>
-#include <gf/Color.h>
-#include <gf/Cursor.h>
-#include <gf/Curves.h>
-#include <gf/EntityContainer.h>
 #include <gf/Event.h>
-#include <gf/Log.h>
-#include <gf/ModelContainer.h>
 #include <gf/RenderWindow.h>
-#include <gf/Shapes.h>
-#include <gf/Singleton.h>
-#include <gf/Tmx.h>
-#include <gf/VectorOps.h>
-#include <gf/Vertex.h>
-#include <gf/ViewContainer.h>
-#include <gf/Views.h>
 #include <gf/Window.h>
+#include <gf/Circ.h>
+#include <gf/Collision.h>
+#include <gf/Shapes.h>
+#include <gf/Views.h>
+#include <gf/Font.h>
+#include <gf/Text.h>
 
-// TODO : ajouter local/*.h
+static constexpr float Speed = 1000.0f;
 
-#include "config.h.in" // TODO : demander au prof
-static constexpr float Speed = 1.0f;
 int main()
 {
-	static constexpr gf::Vector2i ScreenSize(640, 480);
-	static constexpr gf::RectF World = gf::RectF::fromPositionSize({0.0f, 0.0f}, {15.0f, 15.0f});
+  static constexpr gf::Vector2i ScreenSize(1350, 1350/2);
+  static constexpr gf::RectF World = gf::RectF::fromPositionSize({ 0.0f, 0.0f }, { 2000.0f, 1000.0f });
 
-	gf::Window window("41_collision", ScreenSize, ~gf::WindowHints::Resizable);
-	gf::RenderWindow renderer(window);
+  gf::Window window("test", ScreenSize, ~gf::WindowHints::Resizable);
+  gf::RenderWindow renderer(window);
 
-	gf::ExtendView view(World);
-	view.setInitialFramebufferSize(ScreenSize);
+  gf::ExtendView view(World);
+  view.setInitialFramebufferSize(ScreenSize);
 
-	renderer.setView(view);
+  renderer.setView(view);
 
-	gf::CircF circle({14.0f, 0.0f}, 2.0f);
+  gf::Texture texture("../data/RogueCMI/skeleton.png");
+  texture.setSmooth();
 
-	gf::Polygon polygon1;
-	polygon1.addPoint({4.0f, 11.0f});
-	polygon1.addPoint({9.0f, 9.0f});
-	polygon1.addPoint({4.0f, 5.0f});
+  gf::Animation animation;
+  animation.addTileset(texture, gf::vec(4, 2), gf::milliseconds(100), 8);
 
-	gf::Polygon polygon2;
-	polygon2.addPoint({5.0f, 7.0f});
-	polygon2.addPoint({12.0f, 7.0f});
-	polygon2.addPoint({10.0f, 2.0f});
-	polygon2.addPoint({7.0f, 3.0f});
+  gf::AnimatedSprite animatedSprite;
+  animatedSprite.setAnimation(animation);
+  animatedSprite.setOrigin({224 / 2.0f, 364 / 2.0f});
+  animatedSprite.setPosition({1000, 800});
 
-	gf::Penetration p;
-	bool isColliding = gf::collides(polygon1, polygon2, p) || gf::collides(circle, polygon2, p);
+  gf::RectF itBox;
+  itBox.min = animatedSprite.getPosition() - animatedSprite.getOrigin();
+  itBox.max = animatedSprite.getPosition() + animatedSprite.getOrigin();
 
-	bool isMoving = false;
-	gf::Vector2f velocity(0.0f, 0.0f);
+  gf::Vector2f velocity(0.0f, 0.0f);
 
-	std::cout << "Gamedev Framework (gf) example #40: Collision\n";
-	std::cout << "This example shows the collision between two polygons.\n";
-	std::cout << "The red arrow is the normal of the collision.\n";
-	std::cout << "How to use:\n";
-	std::cout << "\tUp/Down/Left/Right: move the blue polygon\n";
+  gf::CircF balls[5];
 
-	gf::Clock clock;
-	renderer.clear(gf::Color::White);
+  for (std::size_t k = 0; k < 5; ++k) {
+    gf::CircF& circle = balls[k];
 
-	while (window.isOpen())
-	{
-		gf::Event event;
+    circle.radius = 50.0f;
+    circle.center.x = 500.0f;
+    circle.center.y = -500.0f - k * 1000;
+  }
 
-		while (window.pollEvent(event))
-		{
-			switch (event.type)
-			{
-			case gf::EventType::Closed:
-				window.close();
-				break;
+  float chrono = 0;
 
-			case gf::EventType::KeyPressed:
-				switch (event.key.scancode)
-				{
-				case gf::Scancode::Up:
-					isMoving = true;
-					velocity = gf::Vector2f(0.0f, -Speed);
-					break;
+  gf::Penetration p;
 
-				case gf::Scancode::Down:
-					isMoving = true;
-					velocity = gf::Vector2f(0.0f, Speed);
-					break;
+  gf::Clock clock;
 
-				case gf::Scancode::Left:
-					isMoving = true;
-					velocity = gf::Vector2f(-Speed, 0.0f);
-					break;
+  int score = 0;
+  gf::Font font("../data/RogueCMI/DejaVuSans.ttf");
 
-				case gf::Scancode::Right:
-					isMoving = true;
-					velocity = gf::Vector2f(Speed, 0.0f);
-					break;
+  gf::Text textChrono;
+  textChrono.setFont(font);
+  textChrono.setCharacterSize(30);
+  textChrono.setColor(gf::Color::Red);
+  textChrono.setString(std::to_string(chrono));
+  textChrono.setPosition({ 20.0f, 20.0f });
+  textChrono.setAnchor(gf::Anchor::TopLeft);
 
-				case gf::Scancode::Escape:
-					window.close();
-					break;
+  gf::Text textScore;
+  textScore.setFont(font);
+  textScore.setCharacterSize(30);
+  textScore.setColor(gf::Color::Red);
+  textScore.setString("Score = " + std::to_string(score));
+  textScore.setPosition({ 20.0f, 60.0f });
+  textScore.setAnchor(gf::Anchor::TopLeft);
 
-				default:
-					break;
-				}
-				break;
+  renderer.clear(gf::Color::White);
 
-			case gf::EventType::KeyReleased:
-				switch (event.key.scancode)
-				{
-				case gf::Scancode::Up:
-					isMoving = false;
-					break;
+  while (window.isOpen())
+  {
+    gf::Event event;
 
-				case gf::Scancode::Down:
-					isMoving = false;
-					break;
+    while (window.pollEvent(event))
+    {
+      switch (event.type)
+      {
+      case gf::EventType::Closed:
+        window.close();
+        break;
 
-				case gf::Scancode::Left:
-					isMoving = false;
-					break;
+      case gf::EventType::KeyPressed:
+        switch (event.key.scancode)
+        {
+        case gf::Scancode::Up:
+          velocity.y = velocity.y - Speed;
+          break;
 
-				case gf::Scancode::Right:
-					isMoving = false;
-					break;
+        case gf::Scancode::Down:
+          velocity.y = velocity.y + Speed;
+          break;
 
-				default:
-					break;
-				}
-				break;
+        case gf::Scancode::Left:
+          velocity.x = velocity.x - Speed;
+          break;
 
-			default:
-				break;
-			}
-		}
+        case gf::Scancode::Right:
+          velocity.x = velocity.x + Speed;
+          break;
 
-		float dt = clock.restart().asSeconds();
+        case gf::Scancode::Escape:
+          window.close();
+          break;
 
-		if (isMoving)
-		{
-			gf::Matrix3f mat = gf::translation(dt * velocity);
-			polygon2.applyTransform(mat);
-			isColliding = gf::collides(polygon1, polygon2, p) || gf::collides(circle, polygon2, p);
-		}
+        default:
+          break;
+        }
+        break;
 
-		renderer.clear();
+      case gf::EventType::KeyReleased:
+        switch (event.key.scancode)
+        {
+        case gf::Scancode::Up:
+          velocity.y = velocity.y + Speed;
+          break;
 
-		{
-			gf::CircleShape shape0(circle);
-			shape0.setColor(gf::Color::Transparent);
-			shape0.setOutlineColor(gf::Color::Yellow);
-			shape0.setOutlineThickness(0.05f);
-			renderer.draw(shape0);
+        case gf::Scancode::Down:
+          velocity.y = velocity.y - Speed;
+          break;
 
-			gf::ConvexShape shape1(polygon1);
-			shape1.setColor(gf::Color::Transparent);
-			shape1.setOutlineColor(gf::Color::Magenta);
-			shape1.setOutlineThickness(0.05f);
-			renderer.draw(shape1);
+        case gf::Scancode::Left:
+          velocity.x = velocity.x + Speed;
+          break;
 
-			gf::ConvexShape shape2(polygon2);
-			shape2.setColor(gf::Color::Transparent);
-			shape2.setOutlineColor(gf::Color::Cyan);
-			shape2.setOutlineThickness(0.05f);
-			renderer.draw(shape2);
-		}
+        case gf::Scancode::Right:
+          velocity.x = velocity.x - Speed;
+          break;
 
-		if (isColliding)
-		{
-			const gf::Vector2f center(2.0f, 2.0f);
+        default:
+          break;
+        }
+        break;
 
-			gf::Vector2f endPoint = center + p.depth * p.normal;
+      default:
+        break;
+      }
+    }
 
-			gf::Line line(center, endPoint);
-			line.setColor(gf::Color::Red);
-			line.setWidth(0.1f);
-			renderer.draw(line);
+    if (chrono > 30)
+    {
+      gf::Text textFin;
+      textFin.setFont(font);
+      textFin.setCharacterSize(60);
+      textFin.setColor(gf::Color::Red);
+      textFin.setString("C'est fini !!!");
+      textFin.setPosition({ 1000.0f, 450.0f });
+      textFin.setAnchor(gf::Anchor::Center);
 
-			gf::CircleShape point(gf::CircF(center, 0.1f));
-			point.setColor(gf::Color::Red);
-			renderer.draw(point);
+      textScore.setCharacterSize(60);
+      textScore.setString("Votre score = " + std::to_string(score));
+      textScore.setPosition({ 1000.0f, 550.0f });
+      textScore.setAnchor(gf::Anchor::Center);
 
-			gf::CircleShape triangle(0.3f, 3);
-			triangle.setPosition(endPoint);
-			triangle.setRotation(gf::angle(p.normal) + gf::Pi2);
-			triangle.setColor(gf::Color::Red);
-			triangle.setAnchor(gf::Anchor::Center);
-			renderer.draw(triangle);
-		}
+      renderer.clear();
+      renderer.draw(textFin);
+      renderer.draw(textScore);
+      renderer.display();
 
-		renderer.display();
-	}
+      continue;
+    }
 
-	return 0;
+    gf::Time time = clock.restart();
+    float dt = time.asSeconds();
+    chrono += dt;
+
+    if (velocity != gf::Vector2f(0, 0))
+    {
+      animatedSprite.update(time);
+    }
+
+    gf::Vector2f vel(0.0f, 500.0f);
+    for (size_t i = 0; i < 5; i++)
+    {
+      balls[i].center = balls[i].center + vel * dt;
+      if (balls[i].center.y > 1000)
+      {
+        balls[i].center.x = static_cast <float> (rand() % 2000);
+        balls[i].center.y = -500;
+      }
+      if (gf::collides(balls[i], itBox, p))
+      {
+        balls[i].center.x = static_cast <float> (rand() % 2000);
+        balls[i].center.y = -500;
+        score++;
+      }
+    }
+
+    animatedSprite.move(velocity * dt);
+    itBox.min = animatedSprite.getPosition() - animatedSprite.getOrigin();
+    itBox.max = animatedSprite.getPosition() + animatedSprite.getOrigin();
+
+    textScore.setString("Score = " + std::to_string(score));
+    textChrono.setString(std::to_string(chrono));
+
+    renderer.clear();
+    renderer.draw(animatedSprite);
+
+    for (size_t i = 0; i < 5; i++)
+    {
+      gf::CircleShape shape0(balls[i]);
+      shape0.setColor(gf::Color::Red);
+      shape0.setOutlineColor(gf::Color::Red);
+      shape0.setOutlineThickness(0.05f);
+      renderer.draw(shape0);
+    }
+    renderer.draw(textChrono);
+    renderer.draw(textScore);
+    renderer.display();
+  }
+
+  return 0;
 }
