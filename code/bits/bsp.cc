@@ -59,7 +59,7 @@ bool BSPTree::split(gf::Random& random, int leafSizeMinimum) { // méthode split
     // détermination aléatoire de la position de l'endroit d'où on splitera
 
     if (splitHorizontally) { // si le rectangle a été divisé horizontalement
-        left = std::make_unique<BSPTree>(gf::RectI::fromPositionSize(space.min, { space.getWidth(), split})); // la cellule divisée de gauche
+        left = std::make_unique<BSPTree>(gf::RectI::fromPositionSize(space.min, { space.getWidth(), split})); // la cellule divisée de gauche est un bspTree, avec une racine : un RectI, avec comme position la position minimum du rectangle divisé, et la taille, la largeur du rectangle jusqu'à l'endroit où l'on coupe
         right = std::make_unique<BSPTree>(gf::RectI::fromPositionSize({space.min.x, space.min.y + split}, { space.getWidth(), space.getHeight() - split})); // celle de droite
     } else { // sinon
         left  = std::make_unique<BSPTree>(gf::RectI::fromPositionSize(space.min, { split, space.getHeight()}));  
