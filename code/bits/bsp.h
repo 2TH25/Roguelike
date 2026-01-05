@@ -28,4 +28,4 @@ struct BSPTree{
     void recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
     void createRooms(gf::Random& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
 
-}
+};
