@@ -1,23 +1,18 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include <vector>
-#include <gf/Vector.h>
-#include <gf/Tileset.h>
-#include <gf/TileLayer.h>
-
+#include <gf/Grid.h>
+#include <gf/Random.h>
 #include "Tile.h"
 
-class Map {
-public:
-    Map(gf::Vector2i size, gf::Vector2i tileSize);
+namespace rCMI{
+  struct Map {
+    gf::Grid grid;
+    std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
+  };
 
-    void render(gf::RenderTarget& target, gf::RenderStates states = gf::RenderStates());
+  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random);
 
-private:
-    gf::Vector2i m_mapSize;
-    gf::Vector2i m_tileSize;
-    gf::TileLayer m_layer;    // Le moteur de rendu de la grille
-};
+}
 
 #endif
