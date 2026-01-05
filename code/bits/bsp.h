@@ -3,29 +3,33 @@
 
 #include <gf/Rect.h>
 #include <memory>
+#include <gf/Random.h>
 
-struct BSPTree{
-    std::unique_ptr<BSPTree> left;
-    std::unique_ptr<BSPTree> right; // les deux fils d'un noeud splité
+namespace rCMI {
 
-    gf::RectI space; // l'espace correspondant au rectangle
-    gf::RectI room; // la salle dans le rectangle
+    struct BSPTree{
+        std::unique_ptr<BSPTree> left;
+        std::unique_ptr<BSPTree> right; // les deux fils d'un noeud splité
 
-
-    // voici la strucuture RectI pour mieux se la représenter : 
-    // struct RectI {
-    //     gf::Vector2i position; // x, y
-    //     gf::Vector2i size;     // w, h
-    // };
-
-    BSPTree(gf::RectI initialSpace);
+        gf::RectI space; // l'espace correspondant au rectangle
+        gf::RectI room; // la salle dans le rectangle
 
 
-    int getWidth() const;
-    int getHeight() const;
+        // voici la strucuture RectI pour mieux se la représenter : 
+        // struct RectI {
+        //     gf::Vector2i position; // x, y
+        //     gf::Vector2i size;     // w, h
+        // };
 
-    bool split(gf::RandomGenerator random, int leafSizeMinimum); // méthode pour split
-    void recursiveSplit(gf::RandomGenerator& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
-    void createRooms(gf::RandomGenerator& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
+        BSPTree(gf::RectI initialSpace);
 
+
+        int getWidth() const;
+        int getHeight() const;
+
+        bool split(gf::RandomGenerator random, int leafSizeMinimum); // méthode pour split
+        void recursiveSplit(gf::RandomGenerator& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
+        void createRooms(gf::RandomGenerator& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
+
+    };
 }
