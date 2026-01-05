@@ -12,7 +12,7 @@ struct BSPTree{
     gf::RectI room; // la salle dans le rectangle
 
 
-    // voici la strucuture RectI pour mieux se la représenter :
+    // voici la strucuture RectI pour mieux se la représenter : 
     // struct RectI {
     //     gf::Vector2i position; // x, y
     //     gf::Vector2i size;     // w, h
@@ -24,8 +24,8 @@ struct BSPTree{
     int getWidth() const;
     int getHeight() const;
 
-    bool split(gf::Random& random, int leafSizeMinimum); // méthode pour split
-    void recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
-    void createRooms(gf::Random& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
+    bool split(gf::RandomGenerator random, int leafSizeMinimum); // méthode pour split
+    void recursiveSplit(gf::RandomGenerator& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
+    void createRooms(gf::RandomGenerator& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
 
 };
