@@ -14,7 +14,7 @@ namespace rCMI {
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target) {
       for (std::size_t i = 0; i < characters.size(); ++i) {
-          if (characters[i].position == target) return i;
+          if (characters[i].entity.position == target) return i;
       }
       return std::nullopt;
   }

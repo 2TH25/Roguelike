@@ -5,6 +5,7 @@
 #include <gf/Texture.h>
 #include <gf/RenderTarget.h>
 #include <vector>
+#include <gf/Random.h>
 
 #include "Tile.h"
 #include "Character.h"
@@ -26,7 +27,7 @@ namespace rCMI {
     void update_tile_at(gf::Vector2i pos, TileType type);
   };
 
-  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random);
+  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random, gf::Texture& texture);
 
 };
 
