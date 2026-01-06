@@ -1,30 +1,35 @@
-#ifndef RL_ACTOR_H
-#define RL_ACTOR_H
+#ifndef ACTOR_H
+#define ACTOR_H
 
 #include <optional>
+
+#include "HostileEntity.h"
+#include "Player.h"
+#include "PassiveEntity.h"
+
 
 
 namespace rCMI {
 
    struct Actor {
-//     Entity entity;
-//     Fighter fighter;
-//     AI ai;
+    PassiveEntity passive;
+    Player player;
+    HostileEntity hostile;
 
-//     bool alive() const
-//     {
-//       return ai.variant.index() != 0;
-//     }
+    bool alive() const
+    {
+      return hostile.variant.index() != 0;
+    }
 
-//     void take_damage(int damage);
-//     void die();
+    void take_damage(int damage);
+    void die();
 
-//     static Actor hero(gf::Vec2I position);
-//     static Actor orc(gf::Vec2I position);
-//     static Actor troll(gf::Vec2I position);
+    static Actor hero(gf::Vector2i position);
+    static Actor orc(gf::Vector2i position);
+    static Actor troll(gf::Vector2i position);
 
    };
 
 }
 
-#endif // RL_ACTOR_H
+#endif // ACTOR_H
