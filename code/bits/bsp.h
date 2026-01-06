@@ -1,3 +1,5 @@
+#ifndef BSP_H
+#define BSP_H
 
 // code basique aidé du github de gf, intitulé : "DungeonGenerator_BinarySpacePartitioning.h"
 
@@ -33,3 +35,5 @@ namespace rCMI {
 
     };
 }
+
+#endif
