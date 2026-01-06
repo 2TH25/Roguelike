@@ -1,13 +1,5 @@
-#include <cstdlib>
-#include <cstdio>
+#include "bits/RogueCMI.h"
 
-#include <iostream>
-
-#include <gf/AnimatedSprite.h>
-#include <gf/Animation.h>
-#include <gf/Clock.h>
-#include <gf/Event.h>
-#include <gf/RenderWindow.h>
 #include <gf/Window.h>
 #include <gf/Circ.h>
 #include <gf/Collision.h>
@@ -22,8 +14,6 @@
 
 #include "./bits/Map.h"
 #include "./bits/Map.cc"
-
-
 
 
 int main() {
@@ -316,3 +306,12 @@ int main() {
 
 //   return 0;
 // }
+
+
+
+// int main() {
+//   rCMI::RogueCMI rogueCMI;
+//   rogueCMI.run();
+//   return 0;
+// }
+
