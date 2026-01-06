@@ -3,10 +3,17 @@
 
 #include <gf/Vector.h>
 
-namespace rCMI {
+namespace rCMI {  
+
+  enum class TileType {
+    Floor,
+    Wall
+  };
+
   struct Tile {
-      int tileIndex_row = 0;
-      int tileIndex_column = 0;
+      TileType type;
+      bool walkable;
+      int textureIndex;
   };
 };
 #endif
