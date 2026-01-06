@@ -1,7 +1,7 @@
 #ifndef RL_MAP_H
 #define RL_MAP_H
 
-#include <gf/Grid.h>
+#include <gf/TileLayer.h>
 #include <gf/Random.h>
 
 #include "Actor.h"
@@ -9,7 +9,7 @@
 namespace rCMI {
   struct Map {
     std::vector<Actor> actors;
-    gf::Grid grid;
+    gf::TileLayer map;
 
     Actor& hero() { return actors.front(); }
 

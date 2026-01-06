@@ -1,6 +1,5 @@
-#include "Entity.h"
-#include <gf/Color.h>
-#include <gf/Vector.h>
+#include "PassiveEntity.h"
+
 
 namespace rCMI {
 

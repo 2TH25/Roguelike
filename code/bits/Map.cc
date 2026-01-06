@@ -5,9 +5,26 @@
 #include <optional>
 #include <algorithm>
 #include <gf/Geometry.h>
-
+#include <gf/TileLayer.h>
+#include <gf/Tileset.h>
 namespace rCMI {
+  gf::Texture& texture = resources.getTexture("../../data/RogueCMI/fond.png");
+  gf::Vector2u tileSize = (32,32);
+  gf::Tileset tileset(texture,tileSize);
 
+  gf::Vector2i mapSize(10, 10); 
+  gf::TileLayer tileLayer(tileset);
+  tileLayer.setMapSize(mapSize);
+
+  for (unsigned y = 0; y < mapSize.y; ++y) {
+    for (unsigned x = 0; x < mapSize.x; ++x) {
+        tileLayer.setTile({x, y}, 1); // tile normale (floor)
+        
+        if (x == 0 || y == 0) {
+            tileLayer.setTile({x, y}, 5); // tile bordure (wall)
+        }
+    }
+  }
   // std::optional<std::size_t> Map::target_actor_at(gf::Vector2i target)
   // {
   //   auto iterator = std::find_if(actors.begin(), actors.end(), [target](const Actor& actor) {
