@@ -4,16 +4,16 @@
 #include <gf/Grid.h>
 #include <gf/Random.h>
 
-#include "Actor.h"
+#include "Character.h"
 
 namespace rCMI {
   struct Map {
-    std::vector<Actor> actors;
+    std::vector<Character> characters;
     gf::Grid grid;
 
-    Actor& hero() { return actors.front(); }
+    Character& hero() { return characters.front(); }
 
-    std::optional<std::size_t> target_actor_at(gf::Vector2i target);
+    std::optional<std::size_t> target_character_at(gf::Vector2i target);
     bool blocking_entity_at(gf::Vector2i target);
 
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);

@@ -3,15 +3,14 @@
 
 #include <gf/Vector.h>
 
-namespace rCMI {
+namespace rl {
   struct Map;
-  struct Actor;
+  struct Character;
 
-  bool bump(Map& map, Actor& actor, gf::Vector2i target);
-  bool movement(Map& map, Actor& actor, gf::Vector2i target);
-  bool melee(Map& map, Actor& actor, gf::Vector2i target);
-
+  bool bump(Map& map, Character& character, gf::Vector2i target);
+  bool movement(Map& map, Character& character, gf::Vector2i target);
+  bool melee(Map& map, Character& character, gf::Vector2i target);
 
 }
 
-#endif
+#endif // ACTIONS_H
