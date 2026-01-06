@@ -21,6 +21,7 @@
 #include <gf/Random.h>
 
 #include "./bits/Map.h"
+#include "./bits/Map.cc"
 
 
 
@@ -30,14 +31,14 @@ int main() {
     gf::RenderWindow renderer(window);
 
     gf::Texture texture("../data/RogueCMI/skeleton.png");
-    gf::Random* random;
+    gf::Random random;
 
     rCMI::Map myMap = rCMI::generate_dungeon(
         {10, 10},       
         10,              
         6, 10,           
         3,               
-        random,         
+        &random,         
         texture  
     );
 
