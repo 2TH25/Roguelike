@@ -19,6 +19,8 @@
 #include <gf/Tileset.h>
 #include <gf/TileLayer.h>
 
+#include "./bits/Map.h"
+
 
 
 
@@ -27,7 +29,7 @@ int main() {
     gf::RenderWindow renderer(window);
 
     gf::Texture texture("../data/RogueCMI/skeleton.png");
-    gf::Random random;
+    gf::Random& random;
 
     rCMI::Map myMap = rCMI::generate_dungeon(
         {10, 10},       
