@@ -7,24 +7,42 @@
 #include <gf/Geometry.h>
 #include <gf/TileLayer.h>
 #include <gf/Tileset.h>
+
+
 namespace rCMI {
-  gf::Texture& texture = resources.getTexture("../../data/RogueCMI/fond.png");
-  gf::Vector2u tileSize = (32,32);
-  gf::Tileset tileset(texture,tileSize);
 
-  gf::Vector2i mapSize(10, 10); 
-  gf::TileLayer tileLayer(tileset);
-  tileLayer.setMapSize(mapSize);
 
-  for (unsigned y = 0; y < mapSize.y; ++y) {
-    for (unsigned x = 0; x < mapSize.x; ++x) {
-        tileLayer.setTile({x, y}, 1); // tile normale (floor)
-        
-        if (x == 0 || y == 0) {
-            tileLayer.setTile({x, y}, 5); // tile bordure (wall)
-        }
-    }
+  std::optional<std::size_t> Map::target_character_at(gf::Vector2i target) {
+      for (std::size_t i = 0; i < characters.size(); ++i) {
+          if (characters[i].position == target) return i;
+      }
+      return std::nullopt;
   }
+
+  bool Map::blocking_entity_at(gf::Vector2i target) {
+      if (grid[target.y * size.x + target.x] == TileType::Wall) {
+        return true;
+      }
+
+      return target_character_at(target).has_value();
+  }
+
+  void Map::update_tile_at(gf::Vector2i pos, TileType type) {
+      grid[pos.y * size.x + pos.x] = type;
+      int tileIndex = (type == TileType::Wall) ? 1 : 0;
+      tileLayer.setTile(pos, tilesetId, tileIndex);
+  }
+
+
+
+
+
+
+
+
+
+
+
   // std::optional<std::size_t> Map::target_actor_at(gf::Vector2i target)
   // {
   //   auto iterator = std::find_if(actors.begin(), actors.end(), [target](const Actor& actor) {

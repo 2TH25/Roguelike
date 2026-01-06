@@ -27,24 +27,16 @@ int main() {
     gf::RenderWindow renderer(window);
 
     gf::Texture texture("../data/RogueCMI/skeleton.png");
+    gf::Random random;
 
-    gf::Vector2i mapSize(10, 10);
-    gf::Vector2i tileSize(80, 80);
-
-    auto tileLayer = gf::TileLayer::createOrthogonal(mapSize, tileSize);
-
-
-    std::size_t tilesetId = tileLayer.createTilesetId();
-    gf::Tileset& tileset = tileLayer.getTileset(tilesetId);
-    tileset.setTexture(texture);
-    tileset.setTileSize(tileSize);
-
-
-    for (int y = 0; y < mapSize.y; ++y) {
-        for (int x = 0; x < mapSize.x; ++x) {
-            tileLayer.setTile({x, y}, tilesetId, 0); 
-        }
-    }
+    rCMI::Map myMap = rCMI::generate_dungeon(
+        {10, 10},       
+        10,              
+        6, 10,           
+        3,               
+        &random,         
+        texture  
+    );
 
     while (window.isOpen()) {
         gf::Event event;
@@ -55,12 +47,55 @@ int main() {
         }
 
         renderer.clear(gf::Color::Black);
-        renderer.draw(tileLayer);
+        renderer.draw(myMap.tileLayer);
         renderer.display();
     }
 
     return 0;
 }
+
+
+// exemple d'utilisation pour créer le plateau 10x10 de manière très simple, dns le main
+
+// int main() {
+//     gf::Window window("Rogue CMI", {1200, 800});
+//     gf::RenderWindow renderer(window);
+
+//     gf::Texture texture("../data/RogueCMI/skeleton.png");
+
+//     gf::Vector2i mapSize(10, 10);
+//     gf::Vector2i tileSize(80, 80);
+
+//     auto tileLayer = gf::TileLayer::createOrthogonal(mapSize, tileSize);
+
+
+//     std::size_t tilesetId = tileLayer.createTilesetId();
+//     gf::Tileset& tileset = tileLayer.getTileset(tilesetId);
+//     tileset.setTexture(texture);
+//     tileset.setTileSize(tileSize);
+
+
+//     for (int y = 0; y < mapSize.y; ++y) {
+//         for (int x = 0; x < mapSize.x; ++x) {
+//             tileLayer.setTile({x, y}, tilesetId, 0); 
+//         }
+//     }
+
+//     while (window.isOpen()) {
+//         gf::Event event;
+//         while (window.pollEvent(event)) {
+//             if (event.type == gf::EventType::Closed) {
+//                 window.close();
+//             }
+//         }
+
+//         renderer.clear(gf::Color::Black);
+//         renderer.draw(tileLayer);
+//         renderer.display();
+//     }
+
+//     return 0;
+// }
 
 
 
