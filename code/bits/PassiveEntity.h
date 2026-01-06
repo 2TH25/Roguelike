@@ -10,7 +10,7 @@ namespace rCMI {
     struct PassiveEntity {
         gf::Vector2i position = { 0, 0 };
         char16_t character = ' ';
-        gf::Color color = gf::Color::White;
+        gf::Color color = White;
         std::string name;
         bool blocks_movement = false;
     };

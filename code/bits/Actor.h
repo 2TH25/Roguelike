@@ -18,7 +18,7 @@ namespace rCMI {
 
     bool alive() const
     {
-      return hostile.variant.index() != 0;
+      return true;
     }
 
     void take_damage(int damage);
