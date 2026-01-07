@@ -39,7 +39,7 @@ namespace rCMI {
     }
   }
 
-  Map generate_board(gf::Vector2i size) {
+  Map generate_board(gf::Vector2i size,gf::Texture wallTex, gf::Texture floorTex) {
     
     Map map;
     map.size = size;
@@ -57,6 +57,7 @@ namespace rCMI {
         }
 
         map.tiles[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
+        map.tiles[index].setTexture(texture);
         map.update_tile_at({x, y}, type);
       }
     }

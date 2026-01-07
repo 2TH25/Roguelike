@@ -20,11 +20,14 @@ int main() {
     gf::Window window("Rogue CMI", {1200, 800});
     gf::RenderWindow renderer(window);
 
-    gf::Texture FloorTexture("../data/RogueCMI/sol_pierre.jpg");
-    gf::Texture WallTexture("../data/RogueCMI/mur_pierre.jpg");
+    gf::ResourceManager resources;
+    resources.addSearchDir("../data/RogueCMI/");
+
+    gf::Texture& wallTex = resources.getTexture("mur_pierre.jpg");
+    gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
     gf::Random random;
 
-    rCMI::Map myMap = rCMI::generate_board({10, 10});
+    rCMI::Map myMap = rCMI::generate_board({10, 10},floorTex,wallTex);
 
     while (window.isOpen()) {
         gf::Event event;
