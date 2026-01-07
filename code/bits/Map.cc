@@ -14,7 +14,7 @@ namespace rCMI {
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target) {
       for (std::size_t i = 0; i < characters.size(); ++i) {
-          if (characters[i].entity.position == target) return i;
+          if (characters[i].getEntity().getPosition() == target) return i;
       }
       return std::nullopt;
   }
@@ -36,17 +36,17 @@ namespace rCMI {
   Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random, gf::Texture& texture) {
     
     Map map;
-    map.size = size;
+    map.setSize(size);
     map.tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
-    map.tilesetId = map.tileLayer.createTilesetId();
+    map.setTilesetId(map.getTileLayer().createTilesetId());
     
-    gf::Tileset& tileset = map.tileLayer.getTileset(map.tilesetId);
+    gf::Tileset& tileset = map.tileLayer.getTileset(map.getTilesetId());
     tileset.setTexture(texture);
     tileset.setTileSize({80,80});
 
-    for (int y = 0; y < map.size.y; ++y) {
-        for (int x = 0; x < map.size.x; ++x) {
-            map.tileLayer.setTile({x, y}, map.tilesetId, 0); 
+    for (int y = 0; y < map.getSize().y; ++y) {
+        for (int x = 0; x < map.getSize().x; ++x) {
+            map.tileLayer.setTile({x, y}, map.getTilesetId(), 0); 
         }
     }
     return map;
