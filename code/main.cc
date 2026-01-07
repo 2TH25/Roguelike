@@ -15,8 +15,10 @@ int main() {
 
     gf::Texture& wallTex = resources.getTexture("mur_pierre.jpg");
     gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
+    gf::Texture& characterTex = resources.getTexture("perso70.png");
 
     rCMI::Map myMap = rCMI::Map::generate_board(rCMI::MapSize, floorTex, wallTex);
+    rCMI::Character perso = rCMI::Character::hero({5, 5}); 
 
     while (window.isOpen()) {
         gf::Event event;
@@ -28,7 +30,8 @@ int main() {
 
         renderer.clear(gf::Color::Black);
 
-        myMap.render(renderer);     
+        myMap.render(renderer);  
+        perso.render(renderer, characterTex, 80);   
         renderer.display();
     }
 
