@@ -22,42 +22,51 @@ namespace rCMI {
 
   Character Character::hero(gf::Vector2i position) {
     Character character;
-    character.existence = Existence{ position, u'@', gf::Color::Blue, "Hero", true };
-    character.stat = Stat(100, 5, 10);
+    character.setExistence(Existence{ position, u'@', gf::Color::Blue, "Hero", true });
+    character.setStat(Stat(100, 5, 10));
     return character;
   }
 
   Character Character::skeleton(gf::Vector2i position) {
     Character character;
-    character.existence = Existence{ position, u'S', gf::Color::White, "Skeleton", true };
-    character.stat = Stat(50, 2, 6); 
-    character.comportment = Comportment::hostile();
+    character.setExistence(Existence{ position, u'S', gf::Color::White, "Skeleton", true });
+    character.setStat(Stat(50, 2, 6)); 
+    character.setComportment(Comportment::hostile());
     return character;
   }
 
   Character Character::zombie(gf::Vector2i position) {
     Character character;
-    character.existence = Existence{ position, u'Z', gf::Color::Orange, "Zombie", true };
-    character.stat = Stat(30, 1, 4);
-    character.comportment = Comportment::hostile();
+    character.setExistence(Existence{ position, u'Z', gf::Color::Orange, "Zombie", true });
+    character.setStat(Stat(30, 1, 4));
+    character.setComportment(Comportment::hostile());
     return character;
   }
 
   Character Character::slime(gf::Vector2i position) {
     Character character;
-    character.existence = Existence{ position, u's', gf::Color::Green, "Slime", true };
-    character.stat = Stat(10, 0, 2);
-    character.comportment = Comportment::hostile();
+    character.setExistence(Existence{ position, u's', gf::Color::Green, "Slime", true });
+    character.setStat(Stat(10, 0, 2));
+    character.setComportment(Comportment::hostile());
     return character;
   }
 
-  void Character::render(gf::RenderTarget& target, const gf::Texture& texture, int tileSize) {
-    gf::Sprite sprite(texture);
+  void Character::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+    if (!texture || tileSize <= 0) {
+        return;
+    }
 
+    gf::Sprite sprite(*texture);
+
+    // Calcul de la position
     gf::Vector2i gridPosition = existence.getPosition();
-    gf::Vector2f pixelPosition = { (float)gridPosition.x * tileSize, (float)gridPosition.y * tileSize };
+    gf::Vector2f pixelPosition = { 
+        (float)gridPosition.x * tileSize, 
+        (float)gridPosition.y * tileSize 
+    };
 
     sprite.setPosition(pixelPosition);
-    target.draw(sprite);
+
+    target.draw(sprite, states);
   }
 }
