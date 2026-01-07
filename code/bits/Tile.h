@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <gf/Vector.h>
+#include <gf/Sprite.h>
 
 namespace rCMI {  
 
@@ -12,7 +13,7 @@ namespace rCMI {
 
   class Tile {
     private: 
-    
+
       TileType type;
       bool walkable;
       gf::Sprite sprite;

@@ -33,7 +33,7 @@ namespace rCMI {
       tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
-  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random, gf::Texture& texture) {
+  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random) {
     
     Map map;
     map.size = size;
@@ -41,7 +41,6 @@ namespace rCMI {
     map.tilesetId = map.tileLayer.createTilesetId();
     
     gf::Tileset& tileset = map.tileLayer.getTileset(map.tilesetId);
-    tileset.setTexture(texture);
     tileset.setTileSize({80,80});
 
     for (int y = 0; y < map.size.y; ++y) {

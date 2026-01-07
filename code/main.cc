@@ -29,8 +29,7 @@ int main() {
         10,              
         6, 10,           
         3,               
-        &random,         
-        texture  
+        &random
     );
 
     while (window.isOpen()) {
