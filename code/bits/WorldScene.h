@@ -13,11 +13,10 @@ namespace rCMI
     WorldScene(RogueCMI *game);
 
   private:
-    // void doProcessEvent(gf::Event &event) override;
-    // void doHandleActions(gf::Window &window) override;
-    // void doUpdate(gf::Time time) override;
+    void doHandleActions(gf::Window &window) override;
+    void doUpdate(gf::Time time) override;
 
-    // void updateFieldOfView();
+    void updateFieldOfView();
 
     RogueCMI *m_game = nullptr;
   };

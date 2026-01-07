@@ -1,5 +1,5 @@
 #include "Entity.h"
 
-namespace rl {
+namespace rCMI {
 
 }
