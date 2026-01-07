@@ -6,11 +6,11 @@
 #include <gf/Vector.h>
 
 namespace rCMI {
-  class Entity {
+  class Existence {
   public:
-    Entity() = default;
+    Existence() = default;
 
-    Entity(gf::Vector2i pos, char16_t ch, gf::Color4f col, std::string n, bool blocks): 
+    Existence(gf::Vector2i pos, char16_t ch, gf::Color4f col, std::string n, bool blocks): 
     position(pos), character(ch), color(col), name(std::move(n)), blocks_movement(blocks)
     {}
 

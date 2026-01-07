@@ -1,6 +1,8 @@
+// Dans Tile.h
 #ifndef TILE_H
 #define TILE_H
 
+#include <gf/Vector.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 
@@ -9,13 +11,31 @@ namespace rCMI {
 
   class Tile {
   public:
-    void setTexture(const gf::Texture& tex) { m_sprite.setTexture(tex); }
-    void setPosition(gf::Vector2f pos) { m_sprite.setPosition(pos); }
-    void render(gf::RenderTarget& target) { target.draw(m_sprite); }
+
+    TileType getType() const { return type; }
+    bool isWalkable() const { return walkable; }
+    gf::Sprite getSprite() const { return sprite; }
+    gf::Vector2f getPosition() const { return pos; }
+
+    void Tile::render(gf::RenderTarget& renderer) {
+        renderer.draw(sprite);
+    };
+
+    void Tile::setPosition(gf::Vector2f position) {
+        pos = position;
+        sprite.setPosition(position);
+    };
+
+    void Tile::setTexture(const gf::Texture& texture) {
+        sprite.setTexture(texture);
+    };
+    void setType(TileType t) { type = t; walkable = (t == TileType::Floor); };
 
   private:
-    gf::Sprite m_sprite;
-    TileType m_type;
+    TileType type;
+    bool walkable;
+    gf::Sprite sprite;
+    gf::Vector2f pos;
   };
-}
+};
 #endif // TILE_H

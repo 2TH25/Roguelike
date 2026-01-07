@@ -10,16 +10,16 @@
 namespace rCMI {
 
   bool HostileEnnemy::perform(Character& self, Map& map) {
-    auto target = map.hero().getEntity().getPosition(); 
+    auto target = map.hero().getExistence().getPosition(); 
     
-    auto distance = 6;//gf::chebyshev_distance(self.getEntity().getPosition(), target);
+    auto distance = 42;//gf::chebyshev_distance(self.getExistence().getPosition(), target);
 
-    if (map.isVisible(self.getEntity().getPosition())) {
+    if (map.isVisible(self.getExistence().getPosition())) {
       if (distance <= 1) {
         return melee(map, self, target);
       }
 
-      path = map.compute_path(self.getEntity().getPosition(), target);
+      path = map.compute_path(self.getExistence().getPosition(), target);
       std::reverse(path.begin(), path.end());
     }
 

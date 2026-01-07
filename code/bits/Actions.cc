@@ -25,7 +25,7 @@ namespace rCMI {
       return false;
     }
 
-    character.getEntity().setPosition(target);
+    character.getExistence().setPosition(target);
     return true;
   }
 
@@ -35,7 +35,7 @@ namespace rCMI {
 
   // Utilisation des getters
   int damage = character.getStat().getPower() - other.getStat().getDefense();
-  std::string description = character.getEntity().getName() + " attacks " + other.getEntity().getName();
+  std::string description = character.getExistence().getName() + " attacks " + other.getExistence().getName();
 
   if (damage > 0) {
     other.take_damage(damage);

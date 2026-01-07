@@ -14,7 +14,7 @@ namespace rCMI {
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target) {
       for (std::size_t i = 0; i < characters.size(); ++i) {
-          if (characters[i].getEntity().getPosition() == target) return i;
+          if (characters[i].getExistence().getPosition() == target) return i;
       }
       return std::nullopt;
   }
@@ -83,7 +83,7 @@ namespace rCMI {
   // std::optional<std::size_t> Map::target_actor_at(gf::Vector2i target)
   // {
   //   auto iterator = std::find_if(actors.begin(), actors.end(), [target](const Actor& actor) {
-  //     return actor.entity.position == target;
+  //     return actor.existence.position == target;
   //   });
 
   //   if (iterator == actors.end()) {
@@ -96,7 +96,7 @@ namespace rCMI {
   // bool Map::blocking_entity_at(gf::Vector2i target)
   // {
   //   auto iterator = std::find_if(actors.begin(), actors.end(), [target](const Actor& actor) {
-  //     return actor.entity.blocks_movement && actor.entity.position == target;
+  //     return actor.existence.blocks_movement && actor.existence.position == target;
   //   });
 
   //   return iterator != actors.end();
@@ -107,8 +107,8 @@ namespace rCMI {
   //   grid.clear_blocks();
 
   //   for (auto& actor : actors) {
-  //     if (actor.entity.blocks_movement) {
-  //       grid.set_blocked(actor.entity.position);
+  //     if (actor.existence.blocks_movement) {
+  //       grid.set_blocked(actor.existence .position);
   //     }
   //   }
 
@@ -162,7 +162,7 @@ namespace rCMI {
 
   //       auto position = random->compute_position(room.shrink_by(1));
 
-  //       if (std::any_of(map.actors.begin(), map.actors.end(), [position](const Actor& other) { return position == other.entity.position; })) {
+  //       if (std::any_of(map.actors.begin(), map.actors.end(), [position](const Actor& other) { return position == other.existence.position; })) {
   //         continue;
   //       }
 

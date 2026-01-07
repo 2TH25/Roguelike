@@ -15,7 +15,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/code/config.h.in ${CMAKE_CURRENT_BINA
 add_executable(RogueCMI
   code/main.cc
   code/bits/Map.cc
-  code/bits/Entity.cc
   code/bits/Character.cc
   code/bits/RogueCMI.cc
   code/bits/WorldScene.cc

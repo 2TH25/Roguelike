@@ -1,7 +1,5 @@
 #include "Character.h"
-#include <gf/Sprite.h>
-#include <gf/Texture.h>
-#include <gf/RenderTarget.h>
+
 #include <algorithm>
 
 namespace rCMI {
@@ -16,22 +14,22 @@ namespace rCMI {
   }
 
   void Character::die() {
-    entity.setCharacter(u'%'); // Utilise le setter
-    entity.setBlocksMovement(false);
+    existence.setCharacter(u'%'); // Utilise le setter
+    existence.setBlocksMovement(false);
     comportment.setVariant(std::monostate{});
   }
 
 
   Character Character::hero(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'@', gf::Color::Blue, "Hero", true };
+    character.existence = Existence{ position, u'@', gf::Color::Blue, "Hero", true };
     character.stat = Stat(100, 5, 10);
     return character;
   }
 
   Character Character::skeleton(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'S', gf::Color::White, "Skeleton", true };
+    character.existence = Existence{ position, u'S', gf::Color::White, "Skeleton", true };
     character.stat = Stat(50, 2, 6); 
     character.comportment = Comportment::hostile();
     return character;
@@ -39,7 +37,7 @@ namespace rCMI {
 
   Character Character::zombie(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'Z', gf::Color::Orange, "Zombie", true };
+    character.existence = Existence{ position, u'Z', gf::Color::Orange, "Zombie", true };
     character.stat = Stat(30, 1, 4);
     character.comportment = Comportment::hostile();
     return character;
@@ -47,7 +45,7 @@ namespace rCMI {
 
   Character Character::slime(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u's', gf::Color::Green, "Slime", true };
+    character.existence = Existence{ position, u's', gf::Color::Green, "Slime", true };
     character.stat = Stat(10, 0, 2);
     character.comportment = Comportment::hostile();
     return character;
@@ -56,7 +54,7 @@ namespace rCMI {
   void Character::render(gf::RenderTarget& target, const gf::Texture& texture, int tileSize) {
     gf::Sprite sprite(texture);
 
-    gf::Vector2i gridPosition = entity.getPosition();
+    gf::Vector2i gridPosition = existence.getPosition();
     gf::Vector2f pixelPosition = { (float)gridPosition.x * tileSize, (float)gridPosition.y * tileSize };
 
     sprite.setPosition(pixelPosition);

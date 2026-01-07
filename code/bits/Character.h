@@ -4,7 +4,7 @@
 #include <optional>
 #include "Comportment.h"
 #include "Stat.h"
-#include "Entity.h"
+#include "Existence.h"
 #include <gf/Sprite.h>
 #include <gf/Texture.h>
 #include <gf/RenderTarget.h>
@@ -13,8 +13,8 @@ namespace rCMI {
   class Character {
   public:
 
-    Entity& getEntity() { return entity; }
-    const Entity& getEntity() const { return entity; }
+    Existence& getExistence() { return existence; }
+    const Existence& getExistence() const { return existence; }
     
     Stat& getStat() { return stat; }
     const Stat& getStat() const { return stat; }
@@ -37,7 +37,7 @@ namespace rCMI {
 
 
     private: 
-      Entity entity;
+      Existence existence;
       Stat stat;
       Comportment comportment;
   };
