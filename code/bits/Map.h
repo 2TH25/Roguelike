@@ -11,9 +11,9 @@
 #include "Character.h"
 
 namespace rCMI {
-  class Map {
+  class Map : public gf::Entity {
     public:
-
+    Map();
     std::vector<Character>& getCharacters() { return characters; }
     gf::Vector2i getSize() const { return size; }
     std::size_t getTilesetId() const { return tilesetId; }
