@@ -13,7 +13,7 @@
 #include <gf/Random.h>
 
 #include "./bits/Map.h"
-#include "./bits/Map.cc"
+#include "./bits/Map.cc"    
 
 
 int main() {
@@ -27,7 +27,7 @@ int main() {
     gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
     gf::Random random;
 
-    rCMI::Map myMap = rCMI::generate_board({10, 10},floorTex,wallTex);
+    rCMI::Map myMap = rCMI::Map::generate_board({10, 10},floorTex,wallTex);
 
     while (window.isOpen()) {
         gf::Event event;
@@ -38,7 +38,7 @@ int main() {
         }
 
         renderer.clear(gf::Color::Black);
-        renderer.draw(myMap.tileLayer);
+        myMap.render(renderer);
         renderer.display();
     }
 

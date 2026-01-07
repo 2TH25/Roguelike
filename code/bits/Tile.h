@@ -17,12 +17,14 @@ namespace rCMI {
       TileType type;
       bool walkable;
       gf::Sprite sprite;
+      gf::Vector2f pos;
 
     public:
 
     void setTexture(const gf::Texture& texture);
     void setPosition(gf::Vector2f position);
     void render(gf::RenderTarget& renderer);
+    void setType(TileType t) { type = t; walkable = (t == TileType::Floor); }
   };
 };
 #endif

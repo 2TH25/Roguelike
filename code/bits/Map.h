@@ -31,6 +31,10 @@ namespace rCMI {
       std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
       void update_tile_at(gf::Vector2i pos, TileType type);
       void render(gf::RenderTarget& renderer);
+      bool isVisible(gf::Vector2i position) const {
+        return true;
+      }
+      Map generate_board(gf::Vector2i size,const gf::Texture& wallTex, const gf::Texture& floorTex);
 
     private:
 
@@ -38,10 +42,12 @@ namespace rCMI {
     std::vector<rCMI::Tile> tiles;
     std::vector<Character> characters;
     std::size_t tilesetId;
+    std::vector<TileType>grid;
+    gf::TileLayer tileLayer;
 
   };
 
-  Map generate_board(gf::Vector2i size);
+  
 
 };
 

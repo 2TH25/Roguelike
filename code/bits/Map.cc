@@ -39,25 +39,28 @@ namespace rCMI {
     }
   }
 
-  Map generate_board(gf::Vector2i size,gf::Texture wallTex, gf::Texture floorTex) {
+  Map Map::generate_board(gf::Vector2i size,const gf::Texture& wallTex, const gf::Texture& floorTex) {
     
     Map map;
     map.setSize(size);
     map.setTiles(std::vector<rCMI::Tile>(size.x * size.y));
 
-    //ressourcemanager
+    
     for (int y = 0; y < size.y; ++y) {
       for (int x = 0; x < size.x; ++x) {
         int index = x + y * size.x;
         
+        gf::Texture texture;
         TileType type = TileType::Floor;
+        map.getTiles()[index].setTexture(floorTex);
 
         if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
             type = TileType::Wall;
+            map.getTiles()[index].setTexture(wallTex);
         }
 
         map.getTiles()[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
-        map.getTiles()[index].setTexture(texture);
+        
         map.update_tile_at({x, y}, type);
       }
     }
