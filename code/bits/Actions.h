@@ -3,7 +3,7 @@
 
 #include <gf/Vector.h>
 
-namespace rCMI { // Changé de rl à rCMI pour la cohérence
+namespace rCMI { 
   class Map;
   class Character;
 

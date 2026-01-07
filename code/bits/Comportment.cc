@@ -12,7 +12,7 @@ namespace rCMI {
   bool HostileEnnemy::perform(Character& self, Map& map) {
     auto target = map.hero().getEntity().getPosition(); 
     
-    auto distance = gf::chebyshev_distance(self.getEntity().getPosition(), target);
+    auto distance = 6;//gf::chebyshev_distance(self.getEntity().getPosition(), target);
 
     if (map.isVisible(self.getEntity().getPosition())) {
       if (distance <= 1) {

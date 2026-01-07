@@ -24,6 +24,7 @@ namespace rCMI {
 
     void take_damage(int damage);
     void die();
+    void render(gf::RenderTarget& target, const gf::Texture& texture, int tileSize);
     
 
     static Character hero(gf::Vector2i position);
