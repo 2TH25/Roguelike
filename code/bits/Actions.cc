@@ -25,28 +25,22 @@ namespace rCMI {
       return false;
     }
 
-    character.entity.position = target;
+    character.getEntity().setPosition(target);
     return true;
   }
 
-  bool melee(Map& map, Character& character, gf::Vector2i target)
-  {
-    auto maybe_character = map.target_character_at(target);
-    assert(maybe_character);
+  bool melee(Map& map, Character& character, gf::Vector2i target) {
+  auto maybe_character = map.target_character_at(target);
+  auto& other = map.getCharacters()[*maybe_character]; // Utilise le getter de Map
 
-    auto& other = map.characters[*maybe_character];
+  // Utilisation des getters
+  int damage = character.getStat().getPower() - other.getStat().getDefense();
+  std::string description = character.getEntity().getName() + " attacks " + other.getEntity().getName();
 
-    int damage = character.stat.power - other.stat.defense;
-
-    std::string description = character.entity.name + " attacks " + other.entity.name;
-    if (damage > 0) {
-      std::cout << description << " for " << damage << " hit points.\n";
-      other.stat.health -= damage;
-    } else {
-      std::cout << description << " but does no damage.\n";
-    }
-
-    return true;
+  if (damage > 0) {
+    other.take_damage(damage);
   }
+  return true;
+}
 
 }

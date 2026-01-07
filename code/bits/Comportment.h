@@ -3,23 +3,28 @@
 
 #include <vector>
 #include <variant>
-
-
 #include <gf/Vector.h>
 
 namespace rCMI {
-  struct Character;
-  struct Map;
+  class Character;
+  class Map;
 
-  struct HostileEnnemy {
-    std::vector<gf::Vector2i> path;
-
+  class HostileEnnemy {
+  public:
+    const std::vector<gf::Vector2i> getPath() const { return path; }
+  
     bool perform(Character& self, Map& map);
+
+  private:
+    std::vector<gf::Vector2i> path;
   };
 
+  class Comportment {
 
-  struct Comportment {
-    std::variant<std::monostate, HostileEnnemy> variant;
+  public:
+
+    const std::variant<std::monostate, HostileEnnemy>& getVariant() const { return variant; }
+    void setVariant(const std::variant<std::monostate, HostileEnnemy>& var) { variant = var; }
 
     bool perform(Character& self, Map& map) {
       return std::visit([&](auto&& comportement) {
@@ -38,9 +43,9 @@ namespace rCMI {
       return comportment;
     }
 
+    private:
+        std::variant<std::monostate, HostileEnnemy> variant;
   };
-
-
 }
 
 #endif // COMPORTMENT_H

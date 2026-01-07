@@ -3,9 +3,9 @@
 
 #include <gf/TileLayer.h>
 #include <gf/Texture.h>
-#include <gf/RenderTarget.h>
 #include <vector>
 #include <gf/Random.h>
+#include <optional>
 
 #include "Tile.h"
 #include "Character.h"

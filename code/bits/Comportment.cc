@@ -1,8 +1,7 @@
 #include "Comportment.h"
-
 #include <algorithm>
-
 #include <gf/Vector.h>
+#include <gf/VectorOps.h>
 
 #include "Actions.h"
 #include "Character.h"
@@ -10,17 +9,17 @@
 
 namespace rCMI {
 
-  bool HostileEnnemy::perform(Character& self, Map& map)
-  {
-    auto target = map.hero().entity.position;
-    auto distance = gf::chebyshev_distance(self.entity.position, target);
+  bool HostileEnnemy::perform(Character& self, Map& map) {
+    auto target = map.hero().getEntity().getPosition(); 
+    
+    auto distance = gf::chebyshev_distance(self.getEntity().getPosition(), target);
 
-    if (map.grid.visible(self.entity.position)) {
+    if (map.isVisible(self.getEntity().getPosition())) {
       if (distance <= 1) {
         return melee(map, self, target);
       }
 
-      path = map.compute_path(self.entity.position, target);
+      path = map.compute_path(self.getEntity().getPosition(), target);
       std::reverse(path.begin(), path.end());
     }
 
@@ -33,5 +32,4 @@ namespace rCMI {
 
     return true;
   }
-
 }

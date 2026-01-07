@@ -1,39 +1,54 @@
 #include "Character.h"
-#include <algorithm> // Pour std::max et std::min
+
+#include <algorithm>
 
 namespace rCMI {
 
   void Character::take_damage(int damage) {
-    stat.health -= damage;
-    stat.health = std::max(0, std::min(stat.health, stat.max_health));
+    int final_damage = std::max(0, damage - stat.getDefense());
+    stat.setHealth(stat.getHealth() - final_damage);
+    stat.setHealth(std::clamp(stat.getHealth(), 0, stat.getMaxHealth()));
 
-    if (stat.health <= 0) {
+    if (stat.getHealth() <= 0) {
       die();
     }
   }
 
   void Character::die() {
+    entity.setCharacter(u'%'); // Utilise le setter
+    entity.setBlocksMovement(false);
+    comportment.setVariant(std::monostate{});
   }
-
   Character Character::hero(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'@', gf::Color::White, "Hero", true };
-    character.stat = Stat(30, 2, 5);
+    character.entity = Entity{ position, u'@', gf::Color::Blue, "Hero", true };
+    character.stat = Stat(100, 5, 10); // HP: 100, Def: 5, Pwr: 10
     return character;
   }
 
-  Character Character::orc(gf::Vector2i position) {
+  // Skeleton (Beaucoup de vie)
+  Character Character::skeleton(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'o', gf::Color::Green, "Orc", true };
-    character.stat = Stat(10, 0, 3);
+    character.entity = Entity{ position, u'S', gf::Color::White, "Skeleton", true };
+    character.stat = Stat(50, 2, 6); 
     character.comportment = Comportment::hostile();
     return character;
   }
 
-  Character Character::troll(gf::Vector2i position) {
+  // Zombie (Vie moyenne)
+  Character Character::zombie(gf::Vector2i position) {
     Character character;
-    character.entity = Entity{ position, u'T', gf::Color::Blue, "Troll", true };
-    character.stat = Stat(16, 1, 4);
+    character.entity = Entity{ position, u'Z', gf::Color::Orange, "Zombie", true };
+    character.stat = Stat(30, 1, 4);
+    character.comportment = Comportment::hostile();
+    return character;
+  }
+
+  // Slime (Peu de vie)
+  Character Character::slime(gf::Vector2i position) {
+    Character character;
+    character.entity = Entity{ position, u's', gf::Color::Green, "Slime", true };
+    character.stat = Stat(10, 0, 2);
     character.comportment = Comportment::hostile();
     return character;
   }
