@@ -46,29 +46,17 @@ namespace rCMI {
 
     for (int y = 0; y < map.size.y; ++y) {
         for (int x = 0; x < map.size.x; ++x) {
-            map.tileLayer.setTile({x, y}, map.tilesetId, 0); 
+          if(x==0 || y == 0 || x == 9 || y == 9) {
+            map.tileLayer.setTile({x, y}, map.tilesetId, 1); //wall
+            
+          }
+            map.tileLayer.setTile({x, y}, map.tilesetId, 0); // floor
         }
     }
     return map;
   }
 
-//     gf::Vector2i mapSize(10, 10);
-//     gf::Vector2i tileSize(80, 80);
 
-//     auto tileLayer = gf::TileLayer::createOrthogonal(mapSize, tileSize);
-
-
-//     std::size_t tilesetId = tileLayer.createTilesetId();
-//     gf::Tileset& tileset = tileLayer.getTileset(tilesetId);
-//     tileset.setTexture(texture);
-//     tileset.setTileSize(tileSize);
-
-
-//     for (int y = 0; y < mapSize.y; ++y) {
-//         for (int x = 0; x < mapSize.x; ++x) {
-//             tileLayer.setTile({x, y}, tilesetId, 0); 
-//         }
-//     }
 
 
 
