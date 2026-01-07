@@ -16,37 +16,37 @@
 #include "./bits/Map.cc"
 
 
-int main() {
-    gf::Window window("Rogue CMI", {1200, 800});
-    gf::RenderWindow renderer(window);
+// int main() {
+//     gf::Window window("Rogue CMI", {1200, 800});
+//     gf::RenderWindow renderer(window);
 
-    gf::Texture texture("../data/RogueCMI/skeleton.png");
-    gf::Random random;
+//     gf::Texture texture("../data/RogueCMI/skeleton.png");
+//     gf::Random random;
 
-    rCMI::Map myMap = rCMI::generate_dungeon(
-        {10, 10},       
-        10,              
-        6, 10,           
-        3,               
-        &random,         
-        texture  
-    );
+//     rCMI::Map myMap = rCMI::generate_dungeon(
+//         {10, 10},       
+//         10,              
+//         6, 10,           
+//         3,               
+//         &random,         
+//         texture  
+//     );
 
-    while (window.isOpen()) {
-        gf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == gf::EventType::Closed) {
-                window.close();
-            }
-        }
+//     while (window.isOpen()) {
+//         gf::Event event;
+//         while (window.pollEvent(event)) {
+//             if (event.type == gf::EventType::Closed) {
+//                 window.close();
+//             }
+//         }
 
-        renderer.clear(gf::Color::Black);
-        renderer.draw(myMap.tileLayer);
-        renderer.display();
-    }
+//         renderer.clear(gf::Color::Black);
+//         renderer.draw(myMap.tileLayer);
+//         renderer.display();
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 
 // exemple d'utilisation pour créer le plateau 10x10 de manière très simple, dns le main
@@ -309,9 +309,9 @@ int main() {
 
 
 
-// int main() {
-//   rCMI::RogueCMI rogueCMI;
-//   rogueCMI.run();
-//   return 0;
-// }
+int main() {
+  rCMI::RogueCMI rogueCMI;
+  rogueCMI.run();
+  return 0;
+}
 
