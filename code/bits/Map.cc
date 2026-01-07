@@ -37,18 +37,38 @@ namespace rCMI {
     
     Map map;
     map.size = size;
-    map.tileLayer = gf::TileLayer::createOrthogonal(size, {32, 32});
+    map.tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
     map.tilesetId = map.tileLayer.createTilesetId();
     
     gf::Tileset& tileset = map.tileLayer.getTileset(map.tilesetId);
     tileset.setTexture(texture);
-    tileset.setTileSize({32, 32});
+    tileset.setTileSize({80,80});
 
-    map.grid.resize(size.x * size.y, TileType::Wall);
-
+    for (int y = 0; y < map.size.y; ++y) {
+        for (int x = 0; x < map.size.x; ++x) {
+            map.tileLayer.setTile({x, y}, map.tilesetId, 0); 
+        }
+    }
     return map;
   }
 
+//     gf::Vector2i mapSize(10, 10);
+//     gf::Vector2i tileSize(80, 80);
+
+//     auto tileLayer = gf::TileLayer::createOrthogonal(mapSize, tileSize);
+
+
+//     std::size_t tilesetId = tileLayer.createTilesetId();
+//     gf::Tileset& tileset = tileLayer.getTileset(tilesetId);
+//     tileset.setTexture(texture);
+//     tileset.setTileSize(tileSize);
+
+
+//     for (int y = 0; y < mapSize.y; ++y) {
+//         for (int x = 0; x < mapSize.x; ++x) {
+//             tileLayer.setTile({x, y}, tilesetId, 0); 
+//         }
+//     }
 
 
 

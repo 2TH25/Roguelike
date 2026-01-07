@@ -20,7 +20,7 @@ int main() {
     gf::Window window("Rogue CMI", {1200, 800});
     gf::RenderWindow renderer(window);
 
-    gf::Texture texture("../data/RogueCMI/skeleton.png");
+    gf::Texture texture("../data/RogueCMI/sol_pierre.jpg");
     gf::Random random;
 
     rCMI::Map myMap = rCMI::generate_dungeon(
