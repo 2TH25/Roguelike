@@ -33,8 +33,8 @@ namespace rCMI {
       tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
-  void render(gf::RenderTarget& renderer) {
-    for (auto& tile : tiles) {
+  void Map::render(gf::RenderTarget& renderer) {
+    for (auto& tile : getTiles()) {
       tile.render(renderer);
     }
   }
@@ -42,8 +42,8 @@ namespace rCMI {
   Map generate_board(gf::Vector2i size,gf::Texture wallTex, gf::Texture floorTex) {
     
     Map map;
-    map.size = size;
-    map.tiles.resize(size.x * size.y);
+    map.setSize(size);
+    map.setTiles(std::vector<rCMI::Tile>(size.x * size.y));
 
     //ressourcemanager
     for (int y = 0; y < size.y; ++y) {
@@ -56,8 +56,8 @@ namespace rCMI {
             type = TileType::Wall;
         }
 
-        map.tiles[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
-        map.tiles[index].setTexture(texture);
+        map.getTiles()[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
+        map.getTiles()[index].setTexture(texture);
         map.update_tile_at({x, y}, type);
       }
     }
