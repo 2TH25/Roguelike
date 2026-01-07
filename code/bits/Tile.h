@@ -2,6 +2,7 @@
 #define TILE_H
 
 #include <gf/Vector.h>
+#include <gf/Sprite.h>
 
 namespace rCMI {  
 
@@ -10,10 +11,18 @@ namespace rCMI {
     Wall
   };
 
-  struct Tile {
+  class Tile {
+    private: 
+
       TileType type;
       bool walkable;
-      int textureIndex;
+      gf::Sprite sprite;
+
+    public:
+
+    void setTexture(const gf::Texture& texture);
+    void setPosition(gf::Vector2f position);
+    void render(gf::RenderTarget& renderer);
   };
 };
 #endif
