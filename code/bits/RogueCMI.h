@@ -5,6 +5,7 @@
 #include <gf/ResourceManager.h>
 
 #include "WorldScene.h"
+#include "GameData.h"
 
 namespace rCMI
 {

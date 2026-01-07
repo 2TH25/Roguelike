@@ -1,42 +1,41 @@
 #include "bits/RogueCMI.h"
 #include "bits/Map.h"
-#include "bits/GameData.h" // Pour MapSize
 #include <gf/ResourceManager.h>
 #include <gf/RenderWindow.h>
 #include <gf/Event.h>
 #include <iostream>
 
-int main() {
-    gf::Window window("Rogue CMI", {1200, 800});
-    gf::RenderWindow renderer(window);
+// int main() {
+//     gf::Window window("Rogue CMI", {1200, 800});
+//     gf::RenderWindow renderer(window);
 
-    gf::ResourceManager resources;
-    resources.addSearchDir("../data/RogueCMI/");
+//     gf::ResourceManager resources;
+//     resources.addSearchDir("../data/RogueCMI/");
 
-    gf::Texture& wallTex = resources.getTexture("mur_pierre.jpg");
-    gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
-    gf::Texture& characterTex = resources.getTexture("perso70.png");
+//     gf::Texture& wallTex = resources.getTexture("mur_pierre.jpg");
+//     gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
+//     gf::Texture& characterTex = resources.getTexture("perso70.png");
 
-    rCMI::Map myMap = rCMI::Map::generate_board(rCMI::MapSize, floorTex, wallTex);
-    rCMI::Character perso = rCMI::Character::hero({5, 5}); 
+//     rCMI::Map myMap = rCMI::Map::generate_board(rCMI::MapSize, floorTex, wallTex);
+//     rCMI::Character perso = rCMI::Character::hero({5, 5}); 
 
-    while (window.isOpen()) {
-        gf::Event event;
-        while (window.pollEvent(event)) {
-            if (event.type == gf::EventType::Closed) {
-                window.close();
-            }
-        }
+//     while (window.isOpen()) {
+//         gf::Event event;
+//         while (window.pollEvent(event)) {
+//             if (event.type == gf::EventType::Closed) {
+//                 window.close();
+//             }
+//         }
 
-        renderer.clear(gf::Color::Black);
+//         renderer.clear(gf::Color::Black);
 
-        myMap.render(renderer);  
-        perso.render(renderer, characterTex, 80);   
-        renderer.display();
-    }
+//         myMap.render(renderer);  
+//         perso.render(renderer, characterTex, 80);   
+//         renderer.display();
+//     }
 
-    return 0;
-}
+//     return 0;
+// }
 
 // exemple d'utilisation pour créer le plateau 10x10 de manière très simple, dns le main
 
@@ -298,9 +297,9 @@ int main() {
 
 
 
-// int main() {
-//   rCMI::RogueCMI rogueCMI;
-//   rogueCMI.run();
-//   return 0;
-// }
+int main() {
+  rCMI::RogueCMI rogueCMI;
+  rogueCMI.run();
+  return 0;
+}
 
