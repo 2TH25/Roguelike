@@ -12,8 +12,8 @@ namespace rCMI
     pushScene(my_WorldScene);
   }
 
-  gf::ResourceManager RogueCMI::world_resource()
-  {
+  // void RogueCMI::world_resource()
+  // {
     
-  }
+  // }
 }

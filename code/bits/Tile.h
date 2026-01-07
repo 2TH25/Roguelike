@@ -17,16 +17,16 @@ namespace rCMI {
     gf::Sprite getSprite() const { return sprite; }
     gf::Vector2f getPosition() const { return pos; }
 
-    void Tile::render(gf::RenderTarget& renderer) {
+    void render(gf::RenderTarget& renderer) {
         renderer.draw(sprite);
     };
 
-    void Tile::setPosition(gf::Vector2f position) {
+    void setPosition(gf::Vector2f position) {
         pos = position;
         sprite.setPosition(position);
     };
 
-    void Tile::setTexture(const gf::Texture& texture) {
+    void setTexture(const gf::Texture& texture) {
         sprite.setTexture(texture);
     };
     void setType(TileType t) { type = t; walkable = (t == TileType::Floor); };
