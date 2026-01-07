@@ -24,13 +24,7 @@ int main() {
     gf::Texture WallTexture("../data/RogueCMI/mur_pierre.jpg");
     gf::Random random;
 
-    rCMI::Map myMap = rCMI::generate_dungeon(
-        {10, 10},       
-        10,              
-        6, 10,           
-        3,               
-        &random
-    );
+    rCMI::Map myMap = rCMI::generate_board({10, 10});
 
     while (window.isOpen()) {
         gf::Event event;

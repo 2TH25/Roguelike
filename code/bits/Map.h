@@ -13,9 +13,8 @@
 namespace rCMI {
   struct Map {
     gf::Vector2i size;
-    std::vector<TileType> grid;
+    std::vector<rCMI::Tile> tiles;
     std::vector<Character> characters;
-    gf::TileLayer tileLayer;
     std::size_t tilesetId;
 
     Character& hero() { return characters.front(); }
@@ -25,9 +24,10 @@ namespace rCMI {
 
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
     void update_tile_at(gf::Vector2i pos, TileType type);
+    void render(gf::RenderTarget& renderer);
   };
 
-  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random);
+  Map generate_board(gf::Vector2i size);
 
 };
 

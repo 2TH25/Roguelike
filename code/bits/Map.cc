@@ -33,24 +33,32 @@ namespace rCMI {
       tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
-  Map generate_dungeon(gf::Vector2i size, int max_rooms, int room_min_size, int room_max_size, int max_monsters_per_room, gf::Random* random) {
+  void render(gf::RenderTarget& renderer) {
+    for (auto& tile : tiles) {
+      tile.render(renderer);
+    }
+  }
+
+  Map generate_board(gf::Vector2i size) {
     
     Map map;
     map.size = size;
-    map.tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
-    map.tilesetId = map.tileLayer.createTilesetId();
-    
-    gf::Tileset& tileset = map.tileLayer.getTileset(map.tilesetId);
-    tileset.setTileSize({80,80});
+    map.tiles.resize(size.x * size.y);
 
-    for (int y = 0; y < map.size.y; ++y) {
-        for (int x = 0; x < map.size.x; ++x) {
-          if(x==0 || y == 0 || x == 9 || y == 9) {
-            map.tileLayer.setTile({x, y}, map.tilesetId, 1); //wall
-            
-          }
-            map.tileLayer.setTile({x, y}, map.tilesetId, 0); // floor
+    //ressourcemanager
+    for (int y = 0; y < size.y; ++y) {
+      for (int x = 0; x < size.x; ++x) {
+        int index = x + y * size.x;
+        
+        TileType type = TileType::Floor;
+
+        if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
+            type = TileType::Wall;
         }
+
+        map.tiles[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
+        map.update_tile_at({x, y}, type);
+      }
     }
     return map;
   }
