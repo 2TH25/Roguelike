@@ -34,7 +34,7 @@ namespace rCMI {
       bool isVisible(gf::Vector2i position) const {
         return true;
       }
-      Map generate_board(gf::Vector2i size,const gf::Texture& wallTex, const gf::Texture& floorTex);
+      static Map generate_board(gf::Vector2i size,const gf::Texture& wallTex, const gf::Texture& floorTex);
 
     private:
 

@@ -1,30 +1,21 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include <gf/Vector.h>
 #include <gf/Sprite.h>
+#include <gf/RenderTarget.h>
 
-namespace rCMI {  
-
-  enum class TileType {
-    Floor,
-    Wall
-  };
+namespace rCMI {
+  enum class TileType { Floor, Wall };
 
   class Tile {
-    private: 
+  public:
+    void setTexture(const gf::Texture& tex) { m_sprite.setTexture(tex); }
+    void setPosition(gf::Vector2f pos) { m_sprite.setPosition(pos); }
+    void render(gf::RenderTarget& target) { target.draw(m_sprite); }
 
-      TileType type;
-      bool walkable;
-      gf::Sprite sprite;
-      gf::Vector2f pos;
-
-    public:
-
-    void setTexture(const gf::Texture& texture);
-    void setPosition(gf::Vector2f position);
-    void render(gf::RenderTarget& renderer);
-    void setType(TileType t) { type = t; walkable = (t == TileType::Floor); }
+  private:
+    gf::Sprite m_sprite;
+    TileType m_type;
   };
-};
-#endif
+}
+#endif // TILE_H

@@ -39,34 +39,36 @@ namespace rCMI {
     }
   }
 
-  Map Map::generate_board(gf::Vector2i size,const gf::Texture& wallTex, const gf::Texture& floorTex) {
-    
+  Map Map::generate_board(gf::Vector2i size, const gf::Texture& floorTex, const gf::Texture& wallTex) {
     Map map;
     map.setSize(size);
-    map.setTiles(std::vector<rCMI::Tile>(size.x * size.y));
+      
+    std::vector<rCMI::Tile> tmpTiles;
+      tmpTiles.reserve(size.x * size.y); 
 
-    
     for (int y = 0; y < size.y; ++y) {
-      for (int x = 0; x < size.x; ++x) {
-        int index = x + y * size.x;
-        
-        gf::Texture texture;
-        TileType type = TileType::Floor;
-        map.getTiles()[index].setTexture(floorTex);
+        for (int x = 0; x < size.x; ++x) {
+            rCMI::Tile tile;
+            TileType type = TileType::Floor;
+            
+            // Logique de positionnement
+            tile.setPosition({ (float)x * 80.0f, (float)y * 80.0f });
 
-        if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
-            type = TileType::Wall;
-            map.getTiles()[index].setTexture(wallTex);
+            if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
+                type = TileType::Wall;
+                tile.setTexture(wallTex);
+            } else {
+                tile.setTexture(floorTex);
+            }
+            
+            tmpTiles.push_back(tile);
         }
-
-        map.getTiles()[index].setPosition({ (float)x * 80.0f, (float)y * 80.0f });
-        
-        map.update_tile_at({x, y}, type);
-      }
     }
-    return map;
-  }
 
+    map.setTiles(std::move(tmpTiles)); 
+    
+    return map;
+}
 
 
 

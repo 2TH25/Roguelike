@@ -1,20 +1,10 @@
 #include "bits/RogueCMI.h"
-
-#include <gf/Window.h>
-#include <gf/Circ.h>
-#include <gf/Collision.h>
-#include <gf/Shapes.h>
-#include <gf/Views.h>
-#include <gf/Font.h>
-#include <gf/Text.h>
-#include <gf/Texture.h>
-#include <gf/Tileset.h>
-#include <gf/TileLayer.h>
-#include <gf/Random.h>
-
-#include "./bits/Map.h"
-#include "./bits/Map.cc"    
-
+#include "bits/Map.h"
+#include "bits/GameData.h" // Pour MapSize
+#include <gf/ResourceManager.h>
+#include <gf/RenderWindow.h>
+#include <gf/Event.h>
+#include <iostream>
 
 int main() {
     gf::Window window("Rogue CMI", {1200, 800});
@@ -25,9 +15,8 @@ int main() {
 
     gf::Texture& wallTex = resources.getTexture("mur_pierre.jpg");
     gf::Texture& floorTex = resources.getTexture("sol_pierre.jpg");
-    gf::Random random;
 
-    rCMI::Map myMap = rCMI::Map::generate_board({10, 10},floorTex,wallTex);
+    rCMI::Map myMap = rCMI::Map::generate_board(rCMI::MapSize, floorTex, wallTex);
 
     while (window.isOpen()) {
         gf::Event event;
@@ -38,13 +27,13 @@ int main() {
         }
 
         renderer.clear(gf::Color::Black);
-        myMap.render(renderer);
+
+        myMap.render(renderer);     
         renderer.display();
     }
 
     return 0;
 }
-
 
 // exemple d'utilisation pour créer le plateau 10x10 de manière très simple, dns le main
 

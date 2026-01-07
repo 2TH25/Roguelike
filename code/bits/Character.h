@@ -5,6 +5,9 @@
 #include "Comportment.h"
 #include "Stat.h"
 #include "Entity.h"
+#include <gf/Sprite.h>
+#include <gf/Texture.h>
+#include <gf/RenderTarget.h>
 
 namespace rCMI {
   class Character {
