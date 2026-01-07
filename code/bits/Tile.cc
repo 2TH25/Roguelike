@@ -12,7 +12,7 @@ namespace rCMI {
             sprite.setPosition(position);
         }
 
-        void setTexture(const gf::Texture& texture) {
+        void Tile::setTexture(const gf::Texture& texture) {
             sprite.setTexture(texture);
         }
     }
