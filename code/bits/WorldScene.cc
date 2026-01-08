@@ -27,8 +27,7 @@ namespace rCMI
   void WorldScene::doHandleActions(gf::Window &window)
   {
     if (up.isActive())
-      std::cout << m_hero.getExistence().getPosition().x << " " << m_hero.getExistence().getPosition().y << "\n";
-      m_hero.goUp(m_map);
+    m_hero.goUp(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
