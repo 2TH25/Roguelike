@@ -16,8 +16,6 @@ namespace rCMI
     setWorldViewSize(view_size);
     setWorldViewCenter({0, 0});
 
-    m_map.generate_board(MapSize);
-
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
   }
