@@ -36,7 +36,7 @@ namespace rCMI
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
 
-    void generate_board(gf::Vector2i size);
+    void generate_board(RogueCMI *m_game);
 
   private:
     gf::Vector2i size;

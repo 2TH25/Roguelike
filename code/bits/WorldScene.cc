@@ -10,7 +10,7 @@ namespace rCMI
   , m_game(game)
   , m_map(game)
   , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png")))
-  , m_actions(getControls())
+  , m_actions(getActions())
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -41,11 +41,12 @@ namespace rCMI
     // m_state.map.grid.compute_field_of_vision(m_state.map.hero().entity.position, 8, gf::Visibility::ShadowCast);
   }
 
-  gf::ActionContainer WorldScene::getControls()
+  gf::ActionContainer WorldScene::getActions()
   {
     gf::ActionContainer res;
+    std::map<std::string, std::string> controls;
 
-    // for (const auto &[action_name, key_name] : controls_player)
+    // for (const auto &[action_name, key_name] : controls)
     // {
       
     // }
