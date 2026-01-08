@@ -21,7 +21,7 @@ namespace rCMI
 
     void updateFieldOfView();
 
-    gf::ActionContainer getControls();
+    gf::ActionContainer getActions();
 
     RogueCMI *m_game = nullptr;
     Map m_map;
