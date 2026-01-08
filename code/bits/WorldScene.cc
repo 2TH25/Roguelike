@@ -11,10 +11,14 @@ namespace rCMI
   , m_map(game)
   , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png")))
   , m_actions(getActions())
+  , up("mov_up")
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
-    setWorldViewCenter({view_size.x / 2, view_size.y / 2});
+    setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
+
+    up.addScancodeKeyControl(gf::Scancode::W);
+    addAction(up);
 
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
@@ -22,11 +26,15 @@ namespace rCMI
 
   void WorldScene::doHandleActions(gf::Window &window)
   {
-
+    if (up.isActive())
+      std::cout << m_hero.getExistence().getPosition().x << " " << m_hero.getExistence().getPosition().y << "\n";
+      m_hero.goUp(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
+    setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
+    // setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
     // m_state.update();
     // update_field_of_view();
 
@@ -44,11 +52,14 @@ namespace rCMI
   gf::ActionContainer WorldScene::getActions()
   {
     gf::ActionContainer res;
-    std::map<std::string, std::string> controls = Controls::getControls();
+    std::map<std::string, const char *> controls = Controls::getControls();
 
     // for (const auto &[action_name, key_name] : controls)
     // {
-      
+    //   gf::Action newAction(action_name);
+    //   newAction.addScancodeKeyControl(gf::Keyboard::getScancodeFromName(key_name));
+    //   res.addAction(newAction);
+    //   addAction(newAction);
     // }
 
     return res;
