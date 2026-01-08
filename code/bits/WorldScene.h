@@ -26,8 +26,10 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     Map m_map;
     Character m_hero;
-    gf::ActionContainer m_actions;
-    gf::Action up;
+    gf::Action mov_up;
+    gf::Action mov_down;
+    gf::Action mov_right;
+    gf::Action mov_left;
   };
 }
 

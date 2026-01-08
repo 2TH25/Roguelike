@@ -10,15 +10,26 @@ namespace rCMI
   , m_game(game)
   , m_map(game)
   , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png")))
-  , m_actions(getActions())
-  , up("mov_up")
+  , mov_up("mov_up")
+  , mov_down("mov_down")
+  , mov_right("mov_down")
+  , mov_left("mov_down")
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
     setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
 
-    up.addScancodeKeyControl(gf::Scancode::W);
-    addAction(up);
+    mov_up.addScancodeKeyControl(gf::Scancode::W);
+    addAction(mov_up);
+
+    mov_down.addScancodeKeyControl(gf::Scancode::S);
+    addAction(mov_down);
+
+    mov_right.addScancodeKeyControl(gf::Scancode::D);
+    addAction(mov_right);
+
+    mov_left.addKeycodeKeyControl(gf::Keycode::Q);
+    addAction(mov_left);
 
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
@@ -26,8 +37,14 @@ namespace rCMI
 
   void WorldScene::doHandleActions(gf::Window &window)
   {
-    if (up.isActive())
-    m_hero.goUp(m_map);
+    if (mov_up.isActive())
+      m_hero.goUp(m_map);
+    else if (mov_down.isActive())
+      m_hero.goDown(m_map);
+    else if (mov_right.isActive())
+      m_hero.goRight(m_map);
+    else if (mov_left.isActive())
+      m_hero.goLeft(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
