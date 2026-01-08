@@ -21,6 +21,7 @@ add_executable(RogueCMI
   code/bits/BaseScene.cc
   code/bits/DungeonGenerator.cc
   code/bits/bsp.cc
+  code/bits/GameData.cc
 )
 
 target_include_directories(RogueCMI

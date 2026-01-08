@@ -27,6 +27,7 @@ namespace rCMI
     Map m_map;
     Character m_hero;
     gf::ActionContainer m_actions;
+    gf::Action up;
   };
 }
 

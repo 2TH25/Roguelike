@@ -17,6 +17,10 @@ namespace rCMI
   constexpr int MaxRooms = 30;
   constexpr int MaxMonstersPerRoom = 2;
 
-  std::map<std::string, std::string> getControls();
-  // bool setControls(std::map<std::string, std::set<std::string>> newControls);
+  class Controls
+  {
+  public:
+    static std::map<std::string, const char *> getControls();
+    // static bool setControls(std::map<std::string, std::set<std::string>> newControls);
+  };
 }
