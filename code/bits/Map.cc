@@ -38,6 +38,15 @@ namespace rCMI {
       tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
+  bool Map::isWalkable(gf::Vector2i position) const {
+
+    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y) {
+        return false;
+    }
+    std::size_t index = position.y * size.x + position.x;
+    return tiles[index].isWalkable();
+}
+
   void Map::render(gf::RenderTarget& renderer) {
     for (auto& tile : getTiles()) {
       tile.render(renderer);
