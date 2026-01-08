@@ -2,9 +2,10 @@
 #define RL_ROGUECMI_H
 
 #include <gf/GameManager.h>
-#include <gf/ResourceManager.h>
 
 #include "WorldScene.h"
+#include "BaseScene.h"
+
 #include "GameData.h"
 
 namespace rCMI
@@ -15,9 +16,8 @@ namespace rCMI
     RogueCMI();
 
   private:
-    gf::ResourceManager world_resource();
-
-    WorldScene my_WorldScene;
+    BaseScene m_BaseScene;
+    WorldScene m_WorldScene;
   };
 }
 

@@ -1,9 +1,4 @@
 #include "bits/RogueCMI.h"
-#include "bits/Map.h"
-#include <gf/ResourceManager.h>
-#include <gf/RenderWindow.h>
-#include <gf/Event.h>
-#include <iostream>
 
 // int main() {
 //     gf::Window window("Rogue CMI", {1200, 800});
@@ -294,8 +289,6 @@
 
 //   return 0;
 // }
-
-
 
 int main() {
   rCMI::RogueCMI rogueCMI;

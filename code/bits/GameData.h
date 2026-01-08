@@ -3,7 +3,7 @@
 
 namespace rCMI
 {
-  constexpr gf::Vector2i frame_size = {1200, 800};
+  constexpr gf::Vector2i view_size = {1200, 800};
   constexpr gf::Vector2i MapSize = {10, 10};
 
   const std::string RESSOURCES_PATH = "../data/RogueCMI";

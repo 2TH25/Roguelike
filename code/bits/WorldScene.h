@@ -2,20 +2,10 @@
 #define RL_WORLD_SCENE_H
 
 #include <gf/Scene.h>
-#include <gf/Entity.h>
-#include <gf/RenderTarget.h>
-#include <gf/RenderStates.h>
 
 namespace rCMI
 {
   class RogueCMI;
-
-  class Player : public gf::Entity
-  {
-  public:
-    Player();
-    void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
-  };
 
   class WorldScene : public gf::Scene
   {
@@ -28,8 +18,9 @@ namespace rCMI
 
     void updateFieldOfView();
 
+    gf::Action getControle(gf::Action action);
+
     RogueCMI *m_game = nullptr;
-    Player m_player;
   };
 }
 
