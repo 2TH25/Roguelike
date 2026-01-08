@@ -1,5 +1,6 @@
 #include "Map.h"
 #include "Tile.h"
+#include "RogueCMI.h"
 
 #include <cassert>
 #include <optional>

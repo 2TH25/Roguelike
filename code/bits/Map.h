@@ -10,10 +10,11 @@
 
 #include "Tile.h"
 #include "Character.h"
-#include "RogueCMI.h"
 
 namespace rCMI
 {
+  class RogueCMI;
+
   class Map : public gf::Entity
   {
   public:

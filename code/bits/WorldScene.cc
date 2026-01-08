@@ -9,7 +9,7 @@ namespace rCMI
   : gf::Scene(view_size)
   , m_game(game)
   , m_map(game)
-  , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png"), 5))
+  , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png")))
   , m_actions(getControls())
   {
     setClearColor(gf::Color::Black);
