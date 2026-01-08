@@ -92,7 +92,7 @@ namespace rCMI {
     return Character(ex, st, tex, tileS);
   }
 
-  void Character::render(gf::RenderTarget& target, const gf::RenderStates& states) {
+  void Character::render([[maybe_unused]] gf::RenderTarget &target, [[maybe_unused]] const gf::RenderStates &states) {
     if (!texture || tileSize <= 0) {
         return;
     }

@@ -47,17 +47,17 @@ namespace rCMI {
     return tiles[index].isWalkable();
 }
 
-  void Map::render(gf::RenderTarget& renderer) {
+  void Map::render([[maybe_unused]] gf::RenderTarget &target, [[maybe_unused]] const gf::RenderStates &states) {
     for (auto& tile : getTiles()) {
-      tile.render(renderer);
+      tile.render(target);
     }
   }
 
-  Map Map::generate_board(gf::Vector2i size) {
-    Map map;
+  Map Map::generate_board(gf::Vector2i size, RogueCMI *game) {
+    Map map(game);
 
     gf::TileMap tileMap(size);
-    gf::Texture tilesetTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    gf::Texture tilesetTexture(map.m_game->resources.getTexture("test"));
     gf::Tileset tileset(tilesetTexture, {80, 80});
 
     for(int y = 0; y < size.y; ++y) {

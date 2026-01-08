@@ -3,6 +3,8 @@
 
 #include <gf/Scene.h>
 
+#include "Map.h"
+
 namespace rCMI
 {
   class RogueCMI;
@@ -21,6 +23,7 @@ namespace rCMI
     gf::Action getControle(gf::Action action);
 
     RogueCMI *m_game = nullptr;
+    Map m_map;
   };
 }
 

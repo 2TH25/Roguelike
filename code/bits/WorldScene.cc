@@ -8,6 +8,7 @@ namespace rCMI
   WorldScene::WorldScene(RogueCMI *game)
   : gf::Scene(view_size)
   , m_game(game)
+  , m_map(game)
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
