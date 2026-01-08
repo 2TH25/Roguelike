@@ -51,7 +51,7 @@ namespace rCMI {
         if (max <= 2 * leafSizeMinimum) {
         return false;
         }
-        // on ne split pas si la taille max dispo pour un split es trop petit
+        // on ne split pas si la taille max dispo pour un split est trop petite
 
         assert(leafSizeMinimum <= max - leafSizeMinimum);
         //on vérifie que le max soit suffisamment grand
@@ -100,11 +100,11 @@ namespace rCMI {
             } else {
                 room = right->room;
             }
-        } else { //sinon, vue qu'on est sur une feuille
+        } else { //sinon, vu qu'on est sur une feuille
             assert(roomSizeMinimum <= std::min(roomSizeMaximum, space.getWidth() - 1));
             assert(roomSizeMinimum <= std::min(roomSizeMaximum, space.getHeight() - 1)); // on vérifie que les dimensions soient bonnes
 
-            gf::Vector2i position, size; // pn créer un vecteur
+            gf::Vector2i position, size; // on créer un vecteur
             size.width = random.computeUniformInteger(roomSizeMinimum,std::min(roomSizeMaximum, space.getWidth() - 1));
             size.height = random.computeUniformInteger(roomSizeMinimum,std::min(roomSizeMaximum, space.getHeight() - 1));
             position.x = random.computeUniformInteger(0,space.getWidth() - size.width - 1);
@@ -120,6 +120,85 @@ namespace rCMI {
     : m_root(gf::RectI::fromPositionSize({ 0, 0 }, { 1, 1 }))
     {
     }
+
+    Dungeon BSP::generate(gf::Vector2i size, gf::Random& random) {
+    switch (getPhase()) {
+      case Phase::Start:
+        m_savedRandom = random;
+        // fallthrough
+      case Phase::Iterate:
+        m_random = m_savedRandom;
+        generateRooms(size);
+        // fallthrough
+      case Phase::Finish:
+        random = m_random;
+        break;
+    }
+
+    setPhase(Phase::Finish);
+    return m_dungeon;
+  }
+
+  void BSP::generateRooms(gf::Vector2i size) {
+    m_dungeon = Dungeon(size, CellState::Wall);
+
+    m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, size);
+    m_root.left = nullptr;
+    m_root.right = nullptr;
+
+    m_root.recursiveSplit(m_random, leafSizeMinimum, leafSizeMaximum);
+    m_root.createRooms(m_random, roomSizeMinimum, roomSizeMaximum);
+    walkTree(m_root);
+  }
+
+  void BSP::walkTree(const BSPTree& tree) {
+    if (tree.left || tree.right) {
+      assert(tree.left && tree.right);
+      walkTree(*tree.left);
+      walkTree(*tree.right);
+
+      auto leftRoom = tree.left->room.getCenter();
+      auto rightRoom = tree.right->room.getCenter();
+
+      if (m_random.computeBernoulli(0.5)) {
+        createHorizontalTunnel(rightRoom.x, leftRoom.x, rightRoom.y);
+        createVerticalTunnel(leftRoom.x, leftRoom.y, rightRoom.y);
+      } else {
+        createVerticalTunnel(rightRoom.x, leftRoom.y, rightRoom.y);
+        createHorizontalTunnel(rightRoom.x, leftRoom.x, leftRoom.y);
+      }
+    } else {
+      createRoom(tree.room);
+    }
+  }
+
+  void BSP::createRoom(const gf::RectI& room) {
+    for (int x = room.min.x + 1; x < room.max.x; ++x) {
+      for (int y = room.min.y + 1; y < room.max.y; ++y) {
+        m_dungeon({ x, y }) = CellState::Path;
+      }
+    }
+  }
+
+  void BSP::createHorizontalTunnel(int x1, int x2, int y) {
+    if (x2 < x1) {
+      std::swap(x1, x2);
+    }
+
+    for (int x = x1; x <= x2; ++x) {
+      m_dungeon({ x, y }) = CellState::Path;
+    }
+  }
+
+  void BSP::createVerticalTunnel(int x, int y1, int y2) {
+    if (y2 < y1) {
+      std::swap(y1, y2);
+    }
+
+    for (int y = y1; y <= y2; ++y) {
+      m_dungeon({ x, y }) = CellState::Path;
+    }
+  }
 
 
     
