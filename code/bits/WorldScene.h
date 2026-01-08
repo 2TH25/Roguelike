@@ -4,6 +4,7 @@
 #include <gf/Scene.h>
 
 #include "Map.h"
+#include "Character.h"
 
 namespace rCMI
 {
@@ -20,10 +21,12 @@ namespace rCMI
 
     void updateFieldOfView();
 
-    gf::Action getControle(gf::Action action);
+    gf::ActionContainer getControls();
 
     RogueCMI *m_game = nullptr;
     Map m_map;
+    Character m_hero;
+    gf::ActionContainer m_actions;
   };
 }
 

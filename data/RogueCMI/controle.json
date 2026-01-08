@@ -1,6 +1,6 @@
 {
-    "up": "Z",
-    "down": "S",
-    "right": "D",
-    "left": "Q"
+    "up": "SDL_SCANCODE_Z",
+    "down": "SDL_SCANCODE_S",
+    "right": "SDL_SCANCODE_D",
+    "left": "SDL_SCANCODE_Q"
 }

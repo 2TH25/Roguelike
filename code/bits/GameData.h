@@ -1,6 +1,9 @@
 #include <gf/Vector.h>
 #include <gf/Paths.h>
 
+#include <map>
+#include <set>
+
 namespace rCMI
 {
   constexpr gf::Vector2i view_size = {1200, 800};
@@ -13,4 +16,8 @@ namespace rCMI
   constexpr int RoomMinSize = 6;
   constexpr int MaxRooms = 30;
   constexpr int MaxMonstersPerRoom = 2;
+
+  std::map<std::string, std::set<std::string>> controls_player;
+  std::map<std::string, std::string> getControls();
+  // bool setControls(std::map<std::string, std::set<std::string>> newControls);
 }
