@@ -3,9 +3,9 @@
 #include "bsp.h"
 #include <gf/Rect.h>
 #include <gf/Random.h>
+#include <cassert>
 
 namespace rCMI {
-
     BSPTree::BSPTree(gf::RectI initialSpace) { // constructeur du BSPTree
         left = nullptr;
         right = nullptr;
@@ -114,5 +114,14 @@ namespace rCMI {
             room = gf::RectI::fromPositionSize(position,size); // enfin, on créer la salle
         }
     }
+
+
+    BSP::BSP()
+    : m_root(gf::RectI::fromPositionSize({ 0, 0 }, { 1, 1 }))
+    {
+    }
+
+
+    
 
 }
