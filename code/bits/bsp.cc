@@ -140,14 +140,14 @@ namespace rCMI {
   }
 
   void BSP::generateRooms(gf::Vector2i size) {
-    m_dungeon = Dungeon(size, CellState::Wall);
+    m_dungeon = Dungeon(size, TileType::Wall);
 
     m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, size);
     m_root.left = nullptr;
     m_root.right = nullptr;
 
     m_root.recursiveSplit(m_random, leafSizeMinimum, leafSizeMaximum);
-    m_root.createRooms(m_random, roomSizeMinimum, roomSizeMaximum);
+    m_root.createRooms(m_random, RoomMinSize, RoomMaxSize);
     walkTree(m_root);
   }
 
@@ -175,7 +175,7 @@ namespace rCMI {
   void BSP::createRoom(const gf::RectI& room) {
     for (int x = room.min.x + 1; x < room.max.x; ++x) {
       for (int y = room.min.y + 1; y < room.max.y; ++y) {
-        m_dungeon({ x, y }) = CellState::Path;
+        m_dungeon({ x, y }) = TileType::Floor;
       }
     }
   }
@@ -186,7 +186,7 @@ namespace rCMI {
     }
 
     for (int x = x1; x <= x2; ++x) {
-      m_dungeon({ x, y }) = CellState::Path;
+      m_dungeon({ x, y }) = TileType::Floor;
     }
   }
 
@@ -196,7 +196,7 @@ namespace rCMI {
     }
 
     for (int y = y1; y <= y2; ++y) {
-      m_dungeon({ x, y }) = CellState::Path;
+      m_dungeon({ x, y }) = TileType::Floor;
     }
   }
 

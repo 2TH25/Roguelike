@@ -4,20 +4,14 @@
 #include <gf/Array2D.h>
 #include <gf/Random.h>
 #include <gf/Vector.h>
+#include "Tile.h"
 
 namespace rCMI {
 
-  enum class CellState : int {
-    Wall,
-    Path,
-  };
-
-  using Dungeon = gf::Array2D<CellState, int>;
+  using Dungeon = gf::Array2D<TileType, int>;
 
   class DungeonGenerator {
   public:
-    static constexpr float CellSize = 80.0f;
-
     enum class Phase {
       Start,
       Iterate,
