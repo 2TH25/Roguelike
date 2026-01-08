@@ -34,7 +34,6 @@ namespace rCMI
     Character m_skeleton;
     Character m_zombie;
     gf::ActionContainer m_actions;
-    gf::Action up;
   };
 }
 

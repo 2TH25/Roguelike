@@ -14,7 +14,6 @@ namespace rCMI
   , m_skeleton(Character::skeleton({6,7}, game->resources.getTexture("squelette.png")))
   , m_zombie(Character::zombie({8, 2}, game->resources.getTexture("zombie.png")))
   , m_actions(getActions())
-  , up("mov_up")
   , mov_up("mov_up")
   , mov_down("mov_down")
   , mov_right("mov_down")
@@ -45,8 +44,14 @@ namespace rCMI
 
   void WorldScene::doHandleActions(gf::Window &window)
   {
-    if (up.isActive())
-    m_hero.goUp(m_map);
+    if (mov_up.isActive())
+      m_hero.goUp(m_map);
+    else if (mov_down.isActive())
+      m_hero.goDown(m_map);
+    else if (mov_right.isActive())
+      m_hero.goRight(m_map);
+    else if (mov_left.isActive())
+      m_hero.goLeft(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
