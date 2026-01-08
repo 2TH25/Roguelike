@@ -10,10 +10,8 @@
 namespace rCMI {
   class Character : public gf::Entity {
   public:
-    Character() : 
-      gf::Entity(1), 
-      texture(nullptr), 
-      tileSize(0) {}
+    Character() = default;
+    Character(const Existence& ex, const Stat& st, const gf::Texture& tex, int tileS);
 
     void setAppearance(const gf::Texture& tex, int tileS) {
         texture = &tex;
@@ -38,17 +36,21 @@ namespace rCMI {
     void take_damage(int damage);
     void die();
 
-    static Character hero(gf::Vector2i position);
-    static Character skeleton(gf::Vector2i position);
-    static Character zombie(gf::Vector2i position);
-    static Character slime(gf::Vector2i position);
+    void goUp(const Map& map);
+    void goDown(const Map& map);
+    void goLeft(const Map& map);
+    void goRight(const Map& map);
 
+    static Character hero(gf::Vector2i position, const gf::Texture& tex, int tileS);
+    static Character skeleton(gf::Vector2i position, const gf::Texture& tex, int tileS);
+    static Character zombie(gf::Vector2i position, const gf::Texture& tex, int tileS);
+    static Character slime(gf::Vector2i position, const gf::Texture& tex, int tileS);
 
     private: 
       Existence existence;
       Stat stat;
       Comportment comportment;
-      const gf::Texture* texture;
+      const gf::Texture* texture = nullptr;
       int tileSize;
   };
 }
