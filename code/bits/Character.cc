@@ -57,10 +57,8 @@ namespace rCMI {
     }
   }
 
-  
-
   void Character::die() {
-    existence.setCharacter(u'%'); // Utilise le setter
+    existence.setCharacter(u'%'); 
     existence.setBlocksMovement(false);
     comportment.setVariant(std::monostate{});
   }

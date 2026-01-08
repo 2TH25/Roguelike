@@ -10,6 +10,9 @@ namespace rCMI
   , m_game(game)
   , m_map(game)
   , m_hero(Character::hero({5, 5}, game->resources.getTexture("perso70.png")))
+  , m_slime(Character::slime({5, 4}, game->resources.getTexture("slime.png")))
+  , m_skeleton(Character::skeleton({6,7}, game->resources.getTexture("squelette.png")))
+  , m_zombie(Character::zombie({8, 2}, game->resources.getTexture("zombie.png")))
   , m_actions(getActions())
   , up("mov_up")
   {
@@ -22,12 +25,15 @@ namespace rCMI
 
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
+    addWorldEntity(m_slime);
+    addWorldEntity(m_skeleton);
+    addWorldEntity(m_zombie);
   }
 
   void WorldScene::doHandleActions(gf::Window &window)
   {
     if (up.isActive())
-    m_hero.goUp(m_map);
+      m_hero.goUp(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)

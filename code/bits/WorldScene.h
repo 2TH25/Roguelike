@@ -26,6 +26,9 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     Map m_map;
     Character m_hero;
+    Character m_slime;
+    Character m_skeleton;
+    Character m_zombie;
     gf::ActionContainer m_actions;
     gf::Action up;
   };
