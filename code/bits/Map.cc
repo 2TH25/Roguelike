@@ -34,7 +34,7 @@ namespace rCMI {
     tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset& ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(m_game->resources.getTexture("test"));
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
     ts.setTileSize({80, 80});
 
     for(int y = 0; y < size.y; ++y) {
