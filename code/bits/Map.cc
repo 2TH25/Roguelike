@@ -65,11 +65,11 @@ namespace rCMI
 
   bool Map::blocking_entity_at(gf::Vector2i target)
   {
-    if (target.x < 0 || target.y < 0 || target.x >= size.x || target.y >= size.y)
+    if (target.x < 0 || target.y < 0 || target.x >= MapSize.x || target.y >= MapSize.y)
     {
       return true;
     }
-    if (grid[target.y * size.x + target.x] == TileType::Wall)
+    if (grid[target.y * MapSize.x + target.x] == TileType::Wall)
     {
       return true;
     }
@@ -78,11 +78,11 @@ namespace rCMI
 
   bool Map::isWalkable(gf::Vector2i position) const
   {
-    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
+    if (position.x < 0 || position.y < 0 || position.x >= MapSize.x || position.y >= MapSize.y)
     {
       return false;
     }
-    return grid[position.y * size.x + position.x] == TileType::Floor;
+    return grid[position.y * MapSize.x + position.x] == TileType::Floor;
   }
 
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)

@@ -57,6 +57,8 @@ namespace rCMI {
     }
   }
 
+  
+
   void Character::die() {
     existence.setCharacter(u'%'); // Utilise le setter
     existence.setBlocksMovement(false);
