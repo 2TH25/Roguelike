@@ -15,13 +15,26 @@ namespace rCMI
   , m_zombie(Character::zombie({8, 2}, game->resources.getTexture("zombie.png")))
   , m_actions(getActions())
   , up("mov_up")
+  , mov_up("mov_up")
+  , mov_down("mov_down")
+  , mov_right("mov_down")
+  , mov_left("mov_down")
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
     setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
 
-    up.addScancodeKeyControl(gf::Scancode::W);
-    addAction(up);
+    mov_up.addScancodeKeyControl(gf::Scancode::W);
+    addAction(mov_up);
+
+    mov_down.addScancodeKeyControl(gf::Scancode::S);
+    addAction(mov_down);
+
+    mov_right.addScancodeKeyControl(gf::Scancode::D);
+    addAction(mov_right);
+
+    mov_left.addKeycodeKeyControl(gf::Keycode::Q);
+    addAction(mov_left);
 
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
@@ -33,7 +46,7 @@ namespace rCMI
   void WorldScene::doHandleActions(gf::Window &window)
   {
     if (up.isActive())
-      m_hero.goUp(m_map);
+    m_hero.goUp(m_map);
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)

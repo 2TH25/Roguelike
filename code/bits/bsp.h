@@ -8,6 +8,8 @@
 #include <gf/Random.h>
 
 #include "DungeonGenerator.h"
+#include "Tile.h"
+#include "GameData.h"
 
 namespace rCMI {
 
@@ -33,7 +35,7 @@ namespace rCMI {
 
         bool split(gf::Random& random, int leafSizeMinimum); // méthode pour split
         void recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
-        void createRooms(gf::Random& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
+        void createRooms(gf::Random& random, int RoomMinSize, int RoomMaxSize); // création des salles
 
     };
 
@@ -43,8 +45,6 @@ namespace rCMI {
 
         int leafSizeMinimum = 10;
         int leafSizeMaximum = 24;
-        int roomSizeMinimum = 6;
-        int roomSizeMaximum = 15;
 
         Dungeon generate(gf::Vector2i size, gf::Random& random) override;
 
