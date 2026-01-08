@@ -14,7 +14,7 @@ namespace rCMI
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
-    setWorldViewCenter({0, 0});
+    setWorldViewCenter({view_size.x / 2, view_size.y / 2});
 
     addWorldEntity(m_map);
     addWorldEntity(m_hero);
