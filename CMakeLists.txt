@@ -19,6 +19,8 @@ add_executable(RogueCMI
   code/bits/RogueCMI.cc
   code/bits/WorldScene.cc
   code/bits/BaseScene.cc
+  code/bits/DungeonGenerator.cc
+  code/bits/bsp.cc
   code/bits/GameData.cc
 )
 

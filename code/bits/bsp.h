@@ -7,6 +7,8 @@
 #include <memory>
 #include <gf/Random.h>
 
+#include "DungeonGenerator.h"
+
 namespace rCMI {
 
     struct BSPTree{
@@ -29,10 +31,33 @@ namespace rCMI {
         int getWidth() const;
         int getHeight() const;
 
-        bool split(gf::RandomGenerator random, int leafSizeMinimum); // méthode pour split
-        void recursiveSplit(gf::RandomGenerator& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
-        void createRooms(gf::RandomGenerator& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
+        bool split(gf::Random& random, int leafSizeMinimum); // méthode pour split
+        void recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
+        void createRooms(gf::Random& random, int roomSizeMinimum, int roomSizeMaximum); // création des salles
 
+    };
+
+    class BSP : public DungeonGenerator {
+        public: 
+        BSP();
+
+        int leafSizeMinimum = 10;
+        int leafSizeMaximum = 24;
+        int roomSizeMinimum = 6;
+        int roomSizeMaximum = 15;
+
+        Dungeon generate(gf::Vector2i size, gf::Random& random) override;
+
+        private:
+        gf::Random m_savedRandom;
+        gf::Random m_random;
+        BSPTree m_root;
+        Dungeon m_dungeon;
+        void generateRooms(gf::Vector2i size);
+        void walkTree(const BSPTree& tree);
+        void createRoom(const gf::RectI& room);
+        void createHorizontalTunnel(int x1, int x2, int y);
+        void createVerticalTunnel(int x, int y1, int y2);
     };
 }
 
