@@ -17,8 +17,8 @@ namespace rCMI
   , tileLayer()
   {
     tilesetId = tileLayer.createTilesetId();
-    gf::Tileset &ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(game->resources.getTexture("tileSetTexture.jpg"));
+    gf::Tileset& ts = tileLayer.getTileset(tilesetId);
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
     ts.setTileSize({80, 80});
 
     generate_board(game);
