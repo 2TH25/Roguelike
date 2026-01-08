@@ -5,6 +5,7 @@
 #include <gf/Random.h>
 #include <gf/Vector.h>
 #include "Tile.h"
+#include "bsp.h"
 
 namespace rCMI {
 
@@ -29,7 +30,7 @@ namespace rCMI {
       m_phase = phase;
     }
 
-    virtual Dungeon generate(gf::Vector2i size, gf::Random& random) = 0;
+    virtual Dungeon generate(gf::Random& random) = 0;
 
   private:
     Phase m_phase;

@@ -15,7 +15,9 @@ namespace rCMI
 
   constexpr int RoomMaxSize = 10;
   constexpr int RoomMinSize = 6;
+  constexpr int MinRooms = 20;
   constexpr int MaxRooms = 30;
+  constexpr gf::Vector2i NumberRooms = {MinRooms,MaxRooms};
   constexpr int MaxMonstersPerRoom = 2;
 
   class Controls
