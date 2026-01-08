@@ -2,7 +2,7 @@
 
 namespace rCMI
 {
-  std::map<std::string, std::string> getControls()
+  std::map<std::string, std::string> Controls::getControls()
   {
     std::map<std::string, std::string> res { {"mov_up", "SDL_SCANCODE_Z"},
                                              {"mov_down", "SDL_SCANCODE_S"},

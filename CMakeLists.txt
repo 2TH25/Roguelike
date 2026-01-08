@@ -19,6 +19,7 @@ add_executable(RogueCMI
   code/bits/RogueCMI.cc
   code/bits/WorldScene.cc
   code/bits/BaseScene.cc
+  code/bits/GameData.cc
 )
 
 target_include_directories(RogueCMI

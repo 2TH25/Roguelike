@@ -44,7 +44,7 @@ namespace rCMI
   gf::ActionContainer WorldScene::getActions()
   {
     gf::ActionContainer res;
-    std::map<std::string, std::string> controls;
+    std::map<std::string, std::string> controls = Controls::getControls();
 
     // for (const auto &[action_name, key_name] : controls)
     // {
