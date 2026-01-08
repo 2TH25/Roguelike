@@ -2,6 +2,7 @@
 #define MAP_H
 
 #include <gf/TileLayer.h>
+#include <gf/Tileset.h> 
 #include <gf/Texture.h>
 #include <vector>
 #include <gf/Random.h>
@@ -20,8 +21,6 @@ namespace rCMI
 
     std::vector<Character> &getCharacters() { return characters; }
     gf::Vector2i getSize() const { return size; }
-    void setSize(gf::Vector2i newSize) { size = newSize; }
-    void setCharacters(const std::vector<Character> &newCharacters) { characters = newCharacters; }
 
     Character &hero() { return characters.front(); }
 
@@ -31,21 +30,19 @@ namespace rCMI
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
     void update_tile_at(gf::Vector2i pos, TileType type);
 
-    void render(gf::RenderTarget &target, const gf::RenderStates &states);
+    void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
-    bool isVisible(gf::Vector2i position) const
-    {
-      return true;
-    }
-
+    bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
 
-    static Map generate_board(gf::Vector2i size, RogueCMI *game);
+    void generate_board(gf::Vector2i size);
 
   private:
     gf::Vector2i size;
     std::vector<Character> characters;
-    gf::TileLayer tileLayer;
+    gf::TileLayer tileLayer; 
+    std::size_t tilesetId;
+    std::vector<TileType> grid;
     RogueCMI *m_game = nullptr;
   };
 };

@@ -5,17 +5,46 @@
 #include <optional>
 #include <algorithm>
 #include <gf/Geometry.h>
-#include <gf/TileLayer.h>
-#include <gf/Tileset.h>
-
+#include <gf/TileLayer.h> 
 
 namespace rCMI {
+
 
   Map::Map(RogueCMI *game)
   : gf::Entity(0)
   , m_game(game)
-  {}
+  , tileLayer()
+  {
+      tilesetId = tileLayer.createTilesetId();
+      gf::Tileset& ts = tileLayer.getTileset(tilesetId);
+      ts.setTexture(game->resources.getTexture("test"));
+      ts.setTileSize({80, 80});
+  }
 
+  void Map::update_tile_at(gf::Vector2i pos, TileType type) {
+      grid[pos.y * size.x + pos.x] = type;
+      int tileIndex = (type == TileType::Wall) ? 1 : 0; 
+      tileLayer.setTile(pos, tilesetId, tileIndex);
+  }
+
+  void Map::generate_board(gf::Vector2i newSize) {
+    size = newSize;
+    grid.assign(size.x * size.y, TileType::Floor);
+    tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
+    tilesetId = tileLayer.createTilesetId();
+    gf::Tileset& ts = tileLayer.getTileset(tilesetId);
+    ts.setTexture(m_game->resources.getTexture("test"));
+    ts.setTileSize({80, 80});
+
+    for(int y = 0; y < size.y; ++y) {
+      for(int x = 0; x < size.x; ++x) { 
+        gf::Vector2i pos = {x, y};
+        TileType type = (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) 
+                        ? TileType::Wall : TileType::Floor;
+        update_tile_at(pos, type);
+      }
+    }
+  }
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target) {
       for (std::size_t i = 0; i < characters.size(); ++i) {
@@ -25,59 +54,30 @@ namespace rCMI {
   }
 
   bool Map::blocking_entity_at(gf::Vector2i target) {
+      if (target.x < 0 || target.y < 0 || target.x >= size.x || target.y >= size.y) {
+          return true; 
+      }
       if (grid[target.y * size.x + target.x] == TileType::Wall) {
         return true;
       }
-
       return target_character_at(target).has_value();
   }
 
-  void Map::update_tile_at(gf::Vector2i pos, TileType type) {
-      grid[pos.y * size.x + pos.x] = type;
-      int tileIndex = (type == TileType::Wall) ? 1 : 0;
-      tileLayer.setTile(pos, tilesetId, tileIndex);
-  }
-
   bool Map::isWalkable(gf::Vector2i position) const {
-
     if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y) {
         return false;
     }
-    std::size_t index = position.y * size.x + position.x;
-    return tiles[index].isWalkable();
-}
-
-  void Map::render([[maybe_unused]] gf::RenderTarget &target, [[maybe_unused]] const gf::RenderStates &states) {
-    for (auto& tile : getTiles()) {
-      tile.render(target);
-    }
+    return grid[position.y * size.x + position.x] == TileType::Floor;
   }
 
-  Map Map::generate_board(gf::Vector2i size, RogueCMI *game) {
-    Map map(game);
-
-    gf::TileMap tileMap(size);
-    gf::Texture tilesetTexture(map.m_game->resources.getTexture("test"));
-    gf::Tileset tileset(tilesetTexture, {80, 80});
-
-    for(int y = 0; y < size.y; ++y) {
-      for(int x = 0; x size.x; ++x) {
-        if(x ==0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
-          tileMap.setTile({x,y}, Wall);
-        } else {
-          tileMap.setTile({x,y}, Floor);
-        }
-      }
+  void Map::render(gf::RenderTarget &target, const gf::RenderStates &states) {
+    target.draw(tileLayer, states); 
+    
+    for (auto& character : characters) {
+        character.render(target, states);
     }
-
-    gf::TileLayer layer(tileset, tileMap);
-    map.tileLayer = layer;
-    return map;
+  }
 }
-
-
-
-
 
 
 
@@ -227,4 +227,4 @@ namespace rCMI {
   //   return map;
  // }
 
-}
+//}
