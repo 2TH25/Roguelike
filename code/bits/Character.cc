@@ -91,12 +91,15 @@ namespace rCMI {
     return Character(ex, st, tex);
   }
 
-  void Character::render([[maybe_unused]] gf::RenderTarget &target, [[maybe_unused]] const gf::RenderStates &states) {
+  void Character::render(gf::RenderTarget &target, const gf::RenderStates &states) {
     if (!texture) {
         return;
     }
+
     gf::Sprite sprite(*texture);
     gf::Vector2i gridPosition = existence.getPosition();
+    float tileSize = 80;
+    sprite.setPosition({ gridPosition.x * tileSize, gridPosition.y * tileSize });
     target.draw(sprite, states);
-  }
+}
 }
