@@ -11,8 +11,9 @@
 
 namespace rCMI {
 
-  Map::Map()
+  Map::Map(RogueCMI *game)
   : gf::Entity(0)
+  , m_game(game)
   {}
 
 
@@ -43,35 +44,23 @@ namespace rCMI {
     }
   }
 
-  Map Map::generate_board(gf::Vector2i size, const gf::Texture& floorTex, const gf::Texture& wallTex) {
-    Map map;
-    map.setSize(size);
-      
-    std::vector<rCMI::Tile> tmpTiles;
-      tmpTiles.reserve(size.x * size.y); 
+  Map Map::generate_board(gf::Vector2i size) {
 
-    for (int y = 0; y < size.y; ++y) {
-        for (int x = 0; x < size.x; ++x) {
-            rCMI::Tile tile;
-            TileType type = TileType::Floor;
-            
-            // Logique de positionnement
-            tile.setPosition({ (float)x * 80.0f, (float)y * 80.0f });
+    gf::TileMap tileMap(size);
+    gf::Texture tilesetTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    gf::Tileset tileset(tilesetTexture, {80, 80});
 
-            if (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
-                type = TileType::Wall;
-                tile.setTexture(wallTex);
-            } else {
-                tile.setTexture(floorTex);
-            }
-            
-            tmpTiles.push_back(tile);
+    for(int y = 0; y < size.y; ++y) {
+      for(int x = 0; x size.x; ++x) {
+        if(x ==0 || y == 0 || x == size.x - 1 || y == size.y - 1) {
+          tileMap.setTile({x,y}, Wall);
+        } else {
+          tileMap.setTile({x,y}, Floor);
         }
+      }
     }
 
-    map.setTiles(std::move(tmpTiles)); 
-    
-    return map;
+    gf::TileLayer layer(tileset, tileMap);
 }
 
 

@@ -9,11 +9,12 @@
 
 #include "Tile.h"
 #include "Character.h"
+#include "RogueCMI.h"
 
 namespace rCMI {
   class Map : public gf::Entity {
     public:
-    Map();
+    Map(RogueCMI *game);
     std::vector<Character>& getCharacters() { return characters; }
     gf::Vector2i getSize() const { return size; }
     std::size_t getTilesetId() const { return tilesetId; }
@@ -44,6 +45,7 @@ namespace rCMI {
     std::size_t tilesetId;
     std::vector<TileType>grid;
     gf::TileLayer tileLayer;
+    RogueCMI *m_game = nullptr;
 
   };
 
