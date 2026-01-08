@@ -54,6 +54,7 @@ namespace rCMI {
   }
 
   Map Map::generate_board(gf::Vector2i size) {
+    Map map;
 
     gf::TileMap tileMap(size);
     gf::Texture tilesetTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
@@ -70,6 +71,8 @@ namespace rCMI {
     }
 
     gf::TileLayer layer(tileset, tileMap);
+    map.tileLayer = layer;
+    return map;
 }
 
 
