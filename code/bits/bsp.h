@@ -8,6 +8,7 @@
 #include <gf/Random.h>
 
 #include "DungeonGenerator.h"
+#include "Tile.h"
 
 namespace rCMI {
 

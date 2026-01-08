@@ -16,7 +16,7 @@ namespace rCMI {
 
   class DungeonGenerator {
   public:
-    static constexpr float CellSize = 16.0f;
+    static constexpr float CellSize = 80.0f;
 
     enum class Phase {
       Start,
