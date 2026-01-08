@@ -28,19 +28,18 @@ namespace rCMI {
       tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
-  void Map::generate_board(gf::Vector2i newSize) {
-    size = newSize;
-    grid.assign(size.x * size.y, TileType::Floor);
-    tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
+  void Map::generate_board(RogueCMI *m_game) {
+    grid.assign(MapSize.x * MapSize.y, TileType::Floor);
+    tileLayer = gf::TileLayer::createOrthogonal(MapSize, {80, 80});
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset& ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(m_game->resources.getTexture("test"));
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
     ts.setTileSize({80, 80});
 
-    for(int y = 0; y < size.y; ++y) {
-      for(int x = 0; x < size.x; ++x) { 
+    for(int y = 0; y < MapSize.y; ++y) {
+      for(int x = 0; x < MapSize.x; ++x) { 
         gf::Vector2i pos = {x, y};
-        TileType type = (x == 0 || y == 0 || x == size.x - 1 || y == size.y - 1) 
+        TileType type = (x == 0 || y == 0 || x == MapSize.x - 1 || y == MapSize.y - 1) 
                         ? TileType::Wall : TileType::Floor;
         update_tile_at(pos, type);
       }
