@@ -52,6 +52,16 @@ namespace rCMI
         update_tile_at(pos, type);
       }
     }
+
+    characters.clear();
+    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
+        const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+    hero.setDeadTexture(textureMort);
+    
+    characters.push_back(hero);
+    characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
+    characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
+    characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
   }
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target)
@@ -90,13 +100,23 @@ namespace rCMI
     return grid[position.y * MapSize.x + position.x] == TileType::Floor;
   }
 
+  void Map::EnemyTurns()
+  {
+    for (std::size_t i = 1; i < characters.size(); ++i)
+    {
+       characters[i].doMove(*this);
+    }
+  }
+
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     target.draw(tileLayer, states);
 
-    for (auto &character : characters)
+    for (std::size_t i = 0; i < characters.size(); ++i)
     {
-      character.render(target, states);
+      if (characters[i].alive() || i == 0) {
+          characters[i].render(target, states);
+      }
     }
   }
 }
