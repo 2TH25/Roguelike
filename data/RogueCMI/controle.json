@@ -1,6 +1,6 @@
 {
-    "up": "SDL_SCANCODE_Z",
-    "down": "SDL_SCANCODE_S",
-    "right": "SDL_SCANCODE_D",
-    "left": "SDL_SCANCODE_Q"
+    "move_up": ["Z", "Up"],
+    "move_down": ["S", "Down"],
+    "move_right": ["D", "Right"],
+    "move_left": ["Q", "Left"]
 }

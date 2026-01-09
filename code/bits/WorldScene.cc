@@ -32,33 +32,37 @@ namespace rCMI
   }
 
   void WorldScene::doHandleActions(gf::Window &window)
-      {
-        Character& heroInMap = m_map.hero();
+  {
+    Character &heroInMap = m_map.hero();
 
-        bool playerMoved = false;
+    bool playerMoved = false;
 
-        if (Controls::isActiveAction("move_up", m_actions)) {
-          heroInMap.goUp(m_map);
-          playerMoved = true;
-        }
-        if (Controls::isActiveAction("move_down", m_actions)) {
-          heroInMap.goDown(m_map);
-          playerMoved = true;
-        }
-        if (Controls::isActiveAction("move_right", m_actions)) {
-          heroInMap.goRight(m_map);
-          playerMoved = true;
-        }
-        if (Controls::isActiveAction("move_left", m_actions)) {
-          heroInMap.goLeft(m_map);
-          playerMoved = true;
-        }
-
-        if (playerMoved) {
-            m_map.EnemyTurns();
-        }
+    if (Controls::isActiveAction("move_up", m_actions))
+    {
+      heroInMap.goUp(m_map);
+      playerMoved = true;
     }
-      
+    else if (Controls::isActiveAction("move_down", m_actions))
+    {
+      heroInMap.goDown(m_map);
+      playerMoved = true;
+    }
+    else if (Controls::isActiveAction("move_right", m_actions))
+    {
+      heroInMap.goRight(m_map);
+      playerMoved = true;
+    }
+    else if (Controls::isActiveAction("move_left", m_actions))
+    {
+      heroInMap.goLeft(m_map);
+      playerMoved = true;
+    }
+
+    if (playerMoved)
+    {
+      m_map.EnemyTurns();
+    }
+  }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
@@ -79,16 +83,19 @@ namespace rCMI
     // m_state.map.grid.compute_field_of_vision(m_state.map.hero().entity.position, 8, gf::Visibility::ShadowCast);
   }
 
-  std::vector<gf::Action*> WorldScene::getActions()
+  std::vector<gf::Action *> WorldScene::getActions()
   {
     auto controls = Controls::getControls();
-    std::vector<gf::Action*> res;
+    std::vector<gf::Action *> res;
     res.reserve(controls.size());
 
-    for (const auto &[action_name, key_name] : controls)
+    for (const auto &[action_name, key_name_tab] : controls)
     {
-      gf::Action* action = new gf::Action(action_name);
-      action->addKeycodeKeyControl(gf::Keyboard::getKeycodeFromName(key_name));
+      gf::Action *action = new gf::Action(action_name);
+      for (const auto key_name : key_name_tab)
+      {
+        action->addKeycodeKeyControl(gf::Keyboard::getKeycodeFromName(key_name));
+      }
       res.push_back(action);
     }
 

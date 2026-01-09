@@ -4,6 +4,7 @@
 
 #include <map>
 #include <set>
+#include <iostream>
 
 namespace rCMI
 {
@@ -27,7 +28,9 @@ namespace rCMI
   {
   public:
     static bool isActiveAction(std::string name, std::vector<gf::Action *> actions);
-    static std::map<std::string, const char *> getControls();
+    static std::map<std::string, std::set<const char *>> getControls();
     // static bool setControls(std::map<std::string, std::set<std::string>> newControls);
+  private:
+    static std::map<std::string, std::set<const char *>> save_actions;
   };
 }
