@@ -8,7 +8,35 @@
 
 namespace rCMI {
 
-  using Dungeon = gf::Array2D<TileType, int>;
+  struct Dungeon {
+    gf::Vector2i size;
+    std::vector<TileType> grid; // Le tableau qui stocke les murs et les sols
+
+    // Constructeur par défaut
+    Dungeon() = default;
+
+    // Constructeur qui initialise la grille avec un type par défaut (ex: Wall)
+    Dungeon(gf::Vector2i size, TileType type)
+    : size(size)
+    , grid(size.x * size.y, type)
+    {
+    }
+
+    // La méthode pour récupérer une tuile en sécurité
+    TileType getTile(gf::Vector2i pos) const {
+      if (pos.x >= 0 && pos.x < size.x && pos.y >= 0 && pos.y < size.y) {
+        return grid[pos.y * size.x + pos.x];
+      }
+      return TileType::Wall; // Par défaut si hors limite
+    }
+
+    // La méthode pour modifier une tuile
+    void setTile(gf::Vector2i pos, TileType type) {
+      if (pos.x >= 0 && pos.x < size.x && pos.y >= 0 && pos.y < size.y) {
+        grid[pos.y * size.x + pos.x] = type;
+      }
+    }
+  };
 
   class DungeonGenerator {
   public:

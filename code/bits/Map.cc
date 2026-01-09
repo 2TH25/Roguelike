@@ -56,7 +56,7 @@ namespace rCMI
     }
 
     characters.clear();
-    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
+    Character hero = Character::hero({10, 15}, m_game->resources.getTexture("perso70.png"));
         const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
     
@@ -144,10 +144,9 @@ namespace rCMI
         for (int x = 0; x < MapSize.x; ++x) {
             gf::Vector2i pos = {x, y};
 
-            TileType type = (x == 0 || y == 0 || x == MapSize.x - 1 || y == MapSize.y - 1)
-                            ? TileType::Wall
-                            : TileType::Floor;
+            TileType type = dungeon.getTile({x, y}); 
             
+
             update_tile_at(pos, type);
         }
     }
