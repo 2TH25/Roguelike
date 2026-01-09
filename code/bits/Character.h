@@ -16,6 +16,9 @@ namespace rCMI {
     void setAppearance(const gf::Texture& tex) {
         texture = &tex;
     }
+    void setDeadTexture(const gf::Texture& tex) {
+        deadTexture = &tex;
+    }
 
     void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
@@ -49,6 +52,7 @@ namespace rCMI {
       Stat stat;
       Comportment comportment;
       const gf::Texture* texture = nullptr;
+      const gf::Texture* deadTexture = nullptr;
   };
 }
 #endif // CHARACTER_H

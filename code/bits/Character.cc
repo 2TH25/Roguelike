@@ -53,8 +53,11 @@ namespace rCMI {
     existence.setCharacter(u'%'); 
     existence.setBlocksMovement(false);
     comportment.setVariant(std::monostate{});
-  }
 
+    if (deadTexture != nullptr) {
+        texture = deadTexture;
+    }
+  }
 
   Character Character::hero(gf::Vector2i position, const gf::Texture& tex) {
     Existence ex{ position, u'@', gf::Color::Blue, "Hero", true };

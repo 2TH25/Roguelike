@@ -45,6 +45,13 @@ namespace rCMI
     // addWorldEntity(m_slime);
     // addWorldEntity(m_skeleton);
     // addWorldEntity(m_zombie);
+
+
+    const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+
+    for (auto& character : m_map.getCharacters()) {
+        character.setDeadTexture(textureMort);
+    }
   }
 
   void WorldScene::doHandleActions(gf::Window &window)
@@ -64,7 +71,7 @@ namespace rCMI
   {
     setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
     // setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
-    // m_state.update();
+       // m_state.update();
     // update_field_of_view();
 
     // m_root_console.clear();
