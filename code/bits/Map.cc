@@ -177,11 +177,6 @@ namespace rCMI
     }
 
     characters.clear();
-    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
-    const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
-    hero.setDeadTexture(textureMort);
-    characters.push_back(hero);
-
 
     std::random_device rd;  
     std::mt19937 gen(rd()); 
@@ -189,6 +184,21 @@ namespace rCMI
     std::uniform_int_distribution<> dist_y(0, MapSize.y - 1);
     std::uniform_int_distribution<> dist_type(1, 100);
 
+    gf::Vector2i pos_aleatoire_hero;
+
+
+    do {
+        pos_aleatoire_hero.x = dist_x(gen);
+        pos_aleatoire_hero.y = dist_y(gen);
+      } while (!isWalkable(pos_aleatoire_hero));
+
+    Character hero = Character::hero({pos_aleatoire_hero.x, pos_aleatoire_hero.y}, m_game->resources.getTexture("perso70.png"));
+    const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+    hero.setDeadTexture(textureMort);
+    characters.push_back(hero);
+
+
+    
 
     for(int i =0; i< MaxMonstersMin; i++) {
       gf::Vector2i pos_aleatoire;
