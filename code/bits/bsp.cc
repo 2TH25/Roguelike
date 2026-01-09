@@ -1,6 +1,7 @@
 // code basique aidé du github de gf, intitulé : "DungeonGenerator_BinarySpacePartitioning.cc"
 
 #include "bsp.h"
+#include "GameData.h"
 #include <gf/Rect.h>
 #include <gf/Random.h>
 #include <cassert>
@@ -121,14 +122,14 @@ namespace rCMI {
     {
     }
 
-    Dungeon BSP::generate(gf::Vector2i size, gf::Random& random) {
+    Dungeon BSP::generate(gf::Random& random) {
     switch (getPhase()) {
       case Phase::Start:
         m_savedRandom = random;
         // fallthrough
       case Phase::Iterate:
         m_random = m_savedRandom;
-        generateRooms(size);
+        generateRooms();
         // fallthrough
       case Phase::Finish:
         random = m_random;
@@ -139,10 +140,10 @@ namespace rCMI {
     return m_dungeon;
   }
 
-  void BSP::generateRooms(gf::Vector2i size) {
-    m_dungeon = Dungeon(size, TileType::Wall);
+  void BSP::generateRooms() {
+    m_dungeon = Dungeon(NumberRooms, TileType::Wall);
 
-    m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, size);
+    m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, NumberRooms);
     m_root.left = nullptr;
     m_root.right = nullptr;
 

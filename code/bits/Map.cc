@@ -1,6 +1,7 @@
 #include "Map.h"
 #include "Tile.h"
 #include "RogueCMI.h"
+#include "DungeonGenerator.h"
 
 #include <cassert>
 #include <optional>
