@@ -145,21 +145,45 @@ namespace rCMI
             gf::Vector2i pos = {x, y};
 
             TileType type = dungeon.getTile({x, y}); 
-            
 
-            update_tile_at(pos, type);
+            if (type == TileType::Wall) {
+
+                bool touchesFloor = false;
+                for (int dy = -1; dy <= 1; ++dy) {
+                    for (int dx = -1; dx <= 1; ++dx) {
+                        if (dx == 0 && dy == 0) continue;
+                        if (dungeon.getTile(pos + gf::Vector2i{dx, dy}) == TileType::Floor) {
+                            touchesFloor = true;
+                            break;
+                        }
+                    }
+                    if (touchesFloor) {
+                      break;
+                    }
+                }
+
+                if (touchesFloor) {
+                    update_tile_at(pos, TileType::Wall);
+                } else {
+                    grid[y * MapSize.x + x] = TileType::Wall;
+                    tileLayer.setTile(pos, tilesetId, -1); // -1 pour cacher la tuile
+                }
+            } else {
+                update_tile_at(pos, TileType::Floor);
+            }
         }
     }
 
     characters.clear();
     Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
-        const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+    const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
-    
     characters.push_back(hero);
     characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
     characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
     characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
 
   }
+
+
 }

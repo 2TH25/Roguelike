@@ -6,7 +6,7 @@
 
 namespace rCMI
 {
-  constexpr gf::Vector2i view_size = {1200, 800};
+  constexpr gf::Vector2i view_size = {12000, 8000};
   constexpr gf::Vector2i MapSize = {100, 100};
   constexpr int TileSize = 80;
 
