@@ -182,7 +182,7 @@ namespace rCMI
     characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
     characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
     characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
-
+  
   }
 
 

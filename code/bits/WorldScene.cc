@@ -32,17 +32,33 @@ namespace rCMI
   }
 
   void WorldScene::doHandleActions(gf::Window &window)
-  {
-    Character &heroInMap = m_map.hero();
-    if (Controls::isActiveAction("mov_up", m_actions))
-      heroInMap.goUp(m_map);
-    if (Controls::isActiveAction("mov_down", m_actions))
-      heroInMap.goDown(m_map);
-    if (Controls::isActiveAction("mov_right", m_actions))
-      heroInMap.goRight(m_map);
-    if (Controls::isActiveAction("mov_left", m_actions))
-      heroInMap.goLeft(m_map);
-  }
+      {
+        Character& heroInMap = m_map.hero();
+
+        bool playerMoved = false;
+
+        if (Controls::isActiveAction("move_up", m_actions)) {
+          heroInMap.goUp(m_map);
+          playerMoved = true;
+        }
+        if (Controls::isActiveAction("move_down", m_actions)) {
+          heroInMap.goDown(m_map);
+          playerMoved = true;
+        }
+        if (Controls::isActiveAction("move_right", m_actions)) {
+          heroInMap.goRight(m_map);
+          playerMoved = true;
+        }
+        if (Controls::isActiveAction("move_left", m_actions)) {
+          heroInMap.goLeft(m_map);
+          playerMoved = true;
+        }
+
+        if (playerMoved) {
+            m_map.EnemyTurns();
+        }
+    }
+      
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
