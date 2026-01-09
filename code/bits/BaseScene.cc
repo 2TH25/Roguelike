@@ -8,8 +8,8 @@ namespace rCMI
   : gf::Scene({0, 0})
   , fullscreen("fullscreen")
   {
-    fullscreen.addScancodeKeyControl(gf::Scancode::F11);
-    fullscreen.addScancodeKeyControl(gf::Scancode::F);
+    fullscreen.addKeycodeKeyControl(gf::Keycode::F11);
+    fullscreen.addKeycodeKeyControl(gf::Keycode::F);
     addAction(fullscreen);
   }
 
