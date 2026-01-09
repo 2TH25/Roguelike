@@ -35,25 +35,31 @@ namespace rCMI
     mov_left.addKeycodeKeyControl(gf::Keycode::Q);
     addAction(mov_left);
 
+    m_map.getCharacters().push_back(m_hero); 
+    m_map.getCharacters().push_back(m_slime);
+    m_map.getCharacters().push_back(m_skeleton);
+    m_map.getCharacters().push_back(m_zombie);
+
     addWorldEntity(m_map);
-    addWorldEntity(m_hero);
-    addWorldEntity(m_slime);
-    addWorldEntity(m_skeleton);
-    addWorldEntity(m_zombie);
+    // addWorldEntity(m_hero);
+    // addWorldEntity(m_slime);
+    // addWorldEntity(m_skeleton);
+    // addWorldEntity(m_zombie);
   }
 
   void WorldScene::doHandleActions(gf::Window &window)
-  {
-    if (mov_up.isActive())
-      m_hero.goUp(m_map);
-    else if (mov_down.isActive())
-      m_hero.goDown(m_map);
-    else if (mov_right.isActive())
-      m_hero.goRight(m_map);
-    else if (mov_left.isActive())
-      m_hero.goLeft(m_map);
-  }
+{
+  Character& heroInMap = m_map.hero(); 
 
+  if (mov_up.isActive())
+    heroInMap.goUp(m_map);
+  else if (mov_down.isActive())
+    heroInMap.goDown(m_map);
+  else if (mov_right.isActive())
+    heroInMap.goRight(m_map);
+  else if (mov_left.isActive())
+    heroInMap.goLeft(m_map);
+}
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     setWorldViewCenter(m_hero.getExistence().getPosition() * 80);

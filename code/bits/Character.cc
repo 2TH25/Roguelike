@@ -1,5 +1,6 @@
 #include "Character.h"
 #include "Map.h"
+#include "Actions.h"
 #include <algorithm>
 
 namespace rCMI {
@@ -11,40 +12,31 @@ namespace rCMI {
   {
   }
 
-  void Character::goUp(const Map& map) {
+  void Character::goUp(Map& map) { 
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x, current.y - 1 };
-
-      if (map.isWalkable(target)) {
-          existence.setPosition(target);
-      }
+      bump(map, *this, target); 
   }
 
-  void Character::goDown(const Map& map) {
+  void Character::goDown(Map& map) {
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x, current.y + 1 };
-
-      if (map.isWalkable(target)) {
-          existence.setPosition(target);
-      }
+      
+      bump(map, *this, target);
   }
 
-  void Character::goLeft(const Map& map) {
+  void Character::goLeft(Map& map) { 
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x - 1, current.y };
-
-      if (map.isWalkable(target)) {
-          existence.setPosition(target);
-      }
+      
+      bump(map, *this, target);
   }
 
-  void Character::goRight(const Map& map) {
+  void Character::goRight(Map& map) { 
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x + 1, current.y };
-
-      if (map.isWalkable(target)) {
-          existence.setPosition(target);
-      }
+      
+      bump(map, *this, target);
   }
 
   void Character::take_damage(int damage) {
@@ -73,24 +65,31 @@ namespace rCMI {
   Character Character::skeleton(gf::Vector2i position, const gf::Texture& tex) {
     Existence ex{ position, u'S', gf::Color::White, "Skeleton", true };
     Stat st(50, 2, 6);
-    Comportment comp(Comportment::hostile());
-    return Character(ex, st, tex);
+    Comportment comp(Comportment::hostile());    
+    Character c(ex, st, tex);
+    c.setComportment(comp);
+    return c;
   }
 
   Character Character::zombie(gf::Vector2i position, const gf::Texture& tex) {
-    Existence ex{ position, u'Z', gf::Color::Orange, "Zombie", true };
-    Stat st(30, 1, 4);
-    Comportment comp(Comportment::hostile());
-    return Character(ex, st, tex);
+      Existence ex{ position, u'Z', gf::Color::Orange, "Zombie", true };
+      Stat st(30, 1, 4);
+      Comportment comp(Comportment::hostile());
+      
+      Character c(ex, st, tex);
+      c.setComportment(comp); 
+      return c;
   }
 
   Character Character::slime(gf::Vector2i position, const gf::Texture& tex) {
-    Existence ex{ position, u's', gf::Color::Green, "Slime", true };
-    Stat st(10, 0, 2);
-    Comportment comp(Comportment::hostile());
-    return Character(ex, st, tex);
-  }
+      Existence ex{ position, u's', gf::Color::Green, "Slime", true };
+      Stat st(10, 0, 2);
+      Comportment comp(Comportment::hostile());
 
+      Character c(ex, st, tex);
+      c.setComportment(comp); 
+      return c;
+  }
   void Character::render(gf::RenderTarget &target, const gf::RenderStates &states) {
     if (!texture) {
         return;

@@ -34,10 +34,10 @@ namespace rCMI {
     void take_damage(int damage);
     void die();
 
-    void goUp(const Map& map);
-    void goDown(const Map& map);
-    void goLeft(const Map& map);
-    void goRight(const Map& map);
+    void goUp(Map& map);
+    void goDown(Map& map);
+    void goLeft(Map& map);
+    void goRight(Map& map);
 
     static Character hero(gf::Vector2i position, const gf::Texture& tex);
     static Character skeleton(gf::Vector2i position, const gf::Texture& tex);

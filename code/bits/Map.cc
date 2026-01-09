@@ -57,8 +57,10 @@ namespace rCMI
   {
     for (std::size_t i = 0; i < characters.size(); ++i)
     {
-      if (characters[i].getExistence().getPosition() == target)
+      if (characters[i].getExistence().getPosition() == target && characters[i].alive())
+      {
         return i;
+      }
     }
     return std::nullopt;
   }
@@ -69,10 +71,12 @@ namespace rCMI
     {
       return true;
     }
+    
     if (grid[target.y * MapSize.x + target.x] == TileType::Wall)
     {
       return true;
     }
+
     return target_character_at(target).has_value();
   }
 
