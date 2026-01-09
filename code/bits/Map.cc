@@ -9,6 +9,8 @@
 #include <algorithm>
 #include <gf/Geometry.h>
 #include <gf/TileLayer.h>
+#include <random>
+#include <iostream>
 
 namespace rCMI
 {
@@ -57,13 +59,13 @@ namespace rCMI
 
     characters.clear();
     Character hero = Character::hero({10, 15}, m_game->resources.getTexture("perso70.png"));
-        const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+    const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
-    
     characters.push_back(hero);
     characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
-    characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
-    characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
+    characters.push_back(Character::zombie({2,6}, m_game->resources.getTexture("squelette.png")));
+    characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("zombie.png")));
+    
   }
 
   std::optional<std::size_t> Map::target_character_at(gf::Vector2i target)
@@ -179,9 +181,34 @@ namespace rCMI
     const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
     characters.push_back(hero);
-    characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
-    characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
-    characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
+
+
+    std::random_device rd;  
+    std::mt19937 gen(rd()); 
+    std::uniform_int_distribution<> dist_x(0, MapSize.x - 1);
+    std::uniform_int_distribution<> dist_y(0, MapSize.y - 1);
+    std::uniform_int_distribution<> dist_type(1, 100);
+
+
+    for(int i =0; i< MaxMonstersMin; i++) {
+      gf::Vector2i pos_aleatoire;
+
+      do {
+        pos_aleatoire.x = dist_x(gen);
+        pos_aleatoire.y = dist_y(gen);
+      } while (!isWalkable(pos_aleatoire));
+
+      int nombre_aleatoire = dist_type(gen);
+      if(nombre_aleatoire <=60) { // 60% de chance
+        characters.push_back(Character::slime({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("slime.png")));
+      }
+      else if(nombre_aleatoire <=85) { // 25% de chance
+        characters.push_back(Character::zombie({pos_aleatoire.x,pos_aleatoire.y}, m_game->resources.getTexture("zombie.png")));
+      }
+      else { // 15% de chance
+        characters.push_back(Character::skeleton({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("squelette.png")));
+      }
+    }
   
   }
 
