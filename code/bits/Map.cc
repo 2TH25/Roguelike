@@ -28,6 +28,7 @@ namespace rCMI
 
   void Map::update_tile_at(gf::Vector2i pos, TileType type)
   {
+    if (pos.x < 0 || pos.y < 0 || pos.x >= MapSize.x || pos.y >= MapSize.y) return;
     grid[pos.y * MapSize.x + pos.x] = type;
     int tileIndex = (type == TileType::Wall) ? 1 : 0;
     tileLayer.setTile(pos, tilesetId, tileIndex);
@@ -150,5 +151,16 @@ namespace rCMI
             update_tile_at(pos, type);
         }
     }
+
+    characters.clear();
+    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
+        const gf::Texture& textureMort = m_game->resources.getTexture("mort.png");
+    hero.setDeadTexture(textureMort);
+    
+    characters.push_back(hero);
+    characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
+    characters.push_back(Character::skeleton({6,7}, m_game->resources.getTexture("squelette.png")));
+    characters.push_back(Character::zombie({8, 2}, m_game->resources.getTexture("zombie.png")));
+
   }
 }
