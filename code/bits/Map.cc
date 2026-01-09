@@ -2,6 +2,7 @@
 #include "Tile.h"
 #include "RogueCMI.h"
 #include "DungeonGenerator.h"
+#include "bsp.h"
 
 #include <cassert>
 #include <optional>
@@ -22,7 +23,7 @@ namespace rCMI
     ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
     ts.setTileSize({80, 80});
 
-    generate_board(game);
+    generate_dungeon(game);
   }
 
   void Map::update_tile_at(gf::Vector2i pos, TileType type)
@@ -97,6 +98,37 @@ namespace rCMI
     for (auto &character : characters)
     {
       character.render(target, states);
+    }
+  }
+
+
+
+
+
+  void Map::generate_dungeon(RogueCMI *m_game) {
+
+    tileLayer = gf::TileLayer::createOrthogonal(MapSize, {80, 80});
+    tilesetId = tileLayer.createTilesetId();
+    gf::Tileset &ts = tileLayer.getTileset(tilesetId);
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    ts.setTileSize({80, 80});
+
+    rCMI::BSP generator;
+    
+    Dungeon dungeon = generator.generate(m_game->random);
+
+    grid.assign(MapSize.x * MapSize.y, TileType::Wall); // On remplit de murs par défaut
+
+    for (int y = 0; y < MapSize.y; ++y) {
+        for (int x = 0; x < MapSize.x; ++x) {
+            gf::Vector2i pos = {x, y};
+
+            TileType type = (x == 0 || y == 0 || x == MapSize.x - 1 || y == MapSize.y - 1)
+                            ? TileType::Wall
+                            : TileType::Floor;
+            
+            update_tile_at(pos, type);
+        }
     }
   }
 }

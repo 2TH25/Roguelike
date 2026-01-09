@@ -14,7 +14,7 @@ namespace rCMI
   {
   public:
     RogueCMI();
-
+    gf::Random random;
   private:
     BaseScene m_BaseScene;
     WorldScene m_WorldScene;

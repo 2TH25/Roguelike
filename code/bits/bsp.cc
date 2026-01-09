@@ -1,10 +1,10 @@
 // code basique aidé du github de gf, intitulé : "DungeonGenerator_BinarySpacePartitioning.cc"
 
 #include "bsp.h"
-#include "GameData.h"
 #include <gf/Rect.h>
 #include <gf/Random.h>
 #include <cassert>
+#include "GameData.h"
 
 namespace rCMI {
     BSPTree::BSPTree(gf::RectI initialSpace) { // constructeur du BSPTree
@@ -24,7 +24,7 @@ namespace rCMI {
 
 
 
-    bool BSPTree::split(gf::Random& random, int leafSizeMinimum) { // méthode split
+    bool BSPTree::split(gf::Random& random) { // méthode split
         if(left||right) { // si le noeud en question a déjà un fils gauche ou droite, alors on ne peut pas le split
             return false; // on renvoie faux
         }
@@ -71,30 +71,30 @@ namespace rCMI {
         return true;
     }
 
-    void BSPTree::recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum) { // on va appeler récursivement la méthode split 
+    void BSPTree::recursiveSplit(gf::Random& random) { // on va appeler récursivement la méthode split 
         assert(!left && !right);
         assert(leafSizeMinimum <= leafSizeMaximum);
 
         if(space.getWidth() > leafSizeMaximum || space.getHeight() > leafSizeMaximum || random.computeBernoulli(0.2)) { // si notre rectangle que l'on visite est trop grand alors on le split
-            if(split(random, leafSizeMinimum)) { // appel du split
+            if(split(random)) { // appel du split
                 assert(left);
-                left->recursiveSplit(random,leafSizeMinimum,leafSizeMaximum);
+                left->recursiveSplit(random);
                 assert(right);
-                right->recursiveSplit(random,leafSizeMinimum,leafSizeMaximum);
+                right->recursiveSplit(random);
                 // et ensuite appel du split sur les enfants
             }
         }
     }
 
-    void BSPTree::createRooms(gf::Random& random, int roomSizeMinimum, int roomSizeMaximum) {
-        assert(roomSizeMinimum <= roomSizeMaximum);
+    void BSPTree::createRooms(gf::Random& random) {
+        assert(RoomMinSize <= RoomMaxSize);
 
         if(left || right) {
             assert(left && right);
 
             //appel récursif sur les enfants
-            left->createRooms(random,roomSizeMinimum,roomSizeMaximum);
-            right->createRooms(random,roomSizeMinimum,roomSizeMaximum);
+            left->createRooms(random);
+            right->createRooms(random);
 
             if (random.computeBernoulli(0.5)) { //on garde l'information d'une des salles de nos 2 enfants
                 room = left->room;
@@ -102,12 +102,12 @@ namespace rCMI {
                 room = right->room;
             }
         } else { //sinon, vu qu'on est sur une feuille
-            assert(roomSizeMinimum <= std::min(roomSizeMaximum, space.getWidth() - 1));
-            assert(roomSizeMinimum <= std::min(roomSizeMaximum, space.getHeight() - 1)); // on vérifie que les dimensions soient bonnes
+            assert(RoomMinSize <= std::min(RoomMaxSize, space.getWidth() - 1));
+            assert(RoomMinSize <= std::min(RoomMaxSize, space.getHeight() - 1)); // on vérifie que les dimensions soient bonnes
 
             gf::Vector2i position, size; // on créer un vecteur
-            size.width = random.computeUniformInteger(roomSizeMinimum,std::min(roomSizeMaximum, space.getWidth() - 1));
-            size.height = random.computeUniformInteger(roomSizeMinimum,std::min(roomSizeMaximum, space.getHeight() - 1));
+            size.width = random.computeUniformInteger(RoomMinSize,std::min(RoomMaxSize, space.getWidth() - 1));
+            size.height = random.computeUniformInteger(RoomMinSize,std::min(RoomMaxSize, space.getHeight() - 1));
             position.x = random.computeUniformInteger(0,space.getWidth() - size.width - 1);
             position.y = random.computeUniformInteger(0,space.getHeight() - size.height - 1); // de manière random on définit la taille et la position de la salle dans l'espace qu'on lui décrit comme disponible
             position += space.getPosition(); // on oublie pas de prendre en compte tout le plateau pour définir la position pas de façon absolue, mais relative au plateau
@@ -141,14 +141,14 @@ namespace rCMI {
   }
 
   void BSP::generateRooms() {
-    m_dungeon = Dungeon(NumberRooms, TileType::Wall);
+    m_dungeon = Dungeon(MapSize, TileType::Wall);
 
-    m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, NumberRooms);
+    m_root.space = gf::RectI::fromPositionSize({ 0, 0 }, MapSize);
     m_root.left = nullptr;
     m_root.right = nullptr;
 
-    m_root.recursiveSplit(m_random, leafSizeMinimum, leafSizeMaximum);
-    m_root.createRooms(m_random, RoomMinSize, RoomMaxSize);
+    m_root.recursiveSplit(m_random);
+    m_root.createRooms(m_random);
     walkTree(m_root);
   }
 

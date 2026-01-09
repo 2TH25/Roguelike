@@ -9,7 +9,6 @@
 
 #include "DungeonGenerator.h"
 #include "Tile.h"
-#include "GameData.h"
 
 namespace rCMI {
 
@@ -33,9 +32,9 @@ namespace rCMI {
         int getWidth() const;
         int getHeight() const;
 
-        bool split(gf::Random& random, int leafSizeMinimum); // méthode pour split
-        void recursiveSplit(gf::Random& random, int leafSizeMinimum, int leafSizeMaximum); // split récursif
-        void createRooms(gf::Random& random, int RoomMinSize, int RoomMaxSize); // création des salles
+        bool split(gf::Random& random); // méthode pour split
+        void recursiveSplit(gf::Random& random); // split récursif
+        void createRooms(gf::Random& random); // création des salles
 
     };
 

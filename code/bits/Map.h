@@ -37,6 +37,7 @@ namespace rCMI
     bool isWalkable(gf::Vector2i position) const;
 
     void generate_board(RogueCMI *m_game);
+    void generate_dungeon(RogueCMI *m_game);
 
   private:
     gf::Vector2i size;
