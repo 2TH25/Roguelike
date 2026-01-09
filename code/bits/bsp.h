@@ -9,7 +9,7 @@
 
 #include "DungeonGenerator.h"
 #include "Tile.h"
-#include "GameData.h"
+// #include "GameData.h"
 
 namespace rCMI {
 

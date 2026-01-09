@@ -5,7 +5,6 @@
 #include <gf/Random.h>
 #include <gf/Vector.h>
 #include "Tile.h"
-#include "bsp.h"
 
 namespace rCMI {
 
