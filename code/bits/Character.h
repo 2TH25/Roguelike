@@ -7,6 +7,8 @@
 #include <gf/Entity.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
+#include <gf/Random.h>
+
 namespace rCMI {
   class Character : public gf::Entity {
   public:
@@ -22,6 +24,7 @@ namespace rCMI {
 
     void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
+    void doMove(Map& map);
     Existence& getExistence() { return existence; }
     Stat& getStat() { return stat; }
     Comportment& getComportment() { return comportment; }

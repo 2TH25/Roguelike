@@ -39,6 +39,29 @@ namespace rCMI {
       bump(map, *this, target);
   }
 
+  void Character::doMove(Map& map) {
+      if (!alive()) return;
+
+      static gf::Random random; 
+      int choice = random.computeUniformInteger(0, 3);
+      
+      gf::Vector2i current = existence.getPosition();
+      gf::Vector2i target = current;
+
+      switch (choice) {
+          case 0: target.y -= 1; break;
+          case 1: target.y += 1; break;
+          case 2: target.x -= 1; break;
+          case 3: target.x += 1; break;
+      }
+      auto targetEntity = map.target_character_at(target);
+    
+      if (targetEntity.has_value() || !map.isWalkable(target)) {
+          return;
+      }
+      bump(map, *this, target);
+  }
+
   void Character::take_damage(int damage) {
     int final_damage = std::max(0, damage - stat.getDefense());
     stat.setHealth(stat.getHealth() - final_damage);
