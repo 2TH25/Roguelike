@@ -1,7 +1,7 @@
 #include "Comportment.h"
 #include <algorithm>
 #include <gf/Vector.h>
-#include <gf/VectorOps.h>
+#include <gf/VectorOps.h> 
 
 #include "Actions.h"
 #include "Character.h"
@@ -10,26 +10,32 @@
 namespace rCMI {
 
   bool HostileEnnemy::perform(Character& self, Map& map) {
-    auto target = map.hero().getExistence().getPosition(); 
-    
-    auto distance = 42;//gf::chebyshev_distance(self.getExistence().getPosition(), target);
 
-    if (map.isVisible(self.getExistence().getPosition())) {
-      if (distance <= 1) {
-        return melee(map, self, target);
+      auto targetPos = map.hero().getExistence().getPosition(); 
+      auto selfPos = self.getExistence().getPosition();
+
+      int distance = gf::chebyshevDistance(selfPos, targetPos);
+
+      if (distance > 10) {
+          return false; 
       }
 
-      path = map.compute_path(self.getExistence().getPosition(), target);
-      std::reverse(path.begin(), path.end());
-    }
+    
+      if (distance <= 1) {
+        return melee(map, self, targetPos);
+      }
 
-    if (!path.empty()) {
-      target = path.back();
-      path.pop_back();
+      if (map.isVisible(selfPos)) {
+        path = map.compute_path(selfPos, targetPos);
+        std::reverse(path.begin(), path.end());
+      }
 
-      return movement(map, self, target);
-    }
+      if (!path.empty()) {
+        auto nextStep = path.back();
+        path.pop_back();
+        return bump(map, self, nextStep);
+      }
 
-    return true;
+      return true; 
   }
 }

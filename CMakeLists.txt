@@ -16,6 +16,7 @@ add_executable(RogueCMI
   code/main.cc
   code/bits/Map.cc
   code/bits/Character.cc
+  code/bits/Comportment.cc
   code/bits/Actions.cc
   code/bits/RogueCMI.cc
   code/bits/WorldScene.cc

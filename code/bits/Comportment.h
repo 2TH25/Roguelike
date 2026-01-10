@@ -30,7 +30,7 @@ namespace rCMI {
       return std::visit([&](auto&& comportement) {
         using T = std::decay_t<decltype(comportement)>;
         if constexpr (std::is_same_v<T, std::monostate>) {
-          return true;
+          return false;
         } else {
           return comportement.perform(self, map);
         }

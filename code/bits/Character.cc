@@ -13,12 +13,14 @@ namespace rCMI {
   }
 
   void Character::goUp(Map& map) { 
-      gf::Vector2i current = existence.getPosition();
-      gf::Vector2i target = { current.x, current.y - 1 };
-      bump(map, *this, target); 
+    if (!alive()) return;
+    gf::Vector2i current = existence.getPosition();
+    gf::Vector2i target = { current.x, current.y - 1 };
+    bump(map, *this, target); 
   }
 
   void Character::goDown(Map& map) {
+      if (!alive()) return;
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x, current.y + 1 };
       
@@ -26,6 +28,7 @@ namespace rCMI {
   }
 
   void Character::goLeft(Map& map) { 
+    if (!alive()) return;
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x - 1, current.y };
       
@@ -33,34 +36,36 @@ namespace rCMI {
   }
 
   void Character::goRight(Map& map) { 
+    if (!alive()) return;
       gf::Vector2i current = existence.getPosition();
       gf::Vector2i target = { current.x + 1, current.y };
       
       bump(map, *this, target);
   }
 
-  void Character::doMove(Map& map) {
-      if (!alive()) return;
+void Character::doMove(Map& map) {
+    if (!alive()) return;
 
-      static gf::Random random; 
-      int choice = random.computeUniformInteger(0, 3);
-      
-      gf::Vector2i current = existence.getPosition();
-      gf::Vector2i target = current;
-
-      switch (choice) {
-          case 0: target.y -= 1; break;
-          case 1: target.y += 1; break;
-          case 2: target.x -= 1; break;
-          case 3: target.x += 1; break;
-      }
-      auto targetEntity = map.target_character_at(target);
+    if (comportment.perform(*this, map)) {
+        return;
+    }
+    static gf::Random random; 
+    int choice = random.computeUniformInteger(0, 3);
     
-      if (targetEntity.has_value() || !map.isWalkable(target)) {
-          return;
-      }
-      bump(map, *this, target);
-  }
+    gf::Vector2i current = existence.getPosition();
+    gf::Vector2i target = current;
+
+    switch (choice) {
+        case 0: target.y -= 1; break;
+        case 1: target.y += 1; break;
+        case 2: target.x -= 1; break;
+        case 3: target.x += 1; break;
+    }
+    if (map.isWalkable(target)) {
+        bump(map, *this, target);
+    }
+}
+
 
   void Character::take_damage(int damage) {
     int final_damage = std::max(0, damage - stat.getDefense());
@@ -90,7 +95,7 @@ namespace rCMI {
 
   Character Character::skeleton(gf::Vector2i position, const gf::Texture& tex) {
     Existence ex{ position, u'S', gf::Color::White, "Skeleton", true };
-    Stat st(50, 2, 6);
+    Stat st(50, 2, 100);
     Comportment comp(Comportment::hostile());    
     Character c(ex, st, tex);
     c.setComportment(comp);
@@ -99,7 +104,7 @@ namespace rCMI {
 
   Character Character::zombie(gf::Vector2i position, const gf::Texture& tex) {
       Existence ex{ position, u'Z', gf::Color::Orange, "Zombie", true };
-      Stat st(30, 1, 4);
+      Stat st(30, 1, 100);
       Comportment comp(Comportment::hostile());
       
       Character c(ex, st, tex);

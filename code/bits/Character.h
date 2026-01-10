@@ -34,7 +34,7 @@ namespace rCMI {
 
 
     bool alive() const {
-      return comportment.getVariant().index() != 0 && stat.getHealth() > 0;
+      return stat.getHealth() > 0;
     }
 
     void take_damage(int damage);

@@ -23,6 +23,9 @@ namespace rCMI {
   if (map.blocking_entity_at(target)) {
     return false; 
   }
+  if (&character != &map.hero() && target == map.hero().getExistence().getPosition()) {
+      return false; 
+    }
 
   character.getExistence().setPosition(target);
   return true;

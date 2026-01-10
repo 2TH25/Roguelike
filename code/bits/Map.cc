@@ -4,6 +4,8 @@
 #include "DungeonGenerator.h"
 #include "bsp.h"
 
+#include <queue>
+#include <map>
 #include <cassert>
 #include <optional>
 #include <algorithm>
@@ -125,9 +127,6 @@ namespace rCMI
   }
 
 
-
-
-
   void Map::generate_dungeon(RogueCMI *m_game) {
 
     tileLayer = gf::TileLayer::createOrthogonal(MapSize, {80, 80});
@@ -223,4 +222,56 @@ namespace rCMI
   }
 
 
-}
+
+
+  struct VectorCompare {
+      bool operator()(const gf::Vector2i& a, const gf::Vector2i& b) const {
+          if (a.x != b.x) return a.x < b.x;
+          return a.y < b.y;
+      }
+  };
+
+  std::vector<gf::Vector2i> Map::compute_path(gf::Vector2i origin, gf::Vector2i target){
+      std::queue<gf::Vector2i> frontier;
+      frontier.push(origin);
+
+      std::map<gf::Vector2i, gf::Vector2i, VectorCompare> came_from;
+      came_from[origin] = origin; 
+      gf::Vector2i directions[] = { {0, -1}, {0, 1}, {-1, 0}, {1, 0} };
+
+      while (!frontier.empty()) {
+          gf::Vector2i current = frontier.front();
+          frontier.pop();
+          if (current == target) {
+              break; 
+          }
+
+          for (auto& dir : directions) {
+              gf::Vector2i next = current + dir;
+
+              if (came_from.find(next) == came_from.end()) {
+                  
+                  if (isWalkable(next) || next == target) {
+                      frontier.push(next);
+                      came_from[next] = current;
+                  }
+              }
+          }
+      }
+      std::vector<gf::Vector2i> path;
+      
+      if (came_from.find(target) == came_from.end()) {
+          return path; 
+      }
+
+      gf::Vector2i current = target;
+      while (current != origin) {
+          path.push_back(current);
+          current = came_from[current];
+      }
+      std::reverse(path.begin(), path.end());
+
+      return path;
+    }
+
+  }
