@@ -58,6 +58,16 @@ namespace rCMI
       playerMoved = true;
     }
 
+    if (Controls::isActiveAction("zoom_cam", m_actions))
+    {
+      setWorldViewSize(getWorldView().getSize() / 1.5);
+    }
+
+    if (Controls::isActiveAction("unzoom_cam", m_actions))
+    {
+      setWorldViewSize(getWorldView().getSize() * 1.5);
+    }
+
     if (playerMoved)
     {
       m_map.EnemyTurns();

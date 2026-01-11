@@ -2,14 +2,22 @@
 
 namespace rCMI
 {
+
+  std::map<std::string, std::set<const char *>> Controls::save_actions = {};
+
   std::map<std::string, std::set<const char *>> Controls::getControls()
   {
-    std::map<std::string, std::set<const char *>> res{{"move_up", {"Z", "Up"}},
-                                                      {"move_down", {"S", "Down"}},
-                                                      {"move_right", {"D", "Right"}},
-                                                      {"move_left", {"Q", "Left"}}};
+    if (!save_actions.empty())
+      return save_actions;
 
-    return res;
+    save_actions["move_up"] = {"Z", "Up"};
+    save_actions["move_down"] = {"S", "Down"};
+    save_actions["move_left"] = {"Q", "Left"};
+    save_actions["move_right"] = {"D", "Right"};
+    save_actions["zoom_cam"] = {"="};
+    save_actions["unzoom_cam"] = {"-"};
+    
+    return save_actions;
   }
 
   bool Controls::isActiveAction(std::string name, std::vector<gf::Action *> actions)
