@@ -24,7 +24,7 @@ namespace rCMI
   {
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset& ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.png"));
     ts.setTileSize({80, 80});
 
     generate_dungeon(game);
@@ -44,7 +44,7 @@ namespace rCMI
     tileLayer = gf::TileLayer::createOrthogonal(MapSize, {80, 80});
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset &ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.png"));
     ts.setTileSize({80, 80});
 
     for (int y = 0; y < MapSize.y; ++y)
@@ -132,7 +132,7 @@ namespace rCMI
     tileLayer = gf::TileLayer::createOrthogonal(MapSize, {80, 80});
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset &ts = tileLayer.getTileset(tilesetId);
-    ts.setTexture(m_game->resources.getTexture("tileSetTexture.jpg"));
+    ts.setTexture(m_game->resources.getTexture("tileSetTexture.png"));
     ts.setTileSize({80, 80});
 
     rCMI::BSP generator;
