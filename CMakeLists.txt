@@ -25,7 +25,6 @@ add_executable(RogueCMI
   code/bits/bsp.cc
   code/bits/GameData.cc
   code/bits/MenuScene.cc
-  code/bits/MenuSceneTest.cc
 )
 
 target_include_directories(RogueCMI

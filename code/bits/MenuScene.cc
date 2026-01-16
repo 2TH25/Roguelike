@@ -2,6 +2,8 @@
 
 #include "RogueCMI.h"
 
+#include <gf/Coordinates.h>
+
 namespace rCMI
 {
   MenuScene::MenuScene(RogueCMI *game)
