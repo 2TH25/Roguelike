@@ -2,5 +2,7 @@
     "move_up": ["Z", "Up"],
     "move_down": ["S", "Down"],
     "move_right": ["D", "Right"],
-    "move_left": ["Q", "Left"]
+    "move_left": ["Q", "Left"],
+    "zoom_cam": ["="],
+    "unzoom_cam": ["-"]
 }

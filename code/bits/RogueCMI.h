@@ -5,6 +5,8 @@
 
 #include "WorldScene.h"
 #include "BaseScene.h"
+#include "MenuScene.h"
+#include "MenuSceneTest.h"
 
 #include "GameData.h"
 
@@ -14,10 +16,9 @@ namespace rCMI
   {
   public:
     RogueCMI();
-    gf::Random random;
-  private:
     BaseScene m_BaseScene;
-    WorldScene m_WorldScene;
+    WorldScene m_WorldScene_L1;
+    MenuScene m_MenuScene;
   };
 }
 

@@ -14,16 +14,12 @@ namespace rCMI
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
     gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * 80 + TileVect / 2);
+    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
     for (gf::Action *action : m_actions)
       addAction(*action);
 
     addWorldEntity(m_map);
-    // addWorldEntity(m_hero);
-    // addWorldEntity(m_slime);
-    // addWorldEntity(m_skeleton);
-    // addWorldEntity(m_zombie);
 
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
 
@@ -31,9 +27,10 @@ namespace rCMI
       character.setDeadTexture(textureMort);
   }
 
-  void WorldScene::doHandleActions(gf::Window &window)
+  void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
     Character &heroInMap = m_map.hero();
+    gf::Vector2i world_view_size = getWorldView().getSize();
 
     bool playerMoved = false;
 
@@ -58,14 +55,21 @@ namespace rCMI
       playerMoved = true;
     }
 
-    if (Controls::isActiveAction("zoom_cam", m_actions))
+    if (Controls::isActiveAction("zoom_cam", m_actions) && world_view_size.x > 300)
     {
-      setWorldViewSize(getWorldView().getSize() / 1.5);
-    }
-
-    if (Controls::isActiveAction("unzoom_cam", m_actions))
+      if (world_view_size.x / 1.5 < 6000 && world_view_size.x > 6000)
+      {
+        std::cout << "Changement de texture bien\n"; // TODO: afficher avec les textures normales
+      }
+      setWorldViewSize(world_view_size / 1.5);
+    } 
+    else if (Controls::isActiveAction("unzoom_cam", m_actions) && world_view_size.x < 25000)
     {
-      setWorldViewSize(getWorldView().getSize() * 1.5);
+      if (world_view_size.x * 1.5 > 6000 && world_view_size.x < 6000)
+      {
+        std::cout << "Changement de texture null\n"; // TODO: afficher avec les textures amoindrie
+      }
+      setWorldViewSize(world_view_size * 1.5);
     }
 
     if (playerMoved)
@@ -77,8 +81,7 @@ namespace rCMI
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * 80 + TileVect / 2);
-    // setWorldViewCenter(m_hero.getExistence().getPosition() * 80);
+    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
     // m_state.update();
     // update_field_of_view();
 

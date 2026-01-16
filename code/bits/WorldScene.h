@@ -4,7 +4,6 @@
 #include <gf/Scene.h>
 
 #include "Map.h"
-#include "Character.h"
 
 namespace rCMI
 {

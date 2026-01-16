@@ -12,35 +12,32 @@ namespace rCMI {
   {
   }
 
-  void Character::goUp(Map& map) { 
-    if (!alive()) return;
+  bool Character::goUp(Map& map) { 
+    if (!alive()) return false;
     gf::Vector2i current = existence.getPosition();
     gf::Vector2i target = { current.x, current.y - 1 };
-    bump(map, *this, target); 
+    return bump(map, *this, target); 
   }
 
-  void Character::goDown(Map& map) {
-      if (!alive()) return;
-      gf::Vector2i current = existence.getPosition();
-      gf::Vector2i target = { current.x, current.y + 1 };
-      
-      bump(map, *this, target);
+  bool Character::goDown(Map& map) {
+    if (!alive()) return false;
+    gf::Vector2i current = existence.getPosition();
+    gf::Vector2i target = { current.x, current.y + 1 };
+    return bump(map, *this, target);
   }
 
-  void Character::goLeft(Map& map) { 
-    if (!alive()) return;
-      gf::Vector2i current = existence.getPosition();
-      gf::Vector2i target = { current.x - 1, current.y };
-      
-      bump(map, *this, target);
+  bool Character::goLeft(Map& map) { 
+    if (!alive()) return false;
+    gf::Vector2i current = existence.getPosition();
+    gf::Vector2i target = { current.x - 1, current.y };
+    return bump(map, *this, target);
   }
 
-  void Character::goRight(Map& map) { 
-    if (!alive()) return;
-      gf::Vector2i current = existence.getPosition();
-      gf::Vector2i target = { current.x + 1, current.y };
-      
-      bump(map, *this, target);
+  bool Character::goRight(Map& map) { 
+    if (!alive()) return false;
+    gf::Vector2i current = existence.getPosition();
+    gf::Vector2i target = { current.x + 1, current.y };
+    return bump(map, *this, target);
   }
 
 void Character::doMove(Map& map) {
