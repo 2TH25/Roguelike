@@ -2,6 +2,8 @@
 
 #include "RogueCMI.h"
 #include <iostream>
+#include "MenuScene.h"
+#include <gf/Time.h>
 
 namespace rCMI
 {
@@ -10,6 +12,8 @@ namespace rCMI
   , m_game(game)
   , m_map(game)
   , m_actions(getActions())
+  , m_timeSinceDeath(gf::Time::Zero)
+  , m_gameOverHandled(false)
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -82,6 +86,17 @@ namespace rCMI
   {
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+
+    if (!m_map.hero().alive())
+    {
+        m_timeSinceDeath += time;
+        if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled) 
+        {
+            m_gameOverHandled = true; 
+            m_game->replaceScene(m_game->m_MenuScene); 
+        }
+    }
+    
     // m_state.update();
     // update_field_of_view();
 

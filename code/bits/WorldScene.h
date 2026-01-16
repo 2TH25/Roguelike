@@ -25,6 +25,9 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     Map m_map;
     std::vector<gf::Action*> m_actions;
+
+    gf::Time m_timeSinceDeath;
+    bool m_gameOverHandled;
   };
 }
 

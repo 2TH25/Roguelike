@@ -40,6 +40,7 @@ namespace rCMI
     };
 
     createButtons(m_saves, [&]()
+    
                   { m_game->replaceScene(m_game->m_WorldScene_L1); });
 
     createButtons(m_quit, [&]()
