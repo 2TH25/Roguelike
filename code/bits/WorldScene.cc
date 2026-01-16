@@ -8,29 +8,33 @@
 namespace rCMI
 {
   WorldScene::WorldScene(RogueCMI *game)
-  : gf::Scene(view_size)
-  , m_game(game)
-  , m_map(game, MapSize)
-  , m_actions(getActions())
-  , m_timeSinceDeath(gf::Time::Zero)
-  , m_gameOverHandled(false)
+      : gf::Scene(view_size),
+        m_game(game),
+        m_map(game),
+        m_actions(getActions()),
+        m_timeSinceDeath(gf::Time::Zero),
+        m_gameOverHandled(false)
   {
-    m_map.generate_dungeon(m_game);
-
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
-    gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
     for (gf::Action *action : m_actions)
       addAction(*action);
+  }
 
-    addWorldEntity(m_map);
+  void WorldScene::generateMap(gf::Vector2i size)
+  {
+    m_map.generate_dungeon(size);
+
+    gf::Vector2i TileVect({TileSize, TileSize});
+    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
 
     for (auto &character : m_map.getCharacters())
       character.setDeadTexture(textureMort);
+
+    addWorldEntity(m_map);
   }
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
@@ -64,7 +68,7 @@ namespace rCMI
         std::cout << "Changement de texture bien\n"; // TODO: afficher avec les textures normales
       }
       setWorldViewSize(world_view_size / 1.5);
-    } 
+    }
     else if (Controls::isActiveAction("unzoom_cam", m_actions) && world_view_size.x < 25000)
     {
       if (world_view_size.x * 1.5 > 6000 && world_view_size.x < 6000)
@@ -87,14 +91,14 @@ namespace rCMI
 
     if (!m_map.hero().alive())
     {
-        m_timeSinceDeath += time;
-        if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled) 
-        {
-            m_gameOverHandled = true; 
-            m_game->replaceScene(m_game->m_MenuScene); 
-        }
+      m_timeSinceDeath += time;
+      if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled)
+      {
+        m_gameOverHandled = true;
+        m_game->replaceScene(m_game->m_MenuScene);
+      }
     }
-    
+
     // m_state.update();
     // update_field_of_view();
 

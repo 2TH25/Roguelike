@@ -17,16 +17,12 @@
 namespace rCMI
 {
 
-  Map::Map(RogueCMI *game, gf::Vector2i size)
-      : gf::Entity(0), 
-      m_game(game), 
-      tileLayer(),
-      size(size),
-      tilesetId(tileLayer.createTilesetId())
+  Map::Map(RogueCMI *game)
+      : gf::Entity(0),
+        m_game(game),
+        tileLayer(),
+        tilesetId(tileLayer.createTilesetId())
   {
-    // gf::Tileset &ts = tileLayer.getTileset(tilesetId);
-    // ts.setTexture(m_game->resources.getTexture("tileSetTexture.png"));
-    // ts.setTileSize({80, 80});
   }
 
   void Map::update_tile_at(gf::Vector2i pos, TileType type)
@@ -38,8 +34,9 @@ namespace rCMI
     tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
-  void Map::generate_board(RogueCMI *m_game)
+  void Map::generate_board()
   {
+    size = TestMapSize;
     grid.assign(size.x * size.y, TileType::Floor);
     tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
     tilesetId = tileLayer.createTilesetId();
@@ -126,9 +123,9 @@ namespace rCMI
     }
   }
 
-  void Map::generate_dungeon(RogueCMI *m_game)
+  void Map::generate_dungeon(gf::Vector2i Map_size)
   {
-
+    size = Map_size;
     tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
     tilesetId = tileLayer.createTilesetId();
     gf::Tileset &ts = tileLayer.getTileset(tilesetId);

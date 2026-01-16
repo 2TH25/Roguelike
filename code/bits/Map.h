@@ -18,7 +18,7 @@ namespace rCMI
   class Map : public gf::Entity
   {
   public:
-    Map(RogueCMI *game, gf::Vector2i size);
+    Map(RogueCMI *game);
 
     std::vector<Character> &getCharacters() { return characters; }
     gf::Vector2i getSize() const { return size; }
@@ -37,8 +37,8 @@ namespace rCMI
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
 
-    void generate_board(RogueCMI *m_game);
-    void generate_dungeon(RogueCMI *m_game);
+    void generate_board();
+    void generate_dungeon(gf::Vector2i Map_size);
 
   private:
     gf::Vector2i size;

@@ -41,12 +41,12 @@ namespace rCMI
     };
 
     createButtons(m_saves, [&]()
-    
-                  { m_game->replaceScene(m_game->m_WorldScene_L1); });
+                  { m_game->m_WorldScene.generateMap(MapSize);
+                    m_game->replaceScene(m_game->m_WorldScene); });
 
     createButtons(m_quit, [&]()
                   { m_game->popAllScenes(); });
-    
+
     createButtons(m_test, [&]()
                   { m_game->replaceScene(m_game->m_TestScene); });
   }

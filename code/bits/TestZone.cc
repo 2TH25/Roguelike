@@ -8,10 +8,10 @@ namespace rCMI
   TestScene::TestScene(RogueCMI *game)
   : gf::Scene(view_size)
   , m_game(game)
-  , m_map(game, TestMapSize)
+  , m_map(game)
   , m_actions(getActions())
   {
-    m_map.generate_board(m_game);
+    m_map.generate_board();
 
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);

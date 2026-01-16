@@ -16,8 +16,9 @@ namespace rCMI
   {
   public:
     RogueCMI();
+    
     BaseScene m_BaseScene;
-    WorldScene m_WorldScene_L1;
+    WorldScene m_WorldScene;
     MenuScene m_MenuScene;
     TestScene m_TestScene;
   };

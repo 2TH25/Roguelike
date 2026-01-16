@@ -13,6 +13,7 @@ namespace rCMI
   {
   public:
     WorldScene(RogueCMI *game);
+    void generateMap(gf::Vector2i size);
 
   private:
     void doHandleActions(gf::Window &window) override;
