@@ -6,6 +6,7 @@
 #include "WorldScene.h"
 #include "BaseScene.h"
 #include "MenuScene.h"
+#include "TestZone.h"
 
 #include "GameData.h"
 
@@ -18,6 +19,7 @@ namespace rCMI
     BaseScene m_BaseScene;
     WorldScene m_WorldScene_L1;
     MenuScene m_MenuScene;
+    TestScene m_TestScene;
   };
 }
 

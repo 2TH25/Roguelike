@@ -18,7 +18,7 @@ namespace rCMI
   class Map : public gf::Entity
   {
   public:
-    Map(RogueCMI *game);
+    Map(RogueCMI *game, gf::Vector2i size);
 
     std::vector<Character> &getCharacters() { return characters; }
     gf::Vector2i getSize() const { return size; }

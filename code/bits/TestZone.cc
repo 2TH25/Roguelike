@@ -1,21 +1,17 @@
-#include "WorldScene.h"
+#include "TestZone.h"
 
 #include "RogueCMI.h"
 #include <iostream>
-#include "MenuScene.h"
-#include <gf/Time.h>
 
 namespace rCMI
 {
-  WorldScene::WorldScene(RogueCMI *game)
+  TestScene::TestScene(RogueCMI *game)
   : gf::Scene(view_size)
   , m_game(game)
-  , m_map(game, MapSize)
+  , m_map(game, TestMapSize)
   , m_actions(getActions())
-  , m_timeSinceDeath(gf::Time::Zero)
-  , m_gameOverHandled(false)
   {
-    m_map.generate_dungeon(m_game);
+    m_map.generate_board(m_game);
 
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -33,7 +29,7 @@ namespace rCMI
       character.setDeadTexture(textureMort);
   }
 
-  void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
+  void TestScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
     Character &heroInMap = m_map.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
@@ -80,21 +76,10 @@ namespace rCMI
     }
   }
 
-  void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
+  void TestScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
-
-    if (!m_map.hero().alive())
-    {
-        m_timeSinceDeath += time;
-        if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled) 
-        {
-            m_gameOverHandled = true; 
-            m_game->replaceScene(m_game->m_MenuScene); 
-        }
-    }
-    
     // m_state.update();
     // update_field_of_view();
 
@@ -103,13 +88,13 @@ namespace rCMI
     // m_console_entity.console().update(m_root_console, m_game->render_manager());
   }
 
-  void WorldScene::updateFieldOfView()
+  void TestScene::updateFieldOfView()
   {
     // m_state.map.grid.clear_visible();
     // m_state.map.grid.compute_field_of_vision(m_state.map.hero().entity.position, 8, gf::Visibility::ShadowCast);
   }
 
-  std::vector<gf::Action *> WorldScene::getActions()
+  std::vector<gf::Action *> TestScene::getActions()
   {
     auto controls = Controls::getControls();
     std::vector<gf::Action *> res;

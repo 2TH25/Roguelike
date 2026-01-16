@@ -12,7 +12,8 @@ namespace rCMI
         down("down"), select("select"),
         font(PATH_FONT),
         m_saves("jouer", font),
-        m_quit("quitter", font)
+        m_quit("quitter", font),
+        m_test("test zone", font)
   {
     setClearColor(gf::Color::Black);
 
@@ -45,6 +46,9 @@ namespace rCMI
 
     createButtons(m_quit, [&]()
                   { m_game->popAllScenes(); });
+    
+    createButtons(m_test, [&]()
+                  { m_game->replaceScene(m_game->m_TestScene); });
   }
 
   void MenuScene::doHandleActions([[maybe_unused]] gf::Window &window)
@@ -86,6 +90,12 @@ namespace rCMI
     m_quit.setPosition(coords.getRelativePoint({0.5f, 0.525f}));
     m_quit.setParagraphWidth(width);
     m_quit.setPadding(padding);
+
+    m_test.setCharacterSize(r_size);
+    m_test.setAnchor(gf::Anchor::Center);
+    m_test.setPosition(coords.getRelativePoint({0.5f, 0.625f}));
+    m_test.setParagraphWidth(width);
+    m_test.setPadding(padding);
 
     widgets.render(target, states);
   }

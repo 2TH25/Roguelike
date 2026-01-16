@@ -28,6 +28,7 @@ namespace rCMI
 		gf::WidgetContainer widgets;
 		gf::TextButtonWidget m_saves;
 		gf::TextButtonWidget m_quit;
+		gf::TextButtonWidget m_test;
 	};
 }
 
