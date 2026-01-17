@@ -34,7 +34,14 @@ namespace rCMI
   {
     if (pos.x < 0 || pos.y < 0 || pos.x >= MapSize.x || pos.y >= MapSize.y) return;
     grid[pos.y * MapSize.x + pos.x] = type;
-    int tileIndex = (type == TileType::Wall) ? 1 : 0;
+
+    int tileIndex = 0;
+
+    if (type == TileType::Wall) {
+      tileIndex = 1;
+    } else if (type == TileType::Stairs) {
+      tileIndex = 2;
+    }
     tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
@@ -104,6 +111,21 @@ namespace rCMI
       return false;
     }
     return grid[position.y * MapSize.x + position.x] == TileType::Floor;
+  }
+
+  bool Map::isStairs(gf::Vector2i position) const
+  {
+    if (position.x < 0 || position.y < 0 || position.x >= MapSize.x || position.y >= MapSize.y)
+    {
+      return false;
+    }
+    return grid[position.y * MapSize.x + position.x] == TileType::Stairs;
+  }
+
+  void Map::nextLevel()
+  {
+      generate_dungeon(m_game);
+      std::cout << "Niveau suivant atteint !" << std::endl;
   }
 
   void Map::EnemyTurns()
@@ -218,6 +240,17 @@ namespace rCMI
         characters.push_back(Character::skeleton({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("squelette.png")));
       }
     }
+
+    gf::Vector2i pos_escalier;
+    bool validPos = false;    
+    do {
+        pos_escalier.x = dist_x(gen);
+        pos_escalier.y = dist_y(gen);
+        if (isWalkable(pos_escalier) && pos_escalier != characters[0].getExistence().getPosition()) {
+            validPos = true;
+        }
+    } while (!validPos);
+    update_tile_at(pos_escalier, TileType::Stairs);
   
   }
 

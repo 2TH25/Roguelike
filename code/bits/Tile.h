@@ -8,14 +8,16 @@
 
 namespace rCMI {
   enum class TileType : uint32_t
-  { Floor = 0, Wall = 1 };
+  { Floor = 0, Wall = 1, Stairs = 2 };
 
   class Tile {
-  public:
-
-    TileType getType() const { return type; }
+  TileType getType() const { return type; }
     bool isWalkable() const { return walkable; }
-    void setType(TileType t) { type = t; walkable = (t == TileType::Floor); };
+    
+    void setType(TileType t) { 
+        type = t; 
+        walkable = (t != TileType::Wall); 
+    };
 
   private:
     TileType type;
