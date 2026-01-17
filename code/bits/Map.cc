@@ -37,10 +37,6 @@ namespace rCMI
     } else if (type == TileType::Stairs) {
       tileIndex = 2;
     }
-    if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
-      return;
-    grid[pos.y * size.x + pos.x] = type;
-    int tileIndex = (type == TileType::Wall) ? 1 : 0;
     tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
@@ -112,15 +108,6 @@ namespace rCMI
     return grid[position.y * size.x + position.x] == TileType::Floor;
   }
 
-  bool Map::isStairs(gf::Vector2i position) const
-  {
-    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
-    {
-      return false;
-    }
-    return grid[position.y * MapSize.x + position.x] == TileType::Stairs;
-  }
-
   void Map::nextLevel()
   {
       generate_dungeon(this->size);
@@ -128,14 +115,13 @@ namespace rCMI
   }
 
   bool Map::isStairs(gf::Vector2i position) const
+{
+  if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
   {
-    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
-    {
-      return false;
-    }
-    return grid[position.y * size.x + position.x] == TileType::Floor;
+    return false;
   }
-
+  return grid[position.y * size.x + position.x] == TileType::Stairs;
+}
   void Map::EnemyTurns()
   {
     for (std::size_t i = 1; i < characters.size(); ++i)
