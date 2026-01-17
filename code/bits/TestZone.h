@@ -1,5 +1,5 @@
-#ifndef RL_WORLD_SCENE_H
-#define RL_WORLD_SCENE_H
+#ifndef RL_TEST_SCENE_H
+#define RL_TEST_SCENE_H
 
 #include <gf/Scene.h>
 
@@ -9,11 +9,10 @@ namespace rCMI
 {
   class RogueCMI;
 
-  class WorldScene : public gf::Scene
+  class TestScene : public gf::Scene
   {
   public:
-    WorldScene(RogueCMI *game);
-    void generateMap(gf::Vector2i size);
+    TestScene(RogueCMI *game);
 
   private:
     void doHandleActions(gf::Window &window) override;
@@ -26,10 +25,7 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     Map m_map;
     std::vector<gf::Action*> m_actions;
-
-    gf::Time m_timeSinceDeath;
-    bool m_gameOverHandled;
   };
 }
 
-#endif // RL_WORLD_SCENE_H
+#endif // RL_TEST_SCENE_H

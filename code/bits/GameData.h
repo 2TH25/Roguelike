@@ -10,6 +10,7 @@ namespace rCMI
 {
   constexpr gf::Vector2i view_size = {800, 800};
   constexpr gf::Vector2i MapSize = {100, 100};
+  constexpr gf::Vector2i TestMapSize = {10, 10};
   constexpr int TileSize = 80;
 
   const std::string PATH_FONT = "../data/RogueCMI/KarmaFuture.ttf";

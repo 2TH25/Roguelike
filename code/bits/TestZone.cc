@@ -1,43 +1,35 @@
-#include "WorldScene.h"
+#include "TestZone.h"
 
 #include "RogueCMI.h"
 #include <iostream>
-#include "MenuScene.h"
-#include <gf/Time.h>
 
 namespace rCMI
 {
-  WorldScene::WorldScene(RogueCMI *game)
-      : gf::Scene(view_size),
-        m_game(game),
-        m_map(game),
-        m_actions(getActions()),
-        m_timeSinceDeath(gf::Time::Zero),
-        m_gameOverHandled(false)
+  TestScene::TestScene(RogueCMI *game)
+  : gf::Scene(view_size)
+  , m_game(game)
+  , m_map(game)
+  , m_actions(getActions())
   {
+    m_map.generate_board();
+
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
+    gf::Vector2i TileVect({TileSize, TileSize});
+    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
     for (gf::Action *action : m_actions)
       addAction(*action);
-  }
 
-  void WorldScene::generateMap(gf::Vector2i size)
-  {
-    m_map.generate_dungeon(size);
-
-    gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+    addWorldEntity(m_map);
 
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
 
     for (auto &character : m_map.getCharacters())
       character.setDeadTexture(textureMort);
-
-    addWorldEntity(m_map);
   }
 
-  void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
+  void TestScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
     Character &heroInMap = m_map.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
@@ -68,7 +60,7 @@ namespace rCMI
         std::cout << "Changement de texture bien\n"; // TODO: afficher avec les textures normales
       }
       setWorldViewSize(world_view_size / 1.5);
-    }
+    } 
     else if (Controls::isActiveAction("unzoom_cam", m_actions) && world_view_size.x < 25000)
     {
       if (world_view_size.x * 1.5 > 6000 && world_view_size.x < 6000)
@@ -80,33 +72,14 @@ namespace rCMI
 
     if (playerMoved)
     {
-      if (m_map.isStairs(heroInMap.getExistence().getPosition())) 
-      {
-          m_map.nextLevel();          
-          gf::Vector2i TileVect({TileSize, TileSize});
-          setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
-          
-          return; 
-      }
       m_map.EnemyTurns();
     }
   }
 
-  void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
+  void TestScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
-
-    if (!m_map.hero().alive())
-    {
-      m_timeSinceDeath += time;
-      if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled)
-      {
-        m_gameOverHandled = true;
-        m_game->replaceScene(m_game->m_MenuScene);
-      }
-    }
-
     // m_state.update();
     // update_field_of_view();
 
@@ -115,13 +88,13 @@ namespace rCMI
     // m_console_entity.console().update(m_root_console, m_game->render_manager());
   }
 
-  void WorldScene::updateFieldOfView()
+  void TestScene::updateFieldOfView()
   {
     // m_state.map.grid.clear_visible();
     // m_state.map.grid.compute_field_of_vision(m_state.map.hero().entity.position, 8, gf::Visibility::ShadowCast);
   }
 
-  std::vector<gf::Action *> WorldScene::getActions()
+  std::vector<gf::Action *> TestScene::getActions()
   {
     auto controls = Controls::getControls();
     std::vector<gf::Action *> res;

@@ -39,8 +39,8 @@ namespace rCMI
     bool isStairs(gf::Vector2i position) const;
     void nextLevel();
 
-    void generate_board(RogueCMI *m_game);
-    void generate_dungeon(RogueCMI *m_game);
+    void generate_board();
+    void generate_dungeon(gf::Vector2i Map_size);
 
   private:
     gf::Vector2i size;

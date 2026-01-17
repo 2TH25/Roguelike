@@ -86,13 +86,13 @@ void Character::doMove(Map& map) {
 
   Character Character::hero(gf::Vector2i position, const gf::Texture& tex) {
     Existence ex{ position, u'@', gf::Color::Blue, "Hero", true };
-    Stat st(100, 5, 10);
+    Stat st(100, 0, 20);
     return Character(ex, st, tex);
   }
 
   Character Character::skeleton(gf::Vector2i position, const gf::Texture& tex) {
     Existence ex{ position, u'S', gf::Color::White, "Skeleton", true };
-    Stat st(50, 2, 100);
+    Stat st(150, 2, 10);
     Comportment comp(Comportment::hostile());    
     Character c(ex, st, tex);
     c.setComportment(comp);
@@ -101,7 +101,7 @@ void Character::doMove(Map& map) {
 
   Character Character::zombie(gf::Vector2i position, const gf::Texture& tex) {
       Existence ex{ position, u'Z', gf::Color::Orange, "Zombie", true };
-      Stat st(30, 1, 100);
+      Stat st(100, 3, 7);
       Comportment comp(Comportment::hostile());
       
       Character c(ex, st, tex);
@@ -111,7 +111,7 @@ void Character::doMove(Map& map) {
 
   Character Character::slime(gf::Vector2i position, const gf::Texture& tex) {
       Existence ex{ position, u's', gf::Color::Green, "Slime", true };
-      Stat st(10, 0, 2);
+      Stat st(50, 0, 3);
       Comportment comp(Comportment::hostile());
 
       Character c(ex, st, tex);
