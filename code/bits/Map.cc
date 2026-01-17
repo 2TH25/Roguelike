@@ -123,7 +123,7 @@ namespace rCMI
 
   void Map::nextLevel()
   {
-      generate_dungeon(m_game);
+      generate_dungeon(this->size);
       std::cout << "Niveau suivant atteint !" << std::endl;
   }
 
