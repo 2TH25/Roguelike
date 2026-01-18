@@ -12,6 +12,7 @@ namespace rCMI
   class WorldScene : public gf::Scene
   {
   public:
+  Map m_map;
     WorldScene(RogueCMI *game);
     void generateMap(gf::Vector2i size);
 
@@ -25,7 +26,7 @@ namespace rCMI
     std::vector<gf::Action*> getActions();
 
     RogueCMI *m_game = nullptr;
-    Map m_map;
+    
     std::vector<gf::Action*> m_actions;
     gf::Vector2i m_mousePosition;
     gf::Action* m_fireAction = nullptr;

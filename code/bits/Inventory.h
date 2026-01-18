@@ -54,6 +54,7 @@ namespace rCMI {
             void onUnequip(ItemType type, RogueCMI *game);
             void updateStatsText();
             void render(gf::RenderTarget& target, const gf::RenderStates& states);
+            void updateInventory(RogueCMI *game);
     };
 }
 
