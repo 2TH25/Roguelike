@@ -1,6 +1,7 @@
 #include "WorldScene.h"
 
 #include "RogueCMI.h"
+#include "Actions.h"
 #include <iostream>
 #include "MenuScene.h"
 #include <gf/Time.h>
@@ -20,7 +21,14 @@ namespace rCMI
 
     for (gf::Action *action : m_actions)
       addAction(*action);
+    for (gf::Action* action : m_actions) {
+      addAction(*action);
+      if (action->getName() == "fire") {
+          m_fireAction = action;
+      }
+   }  
   }
+    
 
   void WorldScene::generateMap(gf::Vector2i size)
   {
@@ -35,6 +43,17 @@ namespace rCMI
       character.setDeadTexture(textureMort);
 
     addWorldEntity(m_map);
+  }
+
+  void WorldScene::doProcessEvent(gf::Event& event)
+  {
+    switch (event.type) {
+      case gf::EventType::MouseMoved:
+        m_mousePosition = event.mouseCursor.coords;
+        break;
+      default:
+        break;
+    }
   }
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
@@ -76,6 +95,26 @@ namespace rCMI
         std::cout << "Changement de texture null\n"; // TODO: afficher avec les textures amoindrie
       }
       setWorldViewSize(world_view_size * 1.5);
+    }
+
+    if (m_fireAction && m_fireAction->isActive())
+    {
+        if (heroInMap.alive()) 
+    {
+        const gf::View& view = getWorldView();
+        gf::RenderTarget& renderer = m_game->getRenderer();
+        gf::Vector2f worldPos = renderer.mapPixelToCoords(m_mousePosition, view);
+        
+        gf::Vector2i targetTile;
+        targetTile.x = static_cast<int>(worldPos.x / TileSize);
+        targetTile.y = static_cast<int>(worldPos.y / TileSize);
+
+        if (shoot(m_map, heroInMap, targetTile))
+        {
+             playerMoved = true; 
+        }
+    }
+        m_fireAction->reset();
     }
 
     if (playerMoved)
@@ -136,7 +175,10 @@ namespace rCMI
       }
       res.push_back(action);
     }
-
+    gf::Action *fire = new gf::Action("fire");
+    fire->addMouseButtonControl(gf::MouseButton::Left);
+    res.push_back(fire);
+        
     return res;
   }
 }
