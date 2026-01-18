@@ -11,6 +11,7 @@
 #include "Tile.h"
 
 namespace rCMI {
+    enum class RoomType { Normal, Start, End, Healing, Chest };
 
     struct BSPTree{
         std::unique_ptr<BSPTree> left;
@@ -18,6 +19,7 @@ namespace rCMI {
 
         gf::RectI space; // l'espace correspondant au rectangle
         gf::RectI room; // la salle dans le rectangle
+        RoomType type = RoomType::Normal;
 
 
         // voici la strucuture RectI pour mieux se la représenter : 
@@ -35,6 +37,7 @@ namespace rCMI {
         bool split(gf::Random& random); // méthode pour split
         void recursiveSplit(gf::Random& random); // split récursif
         void createRooms(gf::Random& random); // création des salles
+        void getRooms(std::vector<BSPTree*>& rooms);
 
     };
 
@@ -46,6 +49,7 @@ namespace rCMI {
         int leafSizeMaximum = 24;
 
         Dungeon generate(gf::Random& random) override;
+        BSPTree& getRoot() { return m_root; }
 
         private:
         gf::Random m_savedRandom;
