@@ -4,6 +4,7 @@
 #include <iostream>
 #include "MenuScene.h"
 #include <gf/Time.h>
+#include "InventoryScene.h"
 
 namespace rCMI
 {
@@ -13,13 +14,17 @@ namespace rCMI
         m_map(game),
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
-        m_gameOverHandled(false)
+        m_gameOverHandled(false),
+        toggleInventory("ToggleInventory")
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
 
     for (gf::Action *action : m_actions)
       addAction(*action);
+
+    toggleInventory.addKeycodeKeyControl(gf::Keycode::Tab);
+    addAction(toggleInventory);
   }
 
   void WorldScene::generateMap(gf::Vector2i size)

@@ -7,6 +7,7 @@
 #include "BaseScene.h"
 #include "MenuScene.h"
 #include "TestZone.h"
+#include "InventoryScene.h"
 
 #include "GameData.h"
 
@@ -21,6 +22,7 @@ namespace rCMI
     WorldScene m_WorldScene;
     MenuScene m_MenuScene;
     TestScene m_TestScene;
+    InventoryScene m_InventoryScene;
   };
 }
 

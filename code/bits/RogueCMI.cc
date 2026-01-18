@@ -9,7 +9,8 @@ namespace rCMI
         m_BaseScene(),
         m_WorldScene(this),
         m_MenuScene(this),
-        m_TestScene(this)
+        m_TestScene(this),
+        m_InventoryScene(this)
   {
     pushScene(m_BaseScene);
     pushScene(m_MenuScene);
