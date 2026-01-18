@@ -15,6 +15,7 @@ namespace rCMI
 	{
 	public:
 		InventoryScene(RogueCMI *game);
+		Inventory m_inventory;
 
 	private:
 		void doHandleActions(gf::Window &window) override;
@@ -23,7 +24,7 @@ namespace rCMI
 
 		RogueCMI *m_game = nullptr;
         gf::Action toggleInventory;
-        Inventory m_inventory;
+        
 		gf::Font font;
 	};
 }

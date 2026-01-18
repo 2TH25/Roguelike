@@ -141,7 +141,7 @@ namespace rCMI {
 
     void Inventory::updateStatsText() {
         std::string str = "Force : " + std::to_string(m_stats.getPower()) + "\n"
-                        + "Santé : " + std::to_string(m_stats.getMaxHealth()) + "\n"
+                        + "Santé : " + std::to_string(m_stats.getHealth()) + " / "  + std::to_string(m_stats.getMaxHealth()) + "\n"
                         + "Defense : " + std::to_string(m_stats.getDefense());
         m_statsWidget.setString(str);
     }
@@ -151,5 +151,11 @@ namespace rCMI {
         target.draw(m_heroSprite, states);
         m_container.render(target, states);
         m_statsWidget.draw(target, states);
+    }
+
+    void Inventory::updateInventory(RogueCMI *game) {
+        auto& hero = game->m_WorldScene.m_map.hero();
+        m_stats = hero.getStat();
+        updateStatsText();
     }
 }
