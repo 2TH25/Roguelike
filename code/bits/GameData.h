@@ -9,7 +9,7 @@
 namespace rCMI
 {
   constexpr gf::Vector2i view_size = {800, 800};
-  constexpr gf::Vector2i MapSize = {100, 100};
+  constexpr gf::Vector2i MapSize = {30, 30};
   constexpr gf::Vector2i TestMapSize = {10, 10};
   constexpr int TileSize = 80;
 
@@ -17,15 +17,15 @@ namespace rCMI
   const std::string RESSOURCES_PATH = "../data/RogueCMI";
   const std::initializer_list<gf::Path> PATHS = {gf::Path(RESSOURCES_PATH), gf::Paths::getBasePath(), gf::Paths::getCurrentPath()};
 
-  constexpr int RoomMaxSize = 30;
-  constexpr int RoomMinSize = 6;
-  constexpr int MinRooms = 20;
-  constexpr int MaxRooms = 30;
+  constexpr int RoomMaxSize = 12;
+  constexpr int RoomMinSize = 4;
+  constexpr int MinRooms = 5;
+  constexpr int MaxRooms = 6;
   constexpr gf::Vector2i NumberRooms = {MinRooms, MaxRooms};
-  constexpr int MaxMonstersMin = 20;
+  constexpr int MaxMonstersMin = 2;
   constexpr int MaxMonstersPerRoom = 2;
-  constexpr int leafSizeMinimum = 9;
-  constexpr int leafSizeMaximum = 10;
+  constexpr int leafSizeMinimum = 6;
+  constexpr int leafSizeMaximum = 15;
 
   class Controls
   {

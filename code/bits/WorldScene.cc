@@ -80,6 +80,14 @@ namespace rCMI
 
     if (playerMoved)
     {
+      if (m_map.isStairs(heroInMap.getExistence().getPosition())) 
+      {
+          m_map.nextLevel();          
+          gf::Vector2i TileVect({TileSize, TileSize});
+          setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+          
+          return; 
+      }
       m_map.EnemyTurns();
     }
   }

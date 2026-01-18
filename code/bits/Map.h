@@ -36,6 +36,8 @@ namespace rCMI
 
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
+    bool isStairs(gf::Vector2i position) const;
+    void nextLevel();
 
     void generate_board();
     void generate_dungeon(gf::Vector2i Map_size);

@@ -27,10 +27,16 @@ namespace rCMI
 
   void Map::update_tile_at(gf::Vector2i pos, TileType type)
   {
-    if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
-      return;
-    grid[pos.y * size.x + pos.x] = type;
-    int tileIndex = (type == TileType::Wall) ? 1 : 0;
+    if (pos.x < 0 || pos.y < 0 || pos.x >= MapSize.x || pos.y >= MapSize.y) return;
+    grid[pos.y * MapSize.x + pos.x] = type;
+
+    int tileIndex = 0;
+
+    if (type == TileType::Wall) {
+      tileIndex = 1;
+    } else if (type == TileType::Stairs) {
+      tileIndex = 2;
+    }
     tileLayer.setTile(pos, tilesetId, tileIndex);
   }
 
@@ -102,6 +108,20 @@ namespace rCMI
     return grid[position.y * size.x + position.x] == TileType::Floor;
   }
 
+  void Map::nextLevel()
+  {
+      generate_dungeon(this->size);
+      std::cout << "Niveau suivant atteint !" << std::endl;
+  }
+
+  bool Map::isStairs(gf::Vector2i position) const
+{
+  if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
+  {
+    return false;
+  }
+  return grid[position.y * size.x + position.x] == TileType::Stairs;
+}
   void Map::EnemyTurns()
   {
     for (std::size_t i = 1; i < characters.size(); ++i)
@@ -229,7 +249,21 @@ namespace rCMI
       { // 15% de chance
         characters.push_back(Character::skeleton({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("squelette.png")));
       }
+
+
     }
+
+    gf::Vector2i pos_escalier;
+    bool validPos = false;    
+    do {
+        pos_escalier.x = dist_x(gen);
+        pos_escalier.y = dist_y(gen);
+        if (isWalkable(pos_escalier) && pos_escalier != characters[0].getExistence().getPosition()) {
+            validPos = true;
+        }
+    } while (!validPos);
+    update_tile_at(pos_escalier, TileType::Stairs);
+  
   }
 
   struct VectorCompare
