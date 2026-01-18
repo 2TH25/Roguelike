@@ -4,7 +4,8 @@
 namespace rCMI {
 
     Inventory::Inventory(RogueCMI *game) : 
-        m_statsWidget("Stats", game->resources.getFont(PATH_FONT), 20),
+    
+        m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
         m_headSlot(game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg")),
         m_torsoSlot(game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png")),
         m_legSlot(game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg")),
@@ -12,15 +13,15 @@ namespace rCMI {
         m_feetSlot(game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg")),
         m_accessorySlot(game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"))
     {
-        m_headSlot.setPosition({150, 50});
-        m_legSlot.setPosition({150, 50});
-        m_torsoSlot.setPosition({150, 50});
-        m_handSlot.setPosition({150, 50});
-        m_feetSlot.setPosition({150, 50});
-        m_accessorySlot.setPosition({150, 50});
+        m_headSlot.setPosition({220, 110});
+        m_legSlot.setPosition({500, 300});
+        m_torsoSlot.setPosition({500, 230});
+        m_handSlot.setPosition({220, 200});
+        m_feetSlot.setPosition({500, 380});
+        m_accessorySlot.setPosition({220, 300});
 
         m_heroSprite.setTexture(game->resources.getTexture("perso100.png"));
-        m_heroSprite.setPosition({70, 80}); 
+        m_heroSprite.setPosition({250, 120}); 
         m_heroSprite.setScale({3.0f, 3.0f});
         
         m_container.addWidget(m_headSlot);
@@ -30,9 +31,14 @@ namespace rCMI {
         m_container.addWidget(m_feetSlot);
         m_container.addWidget(m_accessorySlot);
 
-        m_background.setSize({400, 500});
-        m_background.setColor(gf::Color::Black); 
-        m_background.setPosition({50, 30});
+        m_background.setSize({1200, 700});
+        m_background.setColor(gf::Color::White); 
+        m_background.setPosition({200, 100});
+
+        m_statsWidget.setPosition({800, 200});
+        m_statsWidget.setDefaultTextColor(gf::Color::Black);
+
+        updateStatsText();
         
         m_headSlot.setCallback([this, game]() {
             this->onUnequip(ItemType::Head, game);
@@ -107,6 +113,8 @@ namespace rCMI {
                 }
             }
         } 
+
+        updateStatsText();
     }
 
     Item* Inventory::getEquippedItem(ItemType type) {
@@ -132,9 +140,9 @@ namespace rCMI {
     }
 
     void Inventory::updateStatsText() {
-        std::string str = "Force : " + std::to_string(m_stats.force) + "\n"
-                        + "Santé : " + std::to_string(m_stats.health) + "\n"
-                        + "Defense : " + std::to_string(m_stats.defense);
+        std::string str = "Force : " + std::to_string(m_stats.getPower()) + "\n"
+                        + "Santé : " + std::to_string(m_stats.getMaxHealth()) + "\n"
+                        + "Defense : " + std::to_string(m_stats.getDefense());
         m_statsWidget.setString(str);
     }
 

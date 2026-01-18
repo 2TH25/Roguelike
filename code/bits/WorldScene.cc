@@ -58,6 +58,9 @@ namespace rCMI
       default:
         break;
     }
+    if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Tab) {
+        m_game->pushScene(m_game->m_InventoryScene);
+    }
   }
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)

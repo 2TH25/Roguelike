@@ -21,7 +21,7 @@ namespace rCMI {
         private: 
             bool m_isOpen = false;
             gf::WidgetContainer m_container;
-            HeroStats m_stats;
+            Stat m_stats;
             gf::TextWidget m_statsWidget;
 
             gf::Sprite m_heroSprite;
