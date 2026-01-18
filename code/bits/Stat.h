@@ -27,6 +27,14 @@ namespace rCMI {
     int defense = 0;
     int power = 0;
   };
+
+
+  class HeroStats {
+        public:
+            int force;
+            int health;
+            int defense;
+    };
 }
 
 #endif // STAT_H

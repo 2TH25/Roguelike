@@ -8,7 +8,7 @@
 #include "RogueCMI.h"
 #include "Item.h"
 #include "WorldScene.h"
-#include "HeroStats.h"
+#include "Stat.h"
 #include <gf/Rect.h>
 
 
