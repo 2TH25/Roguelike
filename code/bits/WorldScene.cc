@@ -5,6 +5,7 @@
 #include "MenuScene.h"
 #include <gf/Time.h>
 #include "InventoryScene.h"
+#include "Actions.h"
 
 namespace rCMI
 {
@@ -22,6 +23,12 @@ namespace rCMI
 
     for (gf::Action *action : m_actions)
       addAction(*action);
+      for (gf::Action* action : m_actions) {
+        addAction(*action);
+        if (action->getName() == "fire") {
+            m_fireAction = action;
+        }
+      }  
 
     toggleInventory.addKeycodeKeyControl(gf::Keycode::Tab);
     addAction(toggleInventory);
@@ -40,6 +47,17 @@ namespace rCMI
       character.setDeadTexture(textureMort);
 
     addWorldEntity(m_map);
+  }
+
+  void WorldScene::doProcessEvent(gf::Event& event)
+  {
+    switch (event.type) {
+      case gf::EventType::MouseMoved:
+        m_mousePosition = event.mouseCursor.coords;
+        break;
+      default:
+        break;
+    }
   }
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
@@ -83,6 +101,26 @@ namespace rCMI
       setWorldViewSize(world_view_size * 1.5);
     }
 
+    if (m_fireAction && m_fireAction->isActive())
+    {
+        if (heroInMap.alive()) 
+    {
+        const gf::View& view = getWorldView();
+        gf::RenderTarget& renderer = m_game->getRenderer();
+        gf::Vector2f worldPos = renderer.mapPixelToCoords(m_mousePosition, view);
+        
+        gf::Vector2i targetTile;
+        targetTile.x = static_cast<int>(worldPos.x / TileSize);
+        targetTile.y = static_cast<int>(worldPos.y / TileSize);
+
+        if (shoot(m_map, heroInMap, targetTile))
+        {
+             playerMoved = true; 
+        }
+    }
+        m_fireAction->reset();
+    }
+
     if (playerMoved)
     {
       if (m_map.isStairs(heroInMap.getExistence().getPosition())) 
@@ -95,6 +133,7 @@ namespace rCMI
       }
       m_map.EnemyTurns();
     }
+
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
@@ -141,7 +180,10 @@ namespace rCMI
       }
       res.push_back(action);
     }
-
+    gf::Action *fire = new gf::Action("fire");
+    fire->addMouseButtonControl(gf::MouseButton::Left);
+    res.push_back(fire);
+        
     return res;
   }
 }

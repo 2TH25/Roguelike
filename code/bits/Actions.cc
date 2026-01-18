@@ -43,4 +43,29 @@ namespace rCMI
     return true;
   }
 
+
+  bool shoot(Map &map, Character &character, gf::Vector2i target)
+  {
+    int distance = gf::chebyshevDistance(character.getExistence().getPosition(), target);
+    
+    if (distance > 3) {
+        return false; 
+    }
+    auto maybe_character = map.target_character_at(target);
+    if (!maybe_character) {
+        return false;
+    }
+    auto &other = map.getCharacters()[*maybe_character];
+
+    int damage = character.getStat().getPower() - other.getStat().getDefense();
+
+    std::cout << "Tir sur " << other.getExistence().getName() << " (" << damage << " dmg)\n";
+
+    if (damage > 0) {
+      other.take_damage(damage);
+    }
+      
+    return true;
+  }
+
 }
