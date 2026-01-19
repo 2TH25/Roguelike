@@ -263,6 +263,7 @@ namespace rCMI
                     } else { 
                         mob = Character::skeleton(pos_aleatoire, m_game->resources.getTexture("squelette.png"));
                     }
+                    mob.setHomeRoom(room);
                     characters.push_back(mob);
                 }
             }
