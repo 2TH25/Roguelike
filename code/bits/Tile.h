@@ -6,17 +6,24 @@
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 
-namespace rCMI {
+namespace rCMI
+{
   enum class TileType : uint32_t
-  { Floor = 0, Wall = 1, Stairs = 2 };
+  {
+    Floor = 0,
+    Wall = 1,
+    Stairs = 2
+  };
 
-  class Tile {
-  TileType getType() const { return type; }
+  class Tile
+  {
+    TileType getType() const { return type; }
     bool isWalkable() const { return walkable; }
-    
-    void setType(TileType t) { 
-        type = t; 
-        walkable = (t != TileType::Wall); 
+
+    void setType(TileType t)
+    {
+      type = t;
+      walkable = (t != TileType::Wall);
     };
 
   private:

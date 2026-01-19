@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "Map.h"
 #include "Actions.h"
+#include "GameData.h"
 #include <algorithm>
 
 namespace rCMI {
@@ -125,7 +126,7 @@ void Character::doMove(Map& map) {
 
     gf::Sprite sprite(*texture);
     gf::Vector2i gridPosition = existence.getPosition();
-    float tileSize = 80;
+    float tileSize = TileSize;
     sprite.setPosition({ gridPosition.x * tileSize, gridPosition.y * tileSize });
     target.draw(sprite, states);
 }
