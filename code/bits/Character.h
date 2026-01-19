@@ -21,6 +21,15 @@ namespace rCMI {
     void setDeadTexture(const gf::Texture& tex) {
         deadTexture = &tex;
     }
+    void setHomeRoom(gf::RectI room) {
+        m_homeRoom = room;
+        m_hasHome = true;
+    }
+    
+    bool canWalkTo(gf::Vector2i target) const {
+        if (!m_hasHome) return true; 
+        return (target.x > m_homeRoom.min.x && target.x < m_homeRoom.max.x && target.y > m_homeRoom.min.y && target.y < m_homeRoom.max.y);
+    }
 
     void render(gf::RenderTarget& target, const gf::RenderStates& states) override;
 
@@ -56,6 +65,8 @@ namespace rCMI {
       Comportment comportment;
       const gf::Texture* texture = nullptr;
       const gf::Texture* deadTexture = nullptr;
+      gf::RectI m_homeRoom;
+      bool m_hasHome = false; 
   };
 }
 #endif // CHARACTER_H

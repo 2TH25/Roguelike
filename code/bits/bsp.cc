@@ -86,6 +86,15 @@ namespace rCMI {
         }
     }
 
+    void BSPTree::getRooms(std::vector<BSPTree*>& rooms) {
+        if (left || right) {
+            if (left) left->getRooms(rooms);
+            if (right) right->getRooms(rooms);
+        } else {
+            rooms.push_back(this);
+        }
+    }
+
     void BSPTree::createRooms(gf::Random& random) {
         assert(RoomMinSize <= RoomMaxSize);
 
@@ -149,6 +158,29 @@ namespace rCMI {
 
     m_root.recursiveSplit(m_random);
     m_root.createRooms(m_random);
+
+    std::vector<BSPTree*> leaves;
+    m_root.getRooms(leaves); // On récupère toutes les salles finales
+
+    if (leaves.size() >= 2) {
+        std::shuffle(leaves.begin(), leaves.end(), m_random.getEngine());
+
+        leaves[0]->type = RoomType::Start;
+        leaves[1]->type = RoomType::End;
+
+        for (size_t i = 2; i < leaves.size(); ++i) {
+            float roll = m_random.computeUniformFloat(0.0f, 1.0f);
+            
+            if (roll < 0.20f) { 
+                leaves[i]->type = RoomType::Healing;
+            } else if (roll < 0.35f) { 
+                leaves[i]->type = RoomType::Chest;
+            } else {
+                leaves[i]->type = RoomType::Normal;
+            }
+        }
+    }
+
     walkTree(m_root);
   }
 

@@ -16,7 +16,7 @@ namespace rCMI {
 
       int distance = gf::chebyshevDistance(selfPos, targetPos);
 
-      if (distance > 10) {
+      if (distance > 5) {
           return false; 
       }
 

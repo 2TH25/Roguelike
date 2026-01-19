@@ -144,7 +144,7 @@ namespace rCMI
   }
 
   void Map::generate_dungeon(gf::Vector2i Map_size)
-  {
+    {
     size = Map_size;
     tileLayer = gf::TileLayer::createOrthogonal(size, {80, 80});
     tilesetId = tileLayer.createTilesetId();
@@ -156,116 +156,120 @@ namespace rCMI
 
     Dungeon dungeon = generator.generate(m_game->random);
 
-    grid.assign(size.x * size.y, TileType::Wall); // On remplit de murs par défaut
+    grid.assign(size.x * size.y, TileType::Wall); 
 
     for (int y = 0; y < size.y; ++y)
     {
       for (int x = 0; x < size.x; ++x)
       {
         gf::Vector2i pos = {x, y};
-
         TileType type = dungeon.getTile({x, y});
 
         if (type == TileType::Wall)
         {
-
           bool touchesFloor = false;
-          for (int dy = -1; dy <= 1; ++dy)
-          {
-            for (int dx = -1; dx <= 1; ++dx)
-            {
-              if (dx == 0 && dy == 0)
-                continue;
-              if (dungeon.getTile(pos + gf::Vector2i{dx, dy}) == TileType::Floor)
-              {
+          for (int dy = -1; dy <= 1; ++dy) {
+            for (int dx = -1; dx <= 1; ++dx) {
+              if (dx == 0 && dy == 0) continue;
+              if (dungeon.getTile(pos + gf::Vector2i{dx, dy}) == TileType::Floor) {
                 touchesFloor = true;
                 break;
               }
             }
-            if (touchesFloor)
-            {
-              break;
-            }
+            if (touchesFloor) break;
           }
 
-          if (touchesFloor)
-          {
+          if (touchesFloor) {
             update_tile_at(pos, TileType::Wall);
-          }
-          else
-          {
+          } else {
             grid[y * size.x + x] = TileType::Wall;
-            tileLayer.setTile(pos, tilesetId, -1); // -1 pour cacher la tuile
+            tileLayer.setTile(pos, tilesetId, -1); 
           }
         }
-        else
-        {
+        else {
           update_tile_at(pos, TileType::Floor);
         }
       }
     }
 
     characters.clear();
+    std::vector<BSPTree*> leaves;
+    generator.getRoot().getRooms(leaves);
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dist_x(0, size.x - 1);
-    std::uniform_int_distribution<> dist_y(0, size.y - 1);
     std::uniform_int_distribution<> dist_type(1, 100);
 
-    gf::Vector2i pos_aleatoire_hero;
-
-    do
-    {
-      pos_aleatoire_hero.x = dist_x(gen);
-      pos_aleatoire_hero.y = dist_y(gen);
-    } while (!isWalkable(pos_aleatoire_hero));
-
-    Character hero = Character::hero({pos_aleatoire_hero.x, pos_aleatoire_hero.y}, m_game->resources.getTexture("perso70.png"));
-    const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
-    hero.setDeadTexture(textureMort);
-    characters.push_back(hero);
-
-    for (int i = 0; i < MaxMonstersMin; i++)
-    {
-      gf::Vector2i pos_aleatoire;
-
-      do
-      {
-        pos_aleatoire.x = dist_x(gen);
-        pos_aleatoire.y = dist_y(gen);
-      } while (!isWalkable(pos_aleatoire));
-
-      int nombre_aleatoire = dist_type(gen);
-      if (nombre_aleatoire <= 60)
-      { // 60% de chance
-        characters.push_back(Character::slime({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("slime.png")));
-      }
-      else if (nombre_aleatoire <= 85)
-      { // 25% de chance
-        characters.push_back(Character::zombie({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("zombie.png")));
-      }
-      else
-      { // 15% de chance
-        characters.push_back(Character::skeleton({pos_aleatoire.x, pos_aleatoire.y}, m_game->resources.getTexture("squelette.png")));
-      }
-
-
-    }
-
-    gf::Vector2i pos_escalier;
-    bool validPos = false;    
-    do {
-        pos_escalier.x = dist_x(gen);
-        pos_escalier.y = dist_y(gen);
-        if (isWalkable(pos_escalier) && pos_escalier != characters[0].getExistence().getPosition()) {
-            validPos = true;
+    for (auto* leaf : leaves) {
+        if (leaf->type == RoomType::Start) {
+            gf::Vector2i center = leaf->room.getCenter();
+            
+            Character hero = Character::hero(center, m_game->resources.getTexture("perso70.png"));
+            const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
+            hero.setDeadTexture(textureMort);
+            characters.push_back(hero);
+            break; 
         }
-    } while (!validPos);
-    update_tile_at(pos_escalier, TileType::Stairs);
-  
-  }
+    }
+    
+    // if (characters.empty()) {
+    //    characters.push_back(Character::hero({1,1}, m_game->resources.getTexture("perso70.png")));
+    // }
 
+    for (auto* leaf : leaves) {
+        gf::RectI room = leaf->room;
+        gf::Vector2i center = room.getCenter();
+
+        if (leaf->type == RoomType::End) {
+            update_tile_at(center, TileType::Stairs);
+        }
+        else if (leaf->type == RoomType::Healing) {
+            // update_tile_at(center, TileType::HealingFloor);
+            continue; 
+        }
+        else if (leaf->type == RoomType::Start) {
+            continue;
+        }
+        else {
+            std::uniform_int_distribution<> dist_nb_mob(0, 2);
+            int nbMobs = dist_nb_mob(gen);
+
+            std::uniform_int_distribution<> dist_room_x(room.min.x + 1, room.max.x - 1);
+            std::uniform_int_distribution<> dist_room_y(room.min.y + 1, room.max.y - 1);
+
+            for (int i = 0; i < nbMobs; i++)
+            {
+                gf::Vector2i pos_aleatoire;
+                bool validPos = false;
+                int attempts = 0;
+
+                do {
+                    pos_aleatoire.x = dist_room_x(gen);
+                    pos_aleatoire.y = dist_room_y(gen);
+                    if (isWalkable(pos_aleatoire) && !target_character_at(pos_aleatoire).has_value()) {
+                        validPos = true;
+                    }
+                    attempts++;
+                } while (!validPos && attempts < 10);
+
+                if (validPos) {
+                    Character mob;
+                    int nombre_aleatoire = dist_type(gen);
+                    
+                    if (nombre_aleatoire <= 60) { 
+                        mob = Character::slime(pos_aleatoire, m_game->resources.getTexture("slime.png"));
+                    } else if (nombre_aleatoire <= 85) { 
+                        mob = Character::zombie(pos_aleatoire, m_game->resources.getTexture("zombie.png"));
+                    } else { 
+                        mob = Character::skeleton(pos_aleatoire, m_game->resources.getTexture("squelette.png"));
+                    }
+                    mob.setHomeRoom(room);
+                    characters.push_back(mob);
+                }
+            }
+        }
+    }
+  }
   struct VectorCompare
   {
     bool operator()(const gf::Vector2i &a, const gf::Vector2i &b) const
