@@ -48,7 +48,7 @@ namespace rCMI {
         int leafSizeMinimum = 10;
         int leafSizeMaximum = 24;
 
-        Dungeon generate(gf::Random& random) override;
+        Dungeon generate(gf::Random &random, gf::Vector2i sizeMap) override;
         BSPTree& getRoot() { return m_root; }
 
         private:
@@ -56,7 +56,7 @@ namespace rCMI {
         gf::Random m_random;
         BSPTree m_root;
         Dungeon m_dungeon;
-        void generateRooms();
+        void generateRooms(gf::Vector2i sizeMap);
         void walkTree(const BSPTree& tree);
         void createRoom(const gf::RectI& room);
         void createHorizontalTunnel(int x1, int x2, int y);

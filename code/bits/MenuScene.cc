@@ -48,7 +48,8 @@ namespace rCMI
                   { m_game->popAllScenes(); });
 
     createButtons(m_test, [&]()
-                  { m_game->replaceScene(m_game->m_TestScene); });
+                  { m_game->m_WorldScene.generateMap(TestMapSize);
+                    m_game->replaceScene(m_game->m_WorldScene); });
   }
 
   void MenuScene::doHandleActions([[maybe_unused]] gf::Window &window)

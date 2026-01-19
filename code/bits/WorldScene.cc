@@ -36,7 +36,10 @@ namespace rCMI
 
   void WorldScene::generateMap(gf::Vector2i size)
   {
-    m_map.generate_dungeon(size);
+    if (size == TestMapSize)
+      m_map.generate_board();
+    else
+      m_map.generate_dungeon(size);
 
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
@@ -155,8 +158,7 @@ namespace rCMI
       }
     }
 
-    // m_state.update();
-    // update_field_of_view();
+    updateFieldOfView();
 
     // m_root_console.clear();
     // m_state.render_to(m_root_console);
@@ -165,8 +167,8 @@ namespace rCMI
 
   void WorldScene::updateFieldOfView()
   {
-    // m_state.map.grid.clear_visible();
-    // m_state.map.grid.compute_field_of_vision(m_state.map.hero().entity.position, 8, gf::Visibility::ShadowCast);
+    m_map.clearMap();
+    m_map.fieldOfVision();
   }
 
   std::vector<gf::Action *> WorldScene::getActions()

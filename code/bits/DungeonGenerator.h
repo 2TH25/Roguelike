@@ -57,7 +57,7 @@ namespace rCMI {
       m_phase = phase;
     }
 
-    virtual Dungeon generate(gf::Random& random) = 0;
+    virtual Dungeon generate(gf::Random &random, gf::Vector2i sizeMap) = 0;
 
   private:
     Phase m_phase;
