@@ -26,6 +26,7 @@ namespace rCMI
   constexpr int MaxMonstersPerRoom = 2;
   constexpr int leafSizeMinimum = 6;
   constexpr int leafSizeMaximum = 15;
+  constexpr int NumberItems = 10;
 
   class Controls
   {

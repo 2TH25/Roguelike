@@ -6,6 +6,7 @@ namespace rCMI {
     Inventory::Inventory(RogueCMI *game) : 
     
         m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
+        m_emptySlotTexture(&(game->resources.getTexture("EmptySlot.jpg"))),
         m_headSlot(game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg")),
         m_torsoSlot(game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png")),
         m_legSlot(game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg")),
@@ -31,12 +32,30 @@ namespace rCMI {
         m_container.addWidget(m_feetSlot);
         m_container.addWidget(m_accessorySlot);
 
-        m_background.setSize({1200, 700});
+        m_background.setSize({800, 700});
         m_background.setColor(gf::Color::White); 
         m_background.setPosition({200, 100});
 
         m_statsWidget.setPosition({800, 200});
         m_statsWidget.setDefaultTextColor(gf::Color::Black);
+
+        gf::Vector2f startPos = {220, 500};
+        float slotSize = 80.0f;
+        float padding = 25.0f;
+
+        for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+            m_backpackWidgets[i] = gf::SpriteWidget(*m_emptySlotTexture,*m_emptySlotTexture,*m_emptySlotTexture);
+            
+            float x = startPos.x + (i % 5) * (slotSize + padding);
+            float y = startPos.y + (i / 5) * (slotSize + padding);
+            m_backpackWidgets[i].setPosition({x, y});
+            
+            m_container.addWidget(m_backpackWidgets[i]);
+
+            m_backpackWidgets[i].setCallback([this, i, game]() {
+                this->equipFromBackpack(i, game);
+            });
+        }
 
         updateStatsText();
         
@@ -73,26 +92,20 @@ namespace rCMI {
     }
 
     bool Inventory::hasEquipment(ItemType type) {
-        switch (type) {
-            case ItemType::Head:      return m_equippedHead != nullptr;
-            case ItemType::Torso:     return m_equippedTorso != nullptr;
-            case ItemType::Legs:      return m_equippedLegs != nullptr;
-            case ItemType::Hand:      return m_equippedHand != nullptr;
-            case ItemType::Feet:      return m_equippedFeet != nullptr;
-            case ItemType::Accessory: return m_equippedAccessory != nullptr;
-            default: return false;
-        }
+        EquippedSlot* slot = getSlotByType(type);
+        return (slot != nullptr && slot->hasItem);
     }
 
     void Inventory::setEquippedItem(ItemType type, Item* item, RogueCMI *game) {
-        switch (type) {
-            case ItemType::Head:      m_equippedHead = item; break;
-            case ItemType::Torso:     m_equippedTorso = item; break;
-            case ItemType::Legs:      m_equippedLegs = item; break;
-            case ItemType::Hand:      m_equippedHand = item; break;
-            case ItemType::Feet:      m_equippedFeet = item; break;
-            case ItemType::Accessory: m_equippedAccessory = item; break;
-            default: break;
+        EquippedSlot* slot = getSlotByType(type);
+        
+        if (slot != nullptr) {
+            if (item != nullptr) {
+                slot->item = *item;
+                slot->hasItem = true;
+            } else {
+                slot->hasItem = false;
+            }
         }
 
         gf::SpriteWidget* targetWidget = getWidgetByType(type);
@@ -117,25 +130,28 @@ namespace rCMI {
         updateStatsText();
     }
 
-    Item* Inventory::getEquippedItem(ItemType type) {
-        switch (type) {
-            case ItemType::Head:      return m_equippedHead;
-            case ItemType::Torso:     return m_equippedTorso;
-            case ItemType::Legs:      return m_equippedLegs;
-            case ItemType::Hand:      return m_equippedHand;
-            case ItemType::Feet:      return m_equippedFeet;
-            case ItemType::Accessory: return m_equippedAccessory;
-            default: return nullptr;
+    Item Inventory::getEquippedItem(ItemType type) {
+        EquippedSlot* slot = getSlotByType(type);
+        if (slot && slot->hasItem) {
+            return slot->item;
         }
+        return Item();
     }
 
     void Inventory::onUnequip(ItemType type, RogueCMI *game) {
+
         if (hasEquipment(type)) {
-            Item *item = getEquippedItem(type);
-            m_backpack.push_back(*item);
+            if (m_backpack.size() >= MaxBackpackSize) {
+                std::cout << "Sac plein !" << std::endl;
+                return;
+            }
+
+            Item item = getEquippedItem(type);
+            m_backpack.push_back(item);
             setEquippedItem(type, nullptr, game);
+            
+            updateBackpackDisplay(game);
             updateStatsText();
-            std::cout << "Objet " << item->m_name << " retiré !" << std::endl;
         }
     }
 
@@ -158,4 +174,48 @@ namespace rCMI {
         m_stats = hero.getStat();
         updateStatsText();
     }
+
+    void Inventory::updateBackpackDisplay(RogueCMI *game) {
+        gf::RectF r = gf::RectF::fromPositionSize({0, 0}, {80, 80});
+
+        for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+            if (i < m_backpack.size()) {
+                m_backpackWidgets[i].setDefaultSprite(*m_backpack[i].m_texture, r);
+            } else {
+                m_backpackWidgets[i].setDefaultSprite(*m_emptySlotTexture, r);
+            }
+        }
+    }
+
+    void Inventory::equipFromBackpack(std::size_t index, RogueCMI *game) {
+        if (index >= m_backpack.size()) return;
+
+        Item itemToEquip = m_backpack[index];
+        
+        if (hasEquipment(itemToEquip.m_type)) {
+            Item alreadyEquipped = getEquippedItem(itemToEquip.m_type);
+            Item temp = alreadyEquipped; 
+            m_backpack[index] = temp;
+        } else {
+            m_backpack.erase(m_backpack.begin() + index);
+        }
+
+        setEquippedItem(itemToEquip.m_type, &itemToEquip, game);
+        
+        updateBackpackDisplay(game);
+        updateStatsText();
+    }
+
+    Inventory::EquippedSlot* Inventory::getSlotByType(ItemType type) {
+        switch (type) {
+            case ItemType::Head:      return &m_equippedHead;
+            case ItemType::Torso:     return &m_equippedTorso;
+            case ItemType::Legs:      return &m_equippedLegs;
+            case ItemType::Hand:      return &m_equippedHand;
+            case ItemType::Feet:      return &m_equippedFeet;
+            case ItemType::Accessory: return &m_equippedAccessory;
+            default:                  return nullptr;
+        }
+    }
 }
+

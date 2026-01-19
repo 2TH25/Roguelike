@@ -21,6 +21,8 @@ namespace rCMI {
             ItemType m_type;
             const gf::Texture* m_texture = nullptr;
 
+            Item() = default;
+
 
 
             Item(std::string name, ItemType type, const gf::Texture& tex) 
@@ -29,6 +31,7 @@ namespace rCMI {
             void setTexture(gf::Texture texture) {
                 this->m_texture = &texture;
             }
+            Item generateRandomItem(RogueCMI *game);
 
     };
 }
