@@ -68,6 +68,7 @@ namespace rCMI {
             void updateBackpackDisplay(RogueCMI *game);
             void equipFromBackpack(std::size_t index, RogueCMI *game);
             EquippedSlot* getSlotByType(ItemType type);
+            bool addItemToBackpack(Item item,RogueCMI *game);
     };
 }
 

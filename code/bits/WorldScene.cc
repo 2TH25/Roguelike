@@ -1,5 +1,4 @@
 #include "WorldScene.h"
-
 #include "RogueCMI.h"
 #include <iostream>
 #include "MenuScene.h"
@@ -47,6 +46,32 @@ namespace rCMI
       character.setDeadTexture(textureMort);
 
     addWorldEntity(m_map);
+    addWorldEntity(m_itemManager);
+
+    int numberOfItems = 10;
+    
+    for (int i = 0; i < numberOfItems; ++i) {
+      bool found = false;
+      int x_final;
+      int y_final;
+      do {
+        int x = rand() % size.x;
+        int y = rand() % size.y;
+
+        if(m_map.isWalkable({x,y})) {
+          found = true;
+            x_final = x;
+            y_final = y;
+        }
+
+      } while(!found);
+        
+        gf::Vector2f pixelPos = { x_final * (float)TileSize + TileSize/2.0f, y_final * (float)TileSize + TileSize/2.0f };
+        spawnItem(pixelPos);
+        
+    }
+    
+    std::cout << "Donjon peuple avec " << m_itemManager.items.size() << " items." << std::endl;
   }
 
   void WorldScene::doProcessEvent(gf::Event& event)
@@ -155,6 +180,27 @@ namespace rCMI
       }
     }
 
+    gf::Vector2f heroGridPos = m_map.hero().getExistence().getPosition();
+
+    for (auto it = m_itemManager.items.begin(); it != m_itemManager.items.end(); ) {
+        
+        gf::Vector2i itemGridPos = { 
+            static_cast<int>(it->sprite.getPosition().x / TileSize), 
+            static_cast<int>(it->sprite.getPosition().y / TileSize) 
+        };
+
+        if (heroGridPos.x == itemGridPos.x && heroGridPos.y == itemGridPos.y) {
+            if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(it->item,m_game)) {
+                it = m_itemManager.items.erase(it);
+                std::cout << "Objet ramassé !" << std::endl;
+            } else {
+                ++it;
+            }
+        } else {
+            ++it;
+        }
+    }
+
     // m_state.update();
     // update_field_of_view();
 
@@ -189,5 +235,24 @@ namespace rCMI
     res.push_back(fire);
         
     return res;
+  }
+
+  void WorldScene::spawnItem(gf::Vector2f position) {
+    Item newItem = Item::generateRandomItem(m_game);
+
+    DroppedItem dropped;
+    dropped.item = newItem;
+    if (newItem.m_texture) {
+        dropped.sprite.setTexture(*newItem.m_texture);
+    }
+    
+    gf::Vector2f size = dropped.sprite.getLocalBounds().getSize();
+    
+    dropped.sprite.setOrigin({size.x / 2.0f, size.y / 2.0f});
+    
+    dropped.sprite.setPosition(position);
+    dropped.sprite.setScale({0.5f, 0.5f});
+
+    m_itemManager.items.push_back(dropped);
   }
 }

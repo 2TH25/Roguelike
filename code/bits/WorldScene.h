@@ -4,10 +4,12 @@
 #include <gf/Scene.h>
 #include <gf/Event.h>
 #include "Map.h"
+#include "ItemManager.h"
 
 namespace rCMI
 {
   class RogueCMI;
+
 
   class WorldScene : public gf::Scene
   {
@@ -31,6 +33,8 @@ namespace rCMI
     gf::Vector2i m_mousePosition;
     gf::Action* m_fireAction = nullptr;
     gf::Action toggleInventory;
+    ItemManager m_itemManager;
+    void spawnItem(gf::Vector2f position);
 
     gf::Time m_timeSinceDeath;
     bool m_gameOverHandled;

@@ -217,5 +217,17 @@ namespace rCMI {
             default:                  return nullptr;
         }
     }
+
+    bool Inventory::addItemToBackpack(Item item,RogueCMI *game) {
+
+        if (m_backpack.size() >= MaxBackpackSize) {
+            std::cout << "Inventaire plein ! Impossible de ramasser : " << item.m_name << std::endl;
+            return false;
+        }
+        m_backpack.push_back(item);
+        updateBackpackDisplay(game);
+        
+        return true;
+    }
 }
 

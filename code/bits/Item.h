@@ -30,10 +30,10 @@ namespace rCMI {
             Item(std::string name, ItemType type, const gf::Texture& tex) 
             : m_name(name), m_type(type), m_texture(&tex) {}
 
-            void setTexture(gf::Texture texture) {
+            void setTexture(gf::Texture& texture) {
                 this->m_texture = &texture;
             }
-            Item generateRandomItem(RogueCMI *game);
+            static Item generateRandomItem(RogueCMI *game);
 
     };
 }
