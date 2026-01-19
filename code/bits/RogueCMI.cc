@@ -1,5 +1,5 @@
 #include "RogueCMI.h"
-
+#include "InventoryScene.h"
 #include "WorldScene.h"
 
 namespace rCMI
@@ -9,10 +9,11 @@ namespace rCMI
         m_BaseScene(),
         m_WorldScene(this),
         m_MenuScene(this),
-        m_TestScene(this),
-        m_InventoryScene(this)
+        m_TestScene(this)
   {
+    m_InventoryScene = std::make_unique<InventoryScene>(this);
     pushScene(m_BaseScene);
     pushScene(m_MenuScene);
   }
+  RogueCMI::~RogueCMI() = default;
 }

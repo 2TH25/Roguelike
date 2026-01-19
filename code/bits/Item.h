@@ -7,6 +7,8 @@
 
 namespace rCMI {
 
+    class RogueCMI;
+
     enum class ItemType {
         Head, Torso, Legs, Hand, Feet, Accessory, Consumable, Misc
     };

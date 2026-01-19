@@ -1,6 +1,6 @@
 #include "InventoryScene.h"
-#include "RogueCMI.h"
 #include <gf/Coordinates.h>
+#include "RogueCMI.h"
 
 namespace rCMI
 {
