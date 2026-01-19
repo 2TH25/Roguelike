@@ -10,11 +10,10 @@ namespace rCMI
 {
   class RogueCMI;
 
-
   class WorldScene : public gf::Scene
   {
   public:
-  Map m_map;
+    Map m_map;
     WorldScene(RogueCMI *game);
     void generateMap(gf::Vector2i size);
 
@@ -23,16 +22,15 @@ namespace rCMI
     void doUpdate(gf::Time time) override;
 
     void updateFieldOfView();
-    void doProcessEvent(gf::Event& event) override;
+    void doProcessEvent(gf::Event &event) override;
 
-    std::vector<gf::Action*> getActions();
+    std::vector<gf::Action *> getActions();
 
     RogueCMI *m_game = nullptr;
-    
-    std::vector<gf::Action*> m_actions;
+
+    std::vector<gf::Action *> m_actions;
     gf::Vector2i m_mousePosition;
-    gf::Action* m_fireAction = nullptr;
-    gf::Action toggleInventory;
+    gf::Action *m_fireAction = nullptr;
     ItemManager m_itemManager;
     void spawnItem(gf::Vector2f position);
 

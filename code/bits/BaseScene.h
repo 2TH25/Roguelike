@@ -3,7 +3,6 @@
 
 #include <gf/Scene.h>
 
-
 namespace rCMI
 {
   class BaseScene : public gf::Scene

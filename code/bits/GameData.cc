@@ -42,7 +42,8 @@ namespace rCMI
     save_actions["move_right"] = {"D", "Right"};
     save_actions["zoom_cam"] = {"="};
     save_actions["unzoom_cam"] = {"-"};
-    
+    save_actions["ToggleInventory"] = {"Tab"};
+
     return save_actions;
   }
 
@@ -58,7 +59,6 @@ namespace rCMI
   //     return false;
 
   //   save_actions.at(name) = new_keys;
-
 
   // }
 

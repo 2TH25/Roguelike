@@ -1,6 +1,5 @@
 #include "Stat.h"
 
-namespace rCMI {
-
-
+namespace rCMI
+{
 }

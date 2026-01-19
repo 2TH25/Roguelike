@@ -1,5 +1,5 @@
 #include "Existence.h"
 
-namespace rCMI {
-
+namespace rCMI
+{
 }

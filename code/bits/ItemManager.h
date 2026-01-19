@@ -8,25 +8,29 @@
 #include "Item.h"
 #include <iostream>
 
-namespace rCMI {
+namespace rCMI
+{
 
-    struct DroppedItem {
-        Item item;
-        gf::Sprite sprite;
-    };
+	struct DroppedItem
+	{
+		Item item;
+		gf::Sprite sprite;
+	};
 
-    class RogueCMI;
-    class ItemManager : public gf::Entity {
-    public:
-        std::vector<DroppedItem> items;
+	class RogueCMI;
 
-        virtual void render(gf::RenderTarget& target, const gf::RenderStates& states) override {
-            std::cout << "Nombre d'items au sol : " << items.size() << std::endl;
-            for (auto& dropped : items) {
-                target.draw(dropped.sprite, states);
-            }
-        }
-    };
+	class ItemManager : public gf::Entity
+	{
+	public:
+		std::vector<DroppedItem> items;
+
+		virtual void render(gf::RenderTarget &target, const gf::RenderStates &states) override
+		{
+			// std::cout << "Nombre d'items au sol : " << items.size() << std::endl; 
+			for (auto &dropped : items)
+				target.draw(dropped.sprite, states);
+		}
+	};
 }
 
 #endif

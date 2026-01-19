@@ -23,9 +23,9 @@ namespace rCMI
     if (map.blocking_entity_at(target))
       return false;
 
-    if (!character.canWalkTo(target)) {
-        return false;
-    }
+    if (!character.canWalkTo(target))
+      return false;
+
     if (&character != &map.hero() && target == map.hero().getExistence().getPosition())
       return false;
 
@@ -43,32 +43,30 @@ namespace rCMI
 
     if (damage > 0)
       other.take_damage(damage);
-      
+
     return true;
   }
-
 
   bool shoot(Map &map, Character &character, gf::Vector2i target)
   {
     int distance = gf::chebyshevDistance(character.getExistence().getPosition(), target);
-    
-    if (distance > 3) {
-        return false; 
-    }
+
+    if (distance > 3)
+      return false;
+
     auto maybe_character = map.target_character_at(target);
-    if (!maybe_character) {
-        return false;
-    }
+    if (!maybe_character)
+      return false;
+
     auto &other = map.getCharacters()[*maybe_character];
 
     int damage = character.getStat().getPower() - other.getStat().getDefense();
 
     std::cout << "Tir sur " << other.getExistence().getName() << " (" << damage << " dmg)\n";
 
-    if (damage > 0) {
+    if (damage > 0)
       other.take_damage(damage);
-    }
-      
+
     return true;
   }
 

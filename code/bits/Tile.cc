@@ -1,5 +1,5 @@
 #include "Tile.h"
 
-namespace rCMI {
-    
+namespace rCMI
+{
 };

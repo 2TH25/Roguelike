@@ -4,38 +4,44 @@
 #include <string>
 #include <gf/Texture.h>
 
+namespace rCMI
+{
 
-namespace rCMI {
+	class RogueCMI;
 
-    class RogueCMI;
+	enum class ItemType
+	{
+		Head,
+		Torso,
+		Legs,
+		Hand,
+		Feet,
+		Accessory,
+		Consumable,
+		Misc
+	};
 
-    enum class ItemType {
-        Head, Torso, Legs, Hand, Feet, Accessory, Consumable, Misc
-    };
+	class Item
+	{
+	public:
+		std::string m_name;
+		std::string m_description;
+		ItemType m_type;
+		const gf::Texture *m_texture = nullptr;
 
+		Item() = default;
 
+		Item(std::string name, ItemType type, const gf::Texture &tex)
+				: m_name(name),
+					m_type(type),
+					m_texture(&tex)
+		{
+		}
 
-    class Item {
-
-        public:
-            std::string m_name;
-            std::string m_description;
-            ItemType m_type;
-            const gf::Texture* m_texture = nullptr;
-
-            Item() = default;
-
-
-
-            Item(std::string name, ItemType type, const gf::Texture& tex) 
-            : m_name(name), m_type(type), m_texture(&tex) {}
-
-            void setTexture(gf::Texture& texture) {
-                this->m_texture = &texture;
-            }
-            static Item generateRandomItem(RogueCMI *game);
-
-    };
+		void setTexture(gf::Texture &texture) { this->m_texture = &texture; }
+		
+		static Item generateRandomItem(RogueCMI *game);
+	};
 }
 
 #endif

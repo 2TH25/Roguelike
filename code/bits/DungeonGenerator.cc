@@ -1,11 +1,11 @@
 #include "DungeonGenerator.h"
 
-namespace rCMI {
+namespace rCMI
+{
 
   DungeonGenerator::DungeonGenerator()
-  : m_phase(Phase::Start)
+      : m_phase(Phase::Start)
   {
-
   }
 
   DungeonGenerator::~DungeonGenerator() = default;

@@ -19,12 +19,12 @@ namespace rCMI
 
 	private:
 		void doHandleActions(gf::Window &window) override;
-		void doRender(gf::RenderTarget& target, const gf::RenderStates &states) override;
-		void doProcessEvent(gf::Event& event) override;
+		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
+		void doProcessEvent(gf::Event &event) override;
 
 		RogueCMI *m_game = nullptr;
-        gf::Action toggleInventory;
-        
+		gf::Action toggleInventory;
+
 		gf::Font font;
 	};
 }

@@ -16,46 +16,30 @@ namespace rCMI
   }
 
   // getters de largeur et hauteur pour BSPTree
-  int BSPTree::getWidth() const
-  {
-    return space.getSize().x;
-  }
+  int BSPTree::getWidth() const { return space.getSize().x; }
 
-  int BSPTree::getHeight() const
-  {
-    return space.getSize().y;
-  }
+  int BSPTree::getHeight() const { return space.getSize().y; }
 
   bool BSPTree::split(gf::Random &random)
-  { // méthode split
-    if (left || right)
-    {               // si le noeud en question a déjà un fils gauche ou droite, alors on ne peut pas le split
-      return false; // on renvoie faux
-    }
+  {                    // méthode split
+    if (left || right) // si le noeud en question a déjà un fils gauche ou droite, alors on ne peut pas le split
+      return false;    // on renvoie faux
 
     bool splitHorizontally = random.computeBernoulli(0.5f);
     // renvoie true ou false, 50% du temps l'un et 50% l'autre
     // selon la loi de Bernouilli (true = p et false = 1 - p)
 
-    if (space.getWidth() >= 1.25 * space.getHeight())
-    {
-      splitHorizontally = false; // on force à faux la division horizontale
-                                 // si le rectangle est déjà trop large
-    }
-    else if (space.getHeight() >= 1.25 * space.getWidth())
-    {
-      splitHorizontally = true;
-      // sinon si le rectangle est déjà trop haut, alors on s'assure de
-      //  le diviser horizontalement
-    }
+    if (space.getWidth() >= 1.25 * space.getHeight()) // on force à faux la division horizontale
+      splitHorizontally = false;                      // si le rectangle est déjà trop large
+
+    else if (space.getHeight() >= 1.25 * space.getWidth()) // sinon si le rectangle est déjà trop haut, alors on s'assure de
+      splitHorizontally = true;                            // le diviser horizontalement
 
     int max = splitHorizontally ? space.getHeight() : space.getWidth();
     // dimension maximale du split (en fonction de si on split horizontalement ou pas)
 
     if (max <= 2 * leafSizeMinimum)
-    {
       return false;
-    }
     // on ne split pas si la taille max dispo pour un split est trop petite
 
     assert(leafSizeMinimum <= max - leafSizeMinimum);
@@ -64,10 +48,13 @@ namespace rCMI
     int split = random.computeUniformInteger(leafSizeMinimum, max - leafSizeMinimum);
     // détermination aléatoire de la position de l'endroit d'où on splitera
 
+    // si le rectangle a été divisé horizontalement
+    // la cellule divisée de gauche est un bspTree, avec une racine : un RectI, avec comme position la position minimum du
+    // rectangle divisé, et la taille, la largeur du rectangle jusqu'à l'endroit où l'on coupe celle de droite
     if (splitHorizontally)
-    {                                                                                                                                                    // si le rectangle a été divisé horizontalement
-      left = std::make_unique<BSPTree>(gf::RectI::fromPositionSize(space.min, {space.getWidth(), split}));                                               // la cellule divisée de gauche est un bspTree, avec une racine : un RectI, avec comme position la position minimum du rectangle divisé, et la taille, la largeur du rectangle jusqu'à l'endroit où l'on coupe
-      right = std::make_unique<BSPTree>(gf::RectI::fromPositionSize({space.min.x, space.min.y + split}, {space.getWidth(), space.getHeight() - split})); // celle de droite
+    {
+      left = std::make_unique<BSPTree>(gf::RectI::fromPositionSize(space.min, {space.getWidth(), split}));
+      right = std::make_unique<BSPTree>(gf::RectI::fromPositionSize({space.min.x, space.min.y + split}, {space.getWidth(), space.getHeight() - split}));
     }
     else
     { // sinon
@@ -106,9 +93,7 @@ namespace rCMI
         right->getRooms(rooms);
     }
     else
-    {
       rooms.push_back(this);
-    }
   }
 
   void BSPTree::createRooms(gf::Random &random)
@@ -123,14 +108,10 @@ namespace rCMI
       left->createRooms(random);
       right->createRooms(random);
 
-      if (random.computeBernoulli(0.5))
-      { // on garde l'information d'une des salles de nos 2 enfants
+      if (random.computeBernoulli(0.5)) // on garde l'information d'une des salles de nos 2 enfants
         room = left->room;
-      }
       else
-      {
         room = right->room;
-      }
     }
     else
     { // sinon, vu qu'on est sur une feuille
@@ -199,17 +180,11 @@ namespace rCMI
         float roll = m_random.computeUniformFloat(0.0f, 1.0f);
 
         if (roll < 0.20f)
-        {
           leaves[i]->type = RoomType::Healing;
-        }
         else if (roll < 0.35f)
-        {
           leaves[i]->type = RoomType::Chest;
-        }
         else
-        {
           leaves[i]->type = RoomType::Normal;
-        }
       }
     }
 
@@ -239,46 +214,31 @@ namespace rCMI
       }
     }
     else
-    {
       createRoom(tree.room);
-    }
   }
 
   void BSP::createRoom(const gf::RectI &room)
   {
     for (int x = room.min.x + 1; x < room.max.x; ++x)
-    {
       for (int y = room.min.y + 1; y < room.max.y; ++y)
-      {
         m_dungeon.setTile({x, y}, TileType::Floor);
-      }
-    }
   }
 
   void BSP::createHorizontalTunnel(int x1, int x2, int y)
   {
     if (x2 < x1)
-    {
       std::swap(x1, x2);
-    }
 
     for (int x = x1; x <= x2; ++x)
-    {
       m_dungeon.setTile({x, y}, TileType::Floor);
-    }
   }
 
   void BSP::createVerticalTunnel(int x, int y1, int y2)
   {
     if (y2 < y1)
-    {
       std::swap(y1, y2);
-    }
 
     for (int y = y1; y <= y2; ++y)
-    {
       m_dungeon.setTile({x, y}, TileType::Floor);
-    }
   }
-
 }
