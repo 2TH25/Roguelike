@@ -9,6 +9,7 @@
 
 namespace rCMI
 {
+	class RogueCMI;
 
 	class InventoryScene : public gf::Scene
 	{
