@@ -145,7 +145,7 @@ namespace rCMI
 					targetWidget->setDefaultSprite(game->resources.getTexture("Bottes.jpg"), r);
 					break;
 				case ItemType::Accessory:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Accessoire.jpg"), r);
+					targetWidget->setDefaultSprite(game->resources.getTexture("accessoire.jpg"), r);
 					break;
 				default:
 					break;
@@ -167,33 +167,50 @@ namespace rCMI
 
 	void Inventory::onUnequip(ItemType type, RogueCMI *game)
 	{
-
 		if (hasEquipment(type))
 		{
 			if (m_backpack.size() >= MaxBackpackSize)
 			{
-				std::cout << "Sac plein !" << std::endl;
+				std::cout << "Sac plein ! Veuillez jeter un item avant de déséquiper celui-ci !" << std::endl;
 				return;
 			}
-
 			Item item = getEquippedItem(type);
 			m_backpack.push_back(item);
 			setEquippedItem(type, nullptr, game);
-
-			updateBackpackDisplay(game);
 			updateStatsText();
+			updateBackpackDisplay(game);
 		}
 	}
 
 	void Inventory::updateStatsText()
 	{
+		int bonus_force = 0;
+		int bonus_sante = 0;
+		int bonus_defense = 0;
 
-		int force_additionnelle =0;
-		int sante_additionnelle =0;
-		int defense_additionnelle =0;
-		std::string str = "Force : " + std::to_string(m_stats.getPower()) + "\n" +
-											"Santé : " + std::to_string(m_stats.getHealth()) + " / " + std::to_string(m_stats.getMaxHealth()) + "\n" +
-											"Defense : " + std::to_string(m_stats.getDefense());
+		ItemType types[] = { ItemType::Head, ItemType::Torso, ItemType::Legs, 
+							ItemType::Hand, ItemType::Boots, ItemType::Accessory };
+
+		for (int i = 0; i < 6; ++i)
+		{
+			if (hasEquipment(types[i]))
+			{
+				Item it = getEquippedItem(types[i]);
+				bonus_force   += it.m_stat.getPower();
+				bonus_sante   += it.m_stat.getHealth();
+				bonus_defense += it.m_stat.getDefense();
+			}
+		}
+		
+		int total_force = m_stats.getPower() + bonus_force;
+		int total_def   = m_stats.getDefense() + bonus_defense;
+		int total_pv    = m_stats.getHealth() + bonus_sante;
+		int max_pv      = m_stats.getMaxHealth() + bonus_sante;
+
+		std::string str = "Force : " + std::to_string(total_force) + " (+" + std::to_string(bonus_force) + ")\n" +
+						"Sante : " + std::to_string(total_pv) + " / " + std::to_string(max_pv) + " (+" + std::to_string(bonus_sante) + ")\n" +
+						"Defense : " + std::to_string(total_def) + " (+" + std::to_string(bonus_defense) + ")";
+		
 		m_statsWidget.setString(str);
 	}
 
@@ -214,12 +231,13 @@ namespace rCMI
 
 	void Inventory::updateBackpackDisplay(RogueCMI *game)
 	{
+		gf::RectF r2 = gf::RectF::fromPositionSize({0, 0}, {50, 50});
 		gf::RectF r = gf::RectF::fromPositionSize({0, 0}, {80, 80});
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i)
 		{
 			if (i < m_backpack.size())
-				m_backpackWidgets[i].setDefaultSprite(*m_backpack[i].m_texture, r);
+				m_backpackWidgets[i].setDefaultSprite(*m_backpack[i].m_texture, r2);
 			else
 				m_backpackWidgets[i].setDefaultSprite(*m_emptySlotTexture, r);
 		}
@@ -236,14 +254,16 @@ namespace rCMI
 		if (hasEquipment(type))
 		{
 			Item alreadyEquipped = getEquippedItem(type);
-			m_backpack[index] = alreadyEquipped;
+			m_backpack[index] = alreadyEquipped; 
 		}
 		else
 		{
 			m_backpack.erase(m_backpack.begin() + index);
 		}
 		setEquippedItem(type, &itemToEquip, game);
+
 		updateBackpackDisplay(game);
+		updateStatsText();
 	}
 
 	Inventory::EquippedSlot *Inventory::getSlotByType(ItemType type)

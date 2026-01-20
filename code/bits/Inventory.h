@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <gf/Sprite.h>
+#include <map>
 
 #include "Item.h"
 #include "Stat.h"
@@ -36,6 +37,7 @@ namespace rCMI
     gf::SpriteWidget m_accessorySlot;
 
     std::vector<Item> m_backpack;
+    std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
     std::array<gf::SpriteWidget, MaxBackpackSize> m_backpackWidgets;
     gf::Texture *m_emptySlotTexture; // slot vide du backpack
