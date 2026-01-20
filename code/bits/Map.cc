@@ -67,29 +67,57 @@ namespace rCMI
 
     return stairs == position;
   }
-
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    gf::ShapeParticles particles;
+    float scaleFactor = (float)TileSize / 640.0f;
 
     for (auto pos : map.getRange())
     {
-      if (map.isInFieldOfVision(pos))
-      {
-        gf::Sprite sprite;
-        map.isWalkable(pos) ? sprite.setTexture(m_game->resources.getTexture("Floor.png")) : sprite.setTexture(m_game->resources.getTexture("Wall.png"));
-        sprite.setPosition({(float)(pos.x * TileSize), (float)(pos.y * TileSize)});
-        target.draw(sprite, states);
-      }
-      else if (map.isExplored(pos))
-      {
-        particles.addRectangle(pos * TileSize, {TileSize, TileSize},
-                               map.isWalkable(pos) ? gf::Color::Gray() : gf::Color::Orange);
-      }
-    }
-    target.draw(particles);
-  }
+      bool inFOV = map.isInFieldOfVision(pos);
+      bool explored = map.isExplored(pos);
 
+      // Si la tuile n'est pas explorée, on passe à la suivante (Noir total)
+      if (!explored) {
+          continue;
+      }
+
+      gf::Sprite sprite;
+      std::string textureName;
+
+      // --- 1. Détermination de la texture (identique à avant) ---
+      if (isStairs(pos)) {
+          textureName = "Stairs.png";
+      } else {
+          int hash = (pos.x * 39113 + pos.y * 17569) % 100; 
+          bool isWalkable = map.isWalkable(pos);
+          std::string base = isWalkable ? "Floor" : "Wall";
+
+          if (hash < 45) {
+              int variant = (hash % 4) + 2; 
+              textureName = base + std::to_string(variant) + ".png";
+          } else {
+              textureName = base + ".png";
+          }
+      }
+
+      // --- 2. Configuration du Sprite ---
+      sprite.setTexture(m_game->resources.getTexture(textureName));
+      sprite.setPosition({(float)(pos.x * TileSize), (float)(pos.y * TileSize)});
+      sprite.setScale({scaleFactor, scaleFactor});
+
+      // --- 3. Filtre de luminosité ---
+      if (inFOV) {
+          // Pleine lumière
+          sprite.setColor(gf::Color::White); 
+      } else {
+          // Brouillard de guerre : on fonce l'image (R, G, B très bas)
+          // Tu peux ajuster 60, 60, 60 pour faire plus ou moins sombre
+          sprite.setColor(gf::Color::fromRgba32(100, 100, 100, 255));
+      }
+
+      target.draw(sprite, states);
+    }
+  }
   void Map::generate_dungeon(gf::Vector2i Map_size)
   {
     size = Map_size;

@@ -21,9 +21,10 @@ namespace rCMI
 		m_feetSlot.setPosition({500, 380});
 		m_accessorySlot.setPosition({220, 300});
 
-		m_heroSprite.setTexture(game->resources.getTexture("perso100.png"));
-		m_heroSprite.setPosition({250, 120});
-		m_heroSprite.setScale({3.0f, 3.0f});
+		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
+		float scaleFactor = 400.0f / 640.0f;
+		m_heroSprite.setScale({scaleFactor, scaleFactor});
+		m_heroSprite.setPosition({230, 100});
 
 		m_container.addWidget(m_headSlot);
 		m_container.addWidget(m_legSlot);

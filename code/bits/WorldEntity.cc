@@ -32,7 +32,7 @@ namespace rCMI
     m_map.generate_board();
 
     characters.clear();
-    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
+    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso640/Perso640.png"));
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
     characters.push_back(hero);
@@ -71,7 +71,6 @@ namespace rCMI
   void WorldEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     m_map.render(target, states);
-
     for (std::size_t i = 0; i < characters.size(); ++i)
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
@@ -106,7 +105,7 @@ namespace rCMI
       {
         gf::Vector2i center = leaf->room.getCenter();
 
-        Character hero = Character::hero(center, m_game->resources.getTexture("perso70.png"));
+        Character hero = Character::hero(center, m_game->resources.getTexture("perso640/Perso640.png"));
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
         hero.setDeadTexture(textureMort);
         characters.push_back(hero);
@@ -115,7 +114,7 @@ namespace rCMI
     }
 
     // if (characters.empty()) {
-    //    characters.push_back(Character::hero({1,1}, m_game->resources.getTexture("perso70.png")));
+    //    characters.push_back(Character::hero({1,1}, m_game->resources.getTexture("perso640/Perso640.png")));
     // }
 
     for (auto *leaf : leaves)

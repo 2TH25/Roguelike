@@ -151,6 +151,10 @@ namespace rCMI
       return;
 
     gf::Sprite sprite(*texture);
+    gf::Vector2u textureSize = texture->getSize();
+    float targetSize = TileSize;
+    gf::Vector2f scale = { targetSize / textureSize.x, targetSize / textureSize.y };
+    sprite.setScale(scale);
     gf::Vector2i gridPosition = existence.getPosition();
     float tileSize = TileSize;
     sprite.setPosition({gridPosition.x * tileSize, gridPosition.y * tileSize});
