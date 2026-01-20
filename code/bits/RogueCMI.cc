@@ -1,6 +1,5 @@
 #include "RogueCMI.h"
 #include "InventoryScene.h"
-#include "WorldScene.h"
 
 namespace rCMI
 {

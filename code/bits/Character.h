@@ -4,6 +4,7 @@
 #include "Comportment.h"
 #include "Stat.h"
 #include "Existence.h"
+
 #include <gf/Entity.h>
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
@@ -11,6 +12,8 @@
 
 namespace rCMI
 {
+  class WorldEntity;
+
   class Character : public gf::Entity
   {
   public:
@@ -18,14 +21,14 @@ namespace rCMI
     Character(const Existence &ex, const Stat &st, const gf::Texture &tex);
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
-    void doMove(Map &map);
+    void doMove(WorldEntity &m_world);
     void take_damage(int damage);
     void die();
 
-    bool goUp(Map &map);
-    bool goDown(Map &map);
-    bool goLeft(Map &map);
-    bool goRight(Map &map);
+    bool goUp(WorldEntity &m_world);
+    bool goDown(WorldEntity &m_world);
+    bool goLeft(WorldEntity &m_world);
+    bool goRight(WorldEntity &m_world);
 
     Existence &getExistence() { return existence; }
     Stat &getStat() { return stat; }

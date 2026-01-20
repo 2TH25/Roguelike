@@ -11,7 +11,7 @@ namespace rCMI
   WorldScene::WorldScene(RogueCMI *game)
       : gf::Scene(view_size),
         m_game(game),
-        m_map(game),
+        m_world_entity(game),
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventorie(false)
@@ -26,19 +26,21 @@ namespace rCMI
   void WorldScene::generateMap(gf::Vector2i size)
   {
     if (size == TestMapSize)
-      m_map.generate_board();
+      m_world_entity.generate_board();
     else
-      m_map.generate_dungeon(size);
+      m_world_entity.generate_dungeon(size);
 
     gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+    setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
 
-    for (auto &character : m_map.getCharacters())
+    for (auto &character : m_world_entity.getCharacters())
       character.setDeadTexture(textureMort);
 
-    addWorldEntity(m_map);
+    addWorldEntity(m_world_entity);
+
+    // TODO : déplacer m_itemManager dans m_world_entity
     addWorldEntity(m_itemManager);
 
     int numberOfItems = 10;
@@ -54,7 +56,7 @@ namespace rCMI
         int x = rand() % size.x;
         int y = rand() % size.y;
 
-        if (m_map.isWalkable({x, y}))
+        if (m_world_entity.isWalkable({x, y}))
         {
           found = true;
           x_final = x;
@@ -83,22 +85,22 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
-    Character &heroInMap = m_map.hero();
+    Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
 
     bool playerMoved = false;
 
     if (Controls::isActiveAction("move_up", m_actions))
-      playerMoved = heroInMap.goUp(m_map);
+      playerMoved = heroInEntity.goUp(m_world_entity);
 
     else if (Controls::isActiveAction("move_down", m_actions))
-      playerMoved = heroInMap.goDown(m_map);
+      playerMoved = heroInEntity.goDown(m_world_entity);
 
     else if (Controls::isActiveAction("move_right", m_actions))
-      playerMoved = heroInMap.goRight(m_map);
+      playerMoved = heroInEntity.goRight(m_world_entity);
 
     else if (Controls::isActiveAction("move_left", m_actions))
-      playerMoved = heroInMap.goLeft(m_map);
+      playerMoved = heroInEntity.goLeft(m_world_entity);
 
     if (Controls::isActiveAction("zoom_cam", m_actions) && world_view_size.x > 300)
     {
@@ -119,7 +121,7 @@ namespace rCMI
 
     if (Controls::isActiveAction("fire", m_actions))
     {
-      if (heroInMap.alive())
+      if (heroInEntity.alive())
       {
         const gf::View &view = getWorldView();
         gf::RenderTarget &renderer = m_game->getRenderer();
@@ -129,7 +131,7 @@ namespace rCMI
         targetTile.x = static_cast<int>(worldPos.x / TileSize);
         targetTile.y = static_cast<int>(worldPos.y / TileSize);
 
-        if (shoot(m_map, heroInMap, targetTile))
+        if (shoot(m_world_entity, heroInEntity, targetTile))
           playerMoved = true;
       }
     }
@@ -149,31 +151,31 @@ namespace rCMI
 
     if (playerMoved)
     {
-      if (m_map.isStairs(heroInMap.getExistence().getPosition()))
+      if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
-        m_map.nextLevel();
+        m_world_entity.nextLevel();
         gf::Vector2i TileVect({TileSize, TileSize});
-        setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+        setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
         return;
       }
-      m_map.EnemyTurns();
+      m_world_entity.EnemyTurns();
     }
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_map.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+    setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
-    if (!m_map.hero().alive())
+    if (!m_world_entity.hero().alive())
     {
       m_timeSinceDeath += time;
       if (m_timeSinceDeath.asSeconds() > 2.0f)
         m_game->replaceScene(m_game->m_MenuScene);
     }
 
-    gf::Vector2f heroGridPos = m_map.hero().getExistence().getPosition();
+    gf::Vector2f heroGridPos = m_world_entity.hero().getExistence().getPosition();
 
     for (auto it = m_itemManager.items.begin(); it != m_itemManager.items.end();)
     {
@@ -200,8 +202,8 @@ namespace rCMI
 
   void WorldScene::updateFieldOfView()
   {
-    m_map.clearMap();
-    m_map.fieldOfVision();
+    m_world_entity.clearMap();
+    m_world_entity.fieldOfVision();
   }
 
   std::vector<gf::Action *> WorldScene::getActions()

@@ -8,14 +8,14 @@
 namespace rCMI
 {
   class Character;
-  class Map;
-
+  class WorldEntity;
+  
   class HostileEnnemy
   {
   public:
     const std::vector<gf::Vector2i> getPath() const { return path; }
 
-    bool perform(Character &self, Map &map);
+    bool perform(Character &self, WorldEntity &m_world);
 
   private:
     std::vector<gf::Vector2i> path;
@@ -27,7 +27,7 @@ namespace rCMI
     const std::variant<std::monostate, HostileEnnemy> &getVariant() const { return variant; }
     void setVariant(const std::variant<std::monostate, HostileEnnemy> &var) { variant = var; }
 
-    bool perform(Character &self, Map &map)
+    bool perform(Character &self, WorldEntity &m_world)
     {
       return std::visit(
           [&](auto &&comportement)
@@ -36,7 +36,7 @@ namespace rCMI
             if constexpr (std::is_same_v<T, std::monostate>)
               return false;
             else
-              return comportement.perform(self, map);
+              return comportement.perform(self, m_world);
           },
           variant);
     }

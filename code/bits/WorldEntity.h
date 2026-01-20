@@ -1,28 +1,25 @@
-#ifndef MAP_H
-#define MAP_H
+#ifndef WORLD_ENTITY_H
+#define WORLD_ENTITY_H
 
 #include <gf/Tileset.h>
 #include <gf/Grid.h>
-#include <gf/Map.h>
 #include <gf/Texture.h>
 #include <vector>
 #include <gf/Random.h>
 #include <optional>
-
-#include "Tile.h"
 #include "Character.h"
+#include "Map.h"
 
 namespace rCMI
 {
   class RogueCMI;
 
-  class Map : public gf::Entity
+  class WorldEntity : public gf::Entity
   {
   public:
-    Map(RogueCMI *game);
+    WorldEntity(RogueCMI *game);
 
     std::vector<Character> &getCharacters() { return characters; }
-    gf::Vector2i getSize() const { return size; }
 
     Character &hero() { return characters.front(); }
 
@@ -46,11 +43,12 @@ namespace rCMI
     void clearMap();
     void fieldOfVision();
 
+    Map &getMap(){ return m_map; };
+
   private:
-    gf::Vector2i size;
-    std::vector<Character> characters;
-    gf::SquareMap *grid = nullptr;
     RogueCMI *m_game = nullptr;
+    std::vector<Character> characters;
+    Map m_map;
   };
 };
 

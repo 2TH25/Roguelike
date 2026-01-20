@@ -1,7 +1,7 @@
-#include "Map.h"
-#include "Tile.h"
+#include "WorldEntity.h"
+
 #include "RogueCMI.h"
-#include "DungeonGenerator.h"
+#include "Map.h"
 #include "bsp.h"
 
 #include <queue>
@@ -18,32 +18,18 @@
 namespace rCMI
 {
 
-  Map::Map(RogueCMI *game)
+  WorldEntity::WorldEntity(RogueCMI *game)
       : gf::Entity(0),
-        m_game(game)
+        m_game(game),
+        m_map(game)
   {
   }
 
-  void Map::update_tile_at(gf::Vector2i pos)
+  void WorldEntity::update_tile_at(gf::Vector2i pos) { m_map.update_tile_at(pos); }
+
+  void WorldEntity::generate_board()
   {
-    if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
-      return;
-
-    grid->setEmpty(pos);
-  }
-
-  void Map::generate_board()
-  {
-    if (grid != nullptr)
-      free(grid);
-
-    size = TestMapSize;
-    grid = new gf::SquareMap(size);
-
-    for (int y = 0; y < size.y; ++y)
-      for (int x = 0; x < size.x; ++x)
-        if (x != 0 && y != 0 && x != size.x - 1 && y != size.y - 1)
-          update_tile_at({x, y});
+    m_map.generate_board();
 
     characters.clear();
     Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso70.png"));
@@ -55,7 +41,7 @@ namespace rCMI
     characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("squelette.png")));
   }
 
-  std::optional<std::size_t> Map::target_character_at(gf::Vector2i target)
+  std::optional<std::size_t> WorldEntity::target_character_at(gf::Vector2i target)
   {
     for (std::size_t i = 0; i < characters.size(); ++i)
       if (characters[i].getExistence().getPosition() == target && characters[i].alive())
@@ -64,85 +50,42 @@ namespace rCMI
     return std::nullopt;
   }
 
-  bool Map::blocking_entity_at(gf::Vector2i target)
+  bool WorldEntity::blocking_entity_at(gf::Vector2i target) { return m_map.blocking_entity_at(target) ? true : target_character_at(target).has_value(); }
+
+  bool WorldEntity::isWalkable(gf::Vector2i position) const { return m_map.isWalkable(position); }
+
+  void WorldEntity::nextLevel()
   {
-    if (target.x < 0 || target.y < 0 || target.x >= size.x || target.y >= size.y)
-      return true;
-
-    if (!grid->isWalkable(target))
-      return true;
-
-    return target_character_at(target).has_value();
-  }
-
-  bool Map::isWalkable(gf::Vector2i position) const
-  {
-    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
-      return false;
-
-    return grid->isWalkable(position);
-  }
-
-  void Map::nextLevel()
-  {
-    generate_dungeon(this->size * 1.2);
+    generate_dungeon(m_map.getSize() * 1.2);
     std::cout << "Niveau suivant atteint !" << std::endl;
   }
 
-  bool Map::isStairs(gf::Vector2i position) const
-  {
-    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
-      return false;
-    // return grid[position.y * size.x + position.x] == TileType::Stairs;
-    return false;
-  }
+  bool WorldEntity::isStairs(gf::Vector2i position) const { return m_map.isStairs(position); }
 
-  void Map::EnemyTurns()
+  void WorldEntity::EnemyTurns()
   {
     for (std::size_t i = 1; i < characters.size(); ++i)
       characters[i].doMove(*this);
   }
 
-  void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
+  void WorldEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    gf::ShapeParticles particles;
-
-    for (auto pos : grid->getRange())
-    {
-      if (grid->isInFieldOfVision(pos))
-      {
-        gf::Sprite sprite;
-        grid->isWalkable(pos) ? sprite.setTexture(m_game->resources.getTexture("Floor.png")) : sprite.setTexture(m_game->resources.getTexture("Wall.png"));
-        sprite.setPosition({(float)(pos.x * TileSize), (float)(pos.y * TileSize)});
-        target.draw(sprite, states);
-      }
-      else if (grid->isExplored(pos))
-      {
-        particles.addRectangle(pos * TileSize, {TileSize, TileSize},
-                               grid->isWalkable(pos) ? gf::Color::Gray() : gf::Color::Orange);
-      }
-    }
-
-    target.draw(particles);
+    m_map.render(target, states);
 
     for (std::size_t i = 0; i < characters.size(); ++i)
-      if ((characters[i].alive() || i == 0) && grid->isInFieldOfVision(characters[i].getExistence().getPosition()))
+      if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
   }
 
-  void Map::generate_dungeon(gf::Vector2i Map_size)
+  void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
   {
-    if (grid != nullptr)
-      free(grid);
-
-    size = Map_size;
-    grid = new gf::SquareMap(size);
+    m_map.generate_dungeon(Map_size);
 
     rCMI::BSP generator;
-    Dungeon dungeon = generator.generate(m_game->random, size);
+    Dungeon dungeon = generator.generate(m_game->random, Map_size);
 
-    for (int y = 0; y < size.y; ++y)
-      for (int x = 0; x < size.x; ++x)
+    for (int y = 0; y < Map_size.y; ++y)
+      for (int x = 0; x < Map_size.x; ++x)
       {
         TileType type = dungeon.getTile({x, y});
         if (type == TileType::Floor)
@@ -252,7 +195,7 @@ namespace rCMI
     }
   };
 
-  std::vector<gf::Vector2i> Map::compute_path(gf::Vector2i origin, gf::Vector2i target)
+  std::vector<gf::Vector2i> WorldEntity::compute_path(gf::Vector2i origin, gf::Vector2i target)
   {
     std::queue<gf::Vector2i> frontier;
     frontier.push(origin);
@@ -303,13 +246,7 @@ namespace rCMI
     return path;
   }
 
-  void Map::clearMap()
-  {
-    grid->clearFieldOfVision();
-  }
+  void WorldEntity::clearMap() { m_map.clearFieldOfVision(); }
 
-  void Map::fieldOfVision()
-  {
-    grid->computeFieldOfVision(hero().getExistence().getPosition(), 5);
-  }
+  void WorldEntity::fieldOfVision() { m_map.computeFieldOfVision(hero().getExistence().getPosition()); }
 }

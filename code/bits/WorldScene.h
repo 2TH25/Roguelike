@@ -3,7 +3,7 @@
 
 #include <gf/Scene.h>
 #include <gf/Event.h>
-#include "Map.h"
+#include "WorldEntity.h"
 #include "ItemManager.h"
 
 namespace rCMI
@@ -13,7 +13,7 @@ namespace rCMI
   class WorldScene : public gf::Scene
   {
   public:
-    Map m_map;
+    WorldEntity m_world_entity;
     WorldScene(RogueCMI *game);
     void generateMap(gf::Vector2i size);
 

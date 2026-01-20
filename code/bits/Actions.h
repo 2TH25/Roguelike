@@ -5,13 +5,13 @@
 
 namespace rCMI
 {
-  class Map;
+  class WorldEntity;
   class Character;
 
-  bool bump(Map &map, Character &character, gf::Vector2i target);
-  bool movement(Map &map, Character &character, gf::Vector2i target);
-  bool melee(Map &map, Character &character, gf::Vector2i target);
-  bool shoot(Map &map, Character &character, gf::Vector2i target);
+  bool bump(WorldEntity &m_world, Character &character, gf::Vector2i target);
+  bool movement(WorldEntity &m_world, Character &character, gf::Vector2i target);
+  bool melee(WorldEntity &m_world, Character &character, gf::Vector2i target);
+  bool shoot(WorldEntity &m_world, Character &character, gf::Vector2i target);
 }
 
 #endif // ACTIONS_H

@@ -6,7 +6,7 @@
 #include "WorldScene.h"
 #include "BaseScene.h"
 #include "MenuScene.h"
-
+#include "InventoryScene.h"
 #include "GameData.h"
 
 namespace rCMI

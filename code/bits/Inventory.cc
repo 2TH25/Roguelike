@@ -202,7 +202,7 @@ namespace rCMI
 
 	void Inventory::updateInventory(RogueCMI *game)
 	{
-		auto &hero = game->m_WorldScene.m_map.hero();
+		auto &hero = game->m_WorldScene.m_world_entity.hero();
 		m_stats = hero.getStat();
 		updateStatsText();
 	}

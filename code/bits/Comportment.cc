@@ -5,14 +5,14 @@
 
 #include "Actions.h"
 #include "Character.h"
-#include "Map.h"
+#include "WorldEntity.h"
 
 namespace rCMI
 {
 
-  bool HostileEnnemy::perform(Character &self, Map &map)
+  bool HostileEnnemy::perform(Character &self, WorldEntity &m_world)
   {
-    auto targetPos = map.hero().getExistence().getPosition();
+    auto targetPos = m_world.hero().getExistence().getPosition();
     auto selfPos = self.getExistence().getPosition();
 
     int distance = gf::chebyshevDistance(selfPos, targetPos);
@@ -21,11 +21,11 @@ namespace rCMI
       return false;
 
     if (distance <= 1)
-      return melee(map, self, targetPos);
+      return melee(m_world, self, targetPos);
 
-    if (map.isVisible(selfPos))
+    if (m_world.isVisible(selfPos))
     {
-      path = map.compute_path(selfPos, targetPos);
+      path = m_world.compute_path(selfPos, targetPos);
       std::reverse(path.begin(), path.end());
     }
 
@@ -33,7 +33,7 @@ namespace rCMI
     {
       auto nextStep = path.back();
       path.pop_back();
-      return bump(map, self, nextStep);
+      return bump(m_world, self, nextStep);
     }
 
     return true;

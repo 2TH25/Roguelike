@@ -1,5 +1,5 @@
 #include "Character.h"
-#include "Map.h"
+#include "WorldEntity.h"
 #include "Actions.h"
 #include "GameData.h"
 #include <algorithm>
@@ -14,52 +14,52 @@ namespace rCMI
   {
   }
 
-  bool Character::goUp(Map &map)
+  bool Character::goUp(WorldEntity &m_world)
   {
     if (!alive())
       return false;
 
     gf::Vector2i current = existence.getPosition();
     gf::Vector2i target = {current.x, current.y - 1};
-    return bump(map, *this, target);
+    return bump(m_world, *this, target);
   }
 
-  bool Character::goDown(Map &map)
+  bool Character::goDown(WorldEntity &m_world)
   {
     if (!alive())
       return false;
 
     gf::Vector2i current = existence.getPosition();
     gf::Vector2i target = {current.x, current.y + 1};
-    return bump(map, *this, target);
+    return bump(m_world, *this, target);
   }
 
-  bool Character::goLeft(Map &map)
+  bool Character::goLeft(WorldEntity &m_world)
   {
     if (!alive())
       return false;
 
     gf::Vector2i current = existence.getPosition();
     gf::Vector2i target = {current.x - 1, current.y};
-    return bump(map, *this, target);
+    return bump(m_world, *this, target);
   }
 
-  bool Character::goRight(Map &map)
+  bool Character::goRight(WorldEntity &m_world)
   {
     if (!alive())
       return false;
 
     gf::Vector2i current = existence.getPosition();
     gf::Vector2i target = {current.x + 1, current.y};
-    return bump(map, *this, target);
+    return bump(m_world, *this, target);
   }
 
-  void Character::doMove(Map &map)
+  void Character::doMove(WorldEntity &m_world)
   {
     if (!alive())
       return;
 
-    if (comportment.perform(*this, map))
+    if (comportment.perform(*this, m_world))
       return;
 
     static gf::Random random;
@@ -83,8 +83,8 @@ namespace rCMI
       target.x += 1;
       break;
     }
-    if (map.isWalkable(target))
-      bump(map, *this, target);
+    if (m_world.isWalkable(target))
+      bump(m_world, *this, target);
   }
 
   void Character::take_damage(int damage)

@@ -28,6 +28,8 @@ namespace rCMI
   constexpr int leafSizeMaximum = 15;
   constexpr int NumberItems = 10;
 
+  constexpr int radiusFieldOfView = 8;
+
   class Controls
   {
   public:
