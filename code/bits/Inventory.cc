@@ -11,14 +11,14 @@ namespace rCMI
 				m_torsoSlot(game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png")),
 				m_legSlot(game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg")),
 				m_handSlot(game->resources.getTexture("Gants.jpg"), game->resources.getTexture("Gants.jpg"), game->resources.getTexture("Gants.jpg")),
-				m_feetSlot(game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg")),
+				m_bootsSlot(game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg")),
 				m_accessorySlot(game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"))
 	{
 		m_headSlot.setPosition({220, 110});
 		m_legSlot.setPosition({500, 300});
 		m_torsoSlot.setPosition({500, 230});
 		m_handSlot.setPosition({220, 200});
-		m_feetSlot.setPosition({500, 380});
+		m_bootsSlot.setPosition({500, 380});
 		m_accessorySlot.setPosition({220, 300});
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso100.png"));
@@ -29,7 +29,7 @@ namespace rCMI
 		m_container.addWidget(m_legSlot);
 		m_container.addWidget(m_torsoSlot);
 		m_container.addWidget(m_handSlot);
-		m_container.addWidget(m_feetSlot);
+		m_container.addWidget(m_bootsSlot);
 		m_container.addWidget(m_accessorySlot);
 
 		m_background.setSize({800, 700});
@@ -67,8 +67,8 @@ namespace rCMI
 														{ this->onUnequip(ItemType::Torso, game); });
 		m_handSlot.setCallback([this, game]()
 													 { this->onUnequip(ItemType::Hand, game); });
-		m_feetSlot.setCallback([this, game]()
-													 { this->onUnequip(ItemType::Feet, game); });
+		m_bootsSlot.setCallback([this, game]()
+													 { this->onUnequip(ItemType::Boots, game); });
 		m_accessorySlot.setCallback([this, game]()
 																{ this->onUnequip(ItemType::Accessory, game); });
 	}
@@ -85,8 +85,8 @@ namespace rCMI
 			return &m_legSlot;
 		case ItemType::Hand:
 			return &m_handSlot;
-		case ItemType::Feet:
-			return &m_feetSlot;
+		case ItemType::Boots:
+			return &m_bootsSlot;
 		case ItemType::Accessory:
 			return &m_accessorySlot;
 		default:
@@ -110,6 +110,7 @@ namespace rCMI
 			{
 				slot->item = *item;
 				slot->hasItem = true;
+				
 			}
 			else
 				slot->hasItem = false;
@@ -140,11 +141,11 @@ namespace rCMI
 				case ItemType::Hand:
 					targetWidget->setDefaultSprite(game->resources.getTexture("Gants.jpg"), r);
 					break;
-				case ItemType::Feet:
+				case ItemType::Boots:
 					targetWidget->setDefaultSprite(game->resources.getTexture("Bottes.jpg"), r);
 					break;
 				case ItemType::Accessory:
-					targetWidget->setDefaultSprite(game->resources.getTexture("accessoire.jpg"), r);
+					targetWidget->setDefaultSprite(game->resources.getTexture("Accessoire.jpg"), r);
 					break;
 				default:
 					break;
@@ -186,6 +187,10 @@ namespace rCMI
 
 	void Inventory::updateStatsText()
 	{
+
+		int force_additionnelle =0;
+		int sante_additionnelle =0;
+		int defense_additionnelle =0;
 		std::string str = "Force : " + std::to_string(m_stats.getPower()) + "\n" +
 											"Santé : " + std::to_string(m_stats.getHealth()) + " / " + std::to_string(m_stats.getMaxHealth()) + "\n" +
 											"Defense : " + std::to_string(m_stats.getDefense());
@@ -226,20 +231,19 @@ namespace rCMI
 			return;
 
 		Item itemToEquip = m_backpack[index];
+		ItemType type = itemToEquip.m_type;
 
-		if (hasEquipment(itemToEquip.m_type))
+		if (hasEquipment(type))
 		{
-			Item alreadyEquipped = getEquippedItem(itemToEquip.m_type);
-			Item temp = alreadyEquipped;
-			m_backpack[index] = temp;
+			Item alreadyEquipped = getEquippedItem(type);
+			m_backpack[index] = alreadyEquipped;
 		}
 		else
+		{
 			m_backpack.erase(m_backpack.begin() + index);
-
-		setEquippedItem(itemToEquip.m_type, &itemToEquip, game);
-
+		}
+		setEquippedItem(type, &itemToEquip, game);
 		updateBackpackDisplay(game);
-		updateStatsText();
 	}
 
 	Inventory::EquippedSlot *Inventory::getSlotByType(ItemType type)
@@ -254,8 +258,8 @@ namespace rCMI
 			return &m_equippedLegs;
 		case ItemType::Hand:
 			return &m_equippedHand;
-		case ItemType::Feet:
-			return &m_equippedFeet;
+		case ItemType::Boots:
+			return &m_equippedBoots;
 		case ItemType::Accessory:
 			return &m_equippedAccessory;
 		default:
@@ -275,5 +279,35 @@ namespace rCMI
 		updateBackpackDisplay(game);
 
 		return true;
+	}
+
+
+	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game)
+	{
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i)
+		{
+			gf::Vector2f pos = m_backpackWidgets[i].getPosition();
+			gf::Vector2f size = { 80.0f, 80.0f }; 
+
+			gf::RectF box = gf::RectF::fromPositionSize(pos, size);
+
+			if (box.contains(coords))
+			{
+				this->equipFromBackpack(i, game);
+				return; 
+			}
+		}
+		gf::SpriteWidget* armorSlots[] = { &m_headSlot, &m_torsoSlot, &m_legSlot, &m_handSlot, &m_bootsSlot, &m_accessorySlot };
+		ItemType types[] = { ItemType::Head, ItemType::Torso, ItemType::Legs, ItemType::Hand, ItemType::Boots, ItemType::Accessory };
+
+		for (int i = 0; i < 6; ++i)
+		{
+			gf::RectF box = gf::RectF::fromPositionSize(armorSlots[i]->getPosition(), { 80.0f, 80.0f });
+			if (box.contains(coords))
+			{
+				this->onUnequip(types[i], game);
+				return;
+			}
+		}
 	}
 }

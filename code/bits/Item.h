@@ -3,6 +3,7 @@
 
 #include <string>
 #include <gf/Texture.h>
+#include "Stat.h"
 
 namespace rCMI
 {
@@ -15,7 +16,7 @@ namespace rCMI
 		Torso,
 		Legs,
 		Hand,
-		Feet,
+		Boots,
 		Accessory,
 		Consumable,
 		Misc
@@ -28,6 +29,7 @@ namespace rCMI
 		std::string m_description;
 		ItemType m_type;
 		const gf::Texture *m_texture = nullptr;
+		Stat m_stat;
 
 		Item() = default;
 

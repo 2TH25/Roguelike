@@ -75,6 +75,8 @@ namespace rCMI
     for (std::size_t i = 0; i < characters.size(); ++i)
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
+
+    m_itemManager.render(target,states);
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -184,6 +186,33 @@ namespace rCMI
         }
       }
     }
+
+    int numberOfItems = 10;
+
+    for (int i = 0; i < numberOfItems; ++i)
+    {
+      bool found = false;
+      int x_final;
+      int y_final;
+
+      do
+      {
+        int x = rand() % Map_size.x;
+        int y = rand() % Map_size.y;
+
+        if (isWalkable({x, y}))
+        {
+          found = true;
+          x_final = x;
+          y_final = y;
+        }
+      } while (!found);
+
+      gf::Vector2f pixelPos = {x_final * (float)TileSize + TileSize / 2.0f, y_final * (float)TileSize + TileSize / 2.0f};
+      m_itemManager.spawnItem(pixelPos,m_game);
+    }
+
+    std::cout << "Donjon peuple avec " << m_itemManager.items.size() << " items." << std::endl;
   }
   struct VectorCompare
   {
