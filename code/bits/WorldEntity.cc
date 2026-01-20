@@ -21,7 +21,8 @@ namespace rCMI
   WorldEntity::WorldEntity(RogueCMI *game)
       : gf::Entity(0),
         m_game(game),
-        m_map(game)
+        m_map(game),
+        m_itemManager(this)
   {
   }
 
@@ -71,6 +72,7 @@ namespace rCMI
   void WorldEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     m_map.render(target, states);
+
     for (std::size_t i = 0; i < characters.size(); ++i)
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);

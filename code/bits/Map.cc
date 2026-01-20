@@ -85,7 +85,7 @@ namespace rCMI
 
       // Si la tuile n'est pas explorée, on passe à la suivante (Noir total)
       if (!explored) {
-          continue;
+        continue;
       }
 
       gf::Sprite sprite;
@@ -93,18 +93,21 @@ namespace rCMI
 
       // --- 1. Détermination de la texture (identique à avant) ---
       if (isStairs(pos)) {
-          textureName = "Stairs.png";
-      } else {
-          int hash = (pos.x * 39113 + pos.y * 17569) % 100; 
-          bool isWalkable = map.isWalkable(pos);
-          std::string base = isWalkable ? "Floor" : "Wall";
+        textureName = "Stairs.png";
+      }
+      else
+      {
+        int hash = (pos.x * 39113 + pos.y * 17569) % 100;
+        bool isWalkable = map.isWalkable(pos);
+        std::string base = isWalkable ? "Floor" : "Wall";
 
-          if (hash < 45) {
-              int variant = (hash % 4) + 2; 
-              textureName = base + std::to_string(variant) + ".png";
-          } else {
-              textureName = base + ".png";
-          }
+        if (hash < 45) {
+          int variant = (hash % 4) + 2;
+          textureName = base + std::to_string(variant) + ".png";
+        }
+        else {
+          textureName = base + ".png";
+        }
       }
 
       // --- 2. Configuration du Sprite ---
@@ -114,17 +117,19 @@ namespace rCMI
 
       // --- 3. Filtre de luminosité ---
       if (inFOV) {
-          // Pleine lumière
-          sprite.setColor(gf::Color::White); 
-      } else {
-          // Brouillard de guerre : on fonce l'image (R, G, B très bas)
-          // Tu peux ajuster 60, 60, 60 pour faire plus ou moins sombre
-          sprite.setColor(gf::Color::fromRgba32(100, 100, 100, 255));
+        // Pleine lumière
+        sprite.setColor(gf::Color::White);
+      }
+      else {
+        // Brouillard de guerre : on fonce l'image (R, G, B très bas)
+        // Tu peux ajuster 60, 60, 60 pour faire plus ou moins sombre
+        sprite.setColor(gf::Color::fromRgba32(100, 100, 100, 255));
       }
 
       target.draw(sprite, states);
     }
   }
+  
   void Map::generate_dungeon(gf::Vector2i Map_size)
   {
     size = Map_size;

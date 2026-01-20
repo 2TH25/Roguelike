@@ -110,7 +110,7 @@ namespace rCMI
   Character Character::hero(gf::Vector2i position, const gf::Texture &tex)
   {
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
-    Stat st(10000, 0, 200);
+    Stat st(100, 0, 20);
     return Character(ex, st, tex);
   }
 

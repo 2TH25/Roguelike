@@ -1,8 +1,15 @@
 #include "ItemManager.h"
+#include "WorldEntity.h"
+#include "GameData.h"
 
-namespace rCMI {
+namespace rCMI
+{
+  ItemManager::ItemManager(WorldEntity *world)
+      : m_world(world)
+  {
+  }
 
-    void ItemManager::spawnItem(gf::Vector2f position, RogueCMI *game)
+  void ItemManager::spawnItem(gf::Vector2f position, RogueCMI *game)
   {
     Item newItem = Item::generateRandomItem(game);
 
@@ -21,5 +28,11 @@ namespace rCMI {
     items.push_back(dropped);
   }
 
+  void ItemManager::render(gf::RenderTarget &target, const gf::RenderStates &states)
+  {
+    // std::cout << "Nombre d'items au sol : " << items.size() << std::endl;
+    for (auto &dropped : items)
+      if (m_world->getMap().isInFieldOfVision(dropped.sprite.getPosition() / TileSize))
+        target.draw(dropped.sprite, states);
+  }
 }
-

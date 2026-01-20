@@ -11,28 +11,25 @@
 namespace rCMI
 {
 
-	struct DroppedItem
-	{
-		Item item;
-		gf::Sprite sprite;
-	};
+  struct DroppedItem
+  {
+    Item item;
+    gf::Sprite sprite;
+  };
 
-	class RogueCMI;
+  class RogueCMI;
+  class WorldEntity;
 
-	class ItemManager : public gf::Entity
-	{
-		public:
-			std::vector<DroppedItem> items;
+  class ItemManager
+  {
+  public:
+    std::vector<DroppedItem> items;
+    WorldEntity *m_world;
+    ItemManager(WorldEntity *world);
 
-			virtual void render(gf::RenderTarget &target, const gf::RenderStates &states) override
-			{
-				// std::cout << "Nombre d'items au sol : " << items.size() << std::endl; 
-				for (auto &dropped : items)
-					target.draw(dropped.sprite, states);
-			}
-			void spawnItem(gf::Vector2f position,RogueCMI *game);
-			
-	};
+    virtual void render(gf::RenderTarget &target, const gf::RenderStates &states);
+    void spawnItem(gf::Vector2f position, RogueCMI *game);
+  };
 }
 
 #endif
