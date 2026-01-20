@@ -9,6 +9,7 @@
 #include <optional>
 #include "Character.h"
 #include "Map.h"
+#include "ItemManager.h"
 
 namespace rCMI
 {
@@ -18,6 +19,7 @@ namespace rCMI
   {
   public:
     WorldEntity(RogueCMI *game);
+    ItemManager m_itemManager;
 
     std::vector<Character> &getCharacters() { return characters; }
 
@@ -27,7 +29,7 @@ namespace rCMI
     bool blocking_entity_at(gf::Vector2i target);
 
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
-    void update_tile_at(gf::Vector2i pos);
+    void update_tile_at(gf::Vector2i pos, TileType type);
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
@@ -49,6 +51,7 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
     Map m_map;
+    
   };
 };
 

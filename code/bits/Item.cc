@@ -9,42 +9,53 @@ namespace rCMI
 
     std::vector<ItemType> types = {
         ItemType::Head, ItemType::Torso, ItemType::Legs,
-        ItemType::Hand, ItemType::Feet, ItemType::Accessory};
+        ItemType::Hand, ItemType::Boots, ItemType::Accessory};
 
     ItemType randomType = types[rand() % types.size()];
-    std::string name;
-    std::string textureKey;
+    Item newItem;
 
     switch (randomType)
     {
-    case ItemType::Head:
-      name = "Casque de test";
-      textureKey = "Casque.jpg";
+    case ItemType::Head: {
+      Stat s(10, 2, 0); 
+      newItem = Item("Casque", ItemType::Head, game->resources.getTexture("Casque_item.jpg"));
+      newItem.m_stat = s;
       break;
-    case ItemType::Torso:
-      name = "Plastron de test";
-      textureKey = "Plastron.png";
+    }
+    case ItemType::Torso: {
+      Stat s(30, 5, 0); 
+      newItem = Item("Plastron", ItemType::Torso, game->resources.getTexture("Plastron_item.jpg"));
+      newItem.m_stat = s;
       break;
-    case ItemType::Legs:
-      name = "Jambieres de test";
-      textureKey = "Jambieres.jpg";
+    }
+    case ItemType::Legs: {
+      Stat s(10, 2, 0); 
+      newItem = Item("Jambieres", ItemType::Legs, game->resources.getTexture("Jambieres_item.jpg"));
+      newItem.m_stat = s;
       break;
-    case ItemType::Hand:
-      name = "Gants de test";
-      textureKey = "Gants.jpg";
+    }
+    case ItemType::Hand: {
+      Stat s(0, 2, 3); 
+      newItem = Item("Gants", ItemType::Hand, game->resources.getTexture("Gants_item.jpg"));
+      newItem.m_stat = s;
       break;
-    case ItemType::Feet:
-      name = "Bottes de test";
-      textureKey = "Bottes.jpg";
+    }
+    case ItemType::Boots: {
+      Stat s(10, 2, 0); 
+      newItem = Item("Bottes", ItemType::Boots, game->resources.getTexture("Bottes_item.jpg"));
+      newItem.m_stat = s;
       break;
-    case ItemType::Accessory:
-      name = "Anneau de test";
-      textureKey = "accessoire.jpg";
+    }
+    case ItemType::Accessory: {
+      Stat s(0, 2, 10); 
+      newItem = Item("Accessoire", ItemType::Accessory, game->resources.getTexture("Accessoire_item.jpg"));
+      newItem.m_stat = s;
       break;
+    }
     default:
       break;
     }
 
-    return Item(name, randomType, game->resources.getTexture(textureKey));
+    return newItem;
   }
 }

@@ -22,6 +22,10 @@ namespace rCMI
     int getPower() const { return power; }
 
     void setHealth(int h) { health = h; }
+    void setDefense(int d) { defense = d; }
+    void setPower(int p) { power = p; }
+    void addStat(int h, int d, int p) { health += h; max_health += h; defense += d; power += p; }
+    void retireStat(int h, int d, int p) { health -= h; max_health -= h; defense -= d; power -= p; }
 
   private:
     int max_health = 0;

@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <gf/Sprite.h>
+#include <map>
 
 #include "Item.h"
 #include "Stat.h"
@@ -22,7 +23,7 @@ namespace rCMI
   {
   private:
     bool m_isOpen = false;
-    gf::WidgetContainer m_container;
+    
     Stat m_stats;
     gf::TextWidget m_statsWidget;
 
@@ -32,10 +33,11 @@ namespace rCMI
     gf::SpriteWidget m_legSlot;
     gf::SpriteWidget m_torsoSlot;
     gf::SpriteWidget m_handSlot;
-    gf::SpriteWidget m_feetSlot;
+    gf::SpriteWidget m_bootsSlot;
     gf::SpriteWidget m_accessorySlot;
 
     std::vector<Item> m_backpack;
+    std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
     std::array<gf::SpriteWidget, MaxBackpackSize> m_backpackWidgets;
     gf::Texture *m_emptySlotTexture; // slot vide du backpack
@@ -50,7 +52,7 @@ namespace rCMI
     EquippedSlot m_equippedTorso;
     EquippedSlot m_equippedLegs;
     EquippedSlot m_equippedHand;
-    EquippedSlot m_equippedFeet;
+    EquippedSlot m_equippedBoots;
     EquippedSlot m_equippedAccessory;
 
     gf::RectangleShape m_background;
@@ -59,6 +61,8 @@ namespace rCMI
 
   public:
     Inventory(RogueCMI *game);
+
+    gf::WidgetContainer m_container;
 
     bool hasEquipment(ItemType type);
     void setEquippedItem(ItemType type, Item *item, RogueCMI *game);
@@ -71,6 +75,7 @@ namespace rCMI
     void equipFromBackpack(std::size_t index, RogueCMI *game);
     EquippedSlot *getSlotByType(ItemType type);
     bool addItemToBackpack(Item item, RogueCMI *game);
+    void handleItemClick(gf::Vector2f coords, RogueCMI *game);
   };
 }
 

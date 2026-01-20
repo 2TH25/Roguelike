@@ -23,7 +23,7 @@ namespace rCMI
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states);
 
-    void update_tile_at(gf::Vector2i pos);
+    void update_tile_at(gf::Vector2i pos, TileType type);
 
     void generate_board();
 

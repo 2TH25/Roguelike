@@ -31,8 +31,6 @@ namespace rCMI
     std::vector<gf::Action *> m_actions;
     gf::Vector2i m_mousePosition;
     gf::Action *m_fireAction = nullptr;
-    ItemManager m_itemManager;
-    void spawnItem(gf::Vector2f position);
 
     gf::Time m_timeSinceDeath;
     bool m_isActivateInventorie;

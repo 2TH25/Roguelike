@@ -25,7 +25,7 @@ namespace rCMI
   {
   }
 
-  void WorldEntity::update_tile_at(gf::Vector2i pos) { m_map.update_tile_at(pos); }
+  void WorldEntity::update_tile_at(gf::Vector2i pos, TileType type) { m_map.update_tile_at(pos, type); }
 
   void WorldEntity::generate_board()
   {
@@ -38,7 +38,7 @@ namespace rCMI
     characters.push_back(hero);
     // characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
     // characters.push_back(Character::zombie({2,6}, m_game->resources.getTexture("squelette.png")));
-    characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("squelette.png")));
+    // characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("squelette.png")));
   }
 
   std::optional<std::size_t> WorldEntity::target_character_at(gf::Vector2i target)
@@ -74,6 +74,8 @@ namespace rCMI
     for (std::size_t i = 0; i < characters.size(); ++i)
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
+
+    m_itemManager.render(target,states);
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -85,11 +87,7 @@ namespace rCMI
 
     for (int y = 0; y < Map_size.y; ++y)
       for (int x = 0; x < Map_size.x; ++x)
-      {
-        TileType type = dungeon.getTile({x, y});
-        if (type == TileType::Floor)
-          update_tile_at({x, y});
-      }
+        update_tile_at({x, y}, dungeon.getTile({x, y}));
 
     characters.clear();
     std::vector<BSPTree *> leaves;
@@ -113,10 +111,6 @@ namespace rCMI
       }
     }
 
-    // if (characters.empty()) {
-    //    characters.push_back(Character::hero({1,1}, m_game->resources.getTexture("perso640/Perso640.png")));
-    // }
-
     for (auto *leaf : leaves)
     {
       gf::RectI room = leaf->room;
@@ -124,7 +118,7 @@ namespace rCMI
 
       if (leaf->type == RoomType::End)
       {
-        // update_tile_at(center, TileType::Stairs);
+        update_tile_at(center, TileType::Stairs);
       }
       else if (leaf->type == RoomType::Healing)
       {
@@ -183,7 +177,35 @@ namespace rCMI
         }
       }
     }
+
+    int numberOfItems = 10;
+
+    for (int i = 0; i < numberOfItems; ++i)
+    {
+      bool found = false;
+      int x_final;
+      int y_final;
+
+      do
+      {
+        int x = rand() % Map_size.x;
+        int y = rand() % Map_size.y;
+
+        if (isWalkable({x, y}))
+        {
+          found = true;
+          x_final = x;
+          y_final = y;
+        }
+      } while (!found);
+
+      gf::Vector2f pixelPos = {x_final * (float)TileSize + TileSize / 2.0f, y_final * (float)TileSize + TileSize / 2.0f};
+      m_itemManager.spawnItem(pixelPos,m_game);
+    }
+
+    std::cout << "Donjon peuple avec " << m_itemManager.items.size() << " items." << std::endl;
   }
+
   struct VectorCompare
   {
     bool operator()(const gf::Vector2i &a, const gf::Vector2i &b) const

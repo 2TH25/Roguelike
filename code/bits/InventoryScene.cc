@@ -14,10 +14,13 @@ namespace rCMI
   }
 
   void InventoryScene::doProcessEvent(gf::Event &event)
-  {
-    if (event.type == gf::EventType::MouseMoved || event.type == gf::EventType::MouseButtonPressed)
-      gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseCursor.coords, getHudView());
-  }
+{
+    if (event.type == gf::EventType::MouseButtonPressed)
+    {
+        gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseButton.coords, getHudView());
+        m_inventory.handleItemClick(coords, m_game);
+    }
+}
 
   void InventoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states)
   {
