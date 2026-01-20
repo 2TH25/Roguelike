@@ -29,7 +29,7 @@ namespace rCMI
     bool blocking_entity_at(gf::Vector2i target);
 
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
-    void update_tile_at(gf::Vector2i pos);
+    void update_tile_at(gf::Vector2i pos, TileType type);
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;

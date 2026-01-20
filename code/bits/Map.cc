@@ -22,12 +22,19 @@ namespace rCMI
   {
   }
 
-  void Map::update_tile_at(gf::Vector2i pos)
+  void Map::update_tile_at(gf::Vector2i pos, TileType type)
   {
     if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
       return;
 
-    map.setEmpty(pos);
+    if (type == TileType::Floor)
+      map.setEmpty(pos);
+
+    if (type == TileType::Stairs)
+    {
+      map.setEmpty(pos);
+      stairs = pos;
+    }
   }
 
   void Map::generate_board()
@@ -38,7 +45,7 @@ namespace rCMI
     for (int y = 0; y < size.y; ++y)
       for (int x = 0; x < size.x; ++x)
         if (x != 0 && y != 0 && x != size.x - 1 && y != size.y - 1)
-          update_tile_at({x, y});
+          x == 1 && y == 1 ? update_tile_at({x, y}, TileType::Stairs) : update_tile_at({x, y}, TileType::Floor);
   }
 
   bool Map::blocking_entity_at(gf::Vector2i target)
@@ -77,14 +84,20 @@ namespace rCMI
       if (map.isInFieldOfVision(pos))
       {
         gf::Sprite sprite;
-        map.isWalkable(pos) ? sprite.setTexture(m_game->resources.getTexture("Floor.png")) : sprite.setTexture(m_game->resources.getTexture("Wall.png"));
+        map.isWalkable(pos)
+            ? (pos == stairs
+                   ? sprite.setTexture(m_game->resources.getTexture("Stairs.png"))
+                   : sprite.setTexture(m_game->resources.getTexture("Floor.png")))
+            : sprite.setTexture(m_game->resources.getTexture("Wall.png"));
         sprite.setPosition({(float)(pos.x * TileSize), (float)(pos.y * TileSize)});
         target.draw(sprite, states);
       }
       else if (map.isExplored(pos))
       {
         particles.addRectangle(pos * TileSize, {TileSize, TileSize},
-                               map.isWalkable(pos) ? gf::Color::Gray() : gf::Color::Orange);
+                               map.isWalkable(pos)
+                                   ? (pos == stairs ? gf::Color::Blue : gf::Color::Gray())
+                                   : gf::Color::Orange);
       }
     }
     target.draw(particles);
