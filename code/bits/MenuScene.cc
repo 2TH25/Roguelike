@@ -24,6 +24,7 @@ namespace rCMI
     addAction(down);
 
     select.addKeycodeKeyControl(gf::Keycode::Return);
+    select.addMouseButtonControl(gf::MouseButton::Left);
     addAction(select);
 
     auto createButtons = [&](gf::TextButtonWidget &button, auto callback)
