@@ -14,7 +14,7 @@ namespace rCMI
         m_map(game),
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
-        m_gameOverHandled(false)
+        m_isActivateInventorie(false)
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -136,8 +136,15 @@ namespace rCMI
 
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
-      m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-      m_game->pushScene(*(m_game->m_InventoryScene));
+      if (m_isActivateInventorie)
+        m_game->popScene();
+      else
+      {
+        m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+        m_game->pushScene(*(m_game->m_InventoryScene));
+      }
+
+      m_isActivateInventorie = !m_isActivateInventorie; 
     }
 
     if (playerMoved)
@@ -162,11 +169,8 @@ namespace rCMI
     if (!m_map.hero().alive())
     {
       m_timeSinceDeath += time;
-      if (m_timeSinceDeath.asSeconds() > 2.0f && !m_gameOverHandled)
-      {
-        m_gameOverHandled = true;
+      if (m_timeSinceDeath.asSeconds() > 2.0f)
         m_game->replaceScene(m_game->m_MenuScene);
-      }
     }
 
     gf::Vector2f heroGridPos = m_map.hero().getExistence().getPosition();

@@ -35,7 +35,7 @@ namespace rCMI
     void spawnItem(gf::Vector2f position);
 
     gf::Time m_timeSinceDeath;
-    bool m_gameOverHandled;
+    bool m_isActivateInventorie;
   };
 }
 
