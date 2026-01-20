@@ -40,8 +40,8 @@ namespace rCMI
     save_actions["move_down"] = {"S", "Down"};
     save_actions["move_left"] = {"Q", "Left"};
     save_actions["move_right"] = {"D", "Right"};
-    save_actions["zoom_cam"] = {"="};
-    save_actions["unzoom_cam"] = {"-"};
+    save_actions["zoom_cam"] = {"=", "Keypad +", "P"};
+    save_actions["unzoom_cam"] = {"-", "8", "Keypad -", "M"};
     save_actions["ToggleInventory"] = {"Tab"};
 
     return save_actions;
