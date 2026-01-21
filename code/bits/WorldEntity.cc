@@ -63,6 +63,10 @@ namespace rCMI
 
   bool WorldEntity::isStairs(gf::Vector2i position) const { return m_map.isStairs(position); }
 
+  bool WorldEntity::isHealing(gf::Vector2i position) const { return m_map.isHealing(position); }
+
+  bool WorldEntity::usHealing(gf::Vector2i position) { return m_map.usHealing(position); }
+
   void WorldEntity::EnemyTurns()
   {
     for (std::size_t i = 1; i < characters.size(); ++i)
@@ -124,7 +128,7 @@ namespace rCMI
       }
       else if (leaf->type == RoomType::Healing)
       {
-        // update_tile_at(center, TileType::HealingFloor);
+        update_tile_at(center, TileType::HealingFloor);
         continue;
       }
       else if (leaf->type == RoomType::Start)

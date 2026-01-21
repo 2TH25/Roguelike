@@ -37,6 +37,8 @@ namespace rCMI
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
     bool isStairs(gf::Vector2i position) const;
+    bool isHealing(gf::Vector2i position) const;
+    bool usHealing(gf::Vector2i position);
     void nextLevel();
 
     void generate_board();

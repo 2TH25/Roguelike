@@ -12,7 +12,8 @@ namespace rCMI
   {
     Floor = 0,
     Wall = 1,
-    Stairs = 2
+    Stairs = 2,
+    HealingFloor = 3
   };
 
   class Tile

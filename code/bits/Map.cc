@@ -35,6 +35,12 @@ namespace rCMI
       map.setEmpty(pos);
       stairs = pos;
     }
+
+    if (type == TileType::HealingFloor)
+    {
+      map.setEmpty(pos);
+      healingZone.push_back(posWhBool::getPosWhBool(pos, true));
+    }
   }
 
   void Map::generate_board()
@@ -45,7 +51,7 @@ namespace rCMI
     for (int y = 0; y < size.y; ++y)
       for (int x = 0; x < size.x; ++x)
         if (x != 0 && y != 0 && x != size.x - 1 && y != size.y - 1)
-          x == 1 && y == 1 ? update_tile_at({x, y}, TileType::Stairs) : update_tile_at({x, y}, TileType::Floor);
+          x == 1 && y == 1 ? update_tile_at({x, y}, TileType::HealingFloor) : update_tile_at({x, y}, TileType::Floor);
   }
 
   bool Map::blocking_entity_at(gf::Vector2i target)
@@ -74,6 +80,29 @@ namespace rCMI
 
     return stairs == position;
   }
+
+  bool Map::usHealing(gf::Vector2i position)
+  {
+    auto it = std::find_if(healingZone.begin(), healingZone.end(), [&](posWhBool healPad)
+                           { return position == healPad.position; });
+
+    if (it == healingZone.end()) return false;
+
+    (*it).isActive = false;
+    return !(*it).isActive;
+  }
+
+  bool Map::isHealing(gf::Vector2i position) const
+  {
+    if (position.x < 0 || position.y < 0 || position.x >= size.x || position.y >= size.y)
+      return false;
+
+    auto it = std::find_if(healingZone.begin(), healingZone.end(), [&](posWhBool healPad)
+                           { return position == healPad.position; });
+
+    return it != healingZone.end() && (*it).isActive;
+  }
+
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     float scaleFactor = (float)TileSize / 640.0f;
@@ -84,15 +113,15 @@ namespace rCMI
       bool explored = map.isExplored(pos);
 
       // Si la tuile n'est pas explorée, on passe à la suivante (Noir total)
-      if (!explored) {
+      if (!explored)
         continue;
-      }
 
       gf::Sprite sprite;
       std::string textureName;
 
       // --- 1. Détermination de la texture (identique à avant) ---
-      if (isStairs(pos)) {
+      if (isStairs(pos))
+      {
         textureName = "Stairs.png";
       }
       else
@@ -101,11 +130,13 @@ namespace rCMI
         bool isWalkable = map.isWalkable(pos);
         std::string base = isWalkable ? "Floor" : "Wall";
 
-        if (hash < 45) {
+        if (hash < 45)
+        {
           int variant = (hash % 4) + 2;
           textureName = base + std::to_string(variant) + ".png";
         }
-        else {
+        else
+        {
           textureName = base + ".png";
         }
       }
@@ -116,11 +147,13 @@ namespace rCMI
       sprite.setScale({scaleFactor, scaleFactor});
 
       // --- 3. Filtre de luminosité ---
-      if (inFOV) {
+      if (inFOV)
+      {
         // Pleine lumière
         sprite.setColor(gf::Color::White);
       }
-      else {
+      else
+      {
         // Brouillard de guerre : on fonce l'image (R, G, B très bas)
         // Tu peux ajuster 60, 60, 60 pour faire plus ou moins sombre
         sprite.setColor(gf::Color::fromRgba32(100, 100, 100, 255));
@@ -128,8 +161,21 @@ namespace rCMI
 
       target.draw(sprite, states);
     }
+
+    for (auto healPad : healingZone)
+    {
+      if (!healPad.isActive)
+        continue;
+
+      gf::Sprite sprite;
+
+      sprite.setTexture(m_game->resources.getTexture("mort.png"));
+      sprite.setPosition({(float)(healPad.position.x * TileSize), (float)(healPad.position.y * TileSize)});
+
+      target.draw(sprite, states);
+    }
   }
-  
+
   void Map::generate_dungeon(gf::Vector2i Map_size)
   {
     size = Map_size;

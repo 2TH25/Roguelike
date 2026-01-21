@@ -116,7 +116,7 @@ namespace rCMI
         m_game->pushScene(*(m_game->m_InventoryScene));
       }
 
-      m_isActivateInventorie = !m_isActivateInventorie; 
+      m_isActivateInventorie = !m_isActivateInventorie;
     }
 
     if (playerMoved)
@@ -128,6 +128,15 @@ namespace rCMI
         setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
         return;
+      }
+      if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
+      {
+        if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
+        {
+          //TODO : fait à l’arrache 
+          Stat h_stats = m_world_entity.hero().getStat();
+          h_stats.setHealth(h_stats.getHealth() + 50);
+        }
       }
       m_world_entity.EnemyTurns();
     }
@@ -147,32 +156,30 @@ namespace rCMI
 
     gf::Vector2f heroGridPos = m_world_entity.hero().getExistence().getPosition();
 
-    auto& items = m_world_entity.m_itemManager.items;
-    for (auto it = items.begin(); it != items.end(); )
+    auto &items = m_world_entity.m_itemManager.items;
+    for (auto it = items.begin(); it != items.end();)
     {
-        gf::Vector2i itemGridPos = {
-            static_cast<int>(it->sprite.getPosition().x / TileSize),
-            static_cast<int>(it->sprite.getPosition().y / TileSize)
-        };
+      gf::Vector2i itemGridPos = {
+          static_cast<int>(it->sprite.getPosition().x / TileSize),
+          static_cast<int>(it->sprite.getPosition().y / TileSize)};
 
-        if (static_cast<int>(heroGridPos.x) == itemGridPos.x && 
-            static_cast<int>(heroGridPos.y) == itemGridPos.y)
+      if (static_cast<int>(heroGridPos.x) == itemGridPos.x &&
+          static_cast<int>(heroGridPos.y) == itemGridPos.y)
+      {
+        if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(it->item, m_game))
         {
-            if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(it->item, m_game))
-            {
-                std::cout << "Objet ramassé : " << it->item.m_name << std::endl;
-                it = items.erase(it);
-                
-            }
-            else
-            {
-                ++it;
-            }
+          std::cout << "Objet ramassé : " << it->item.m_name << std::endl;
+          it = items.erase(it);
         }
         else
         {
-            ++it;
+          ++it;
         }
+      }
+      else
+      {
+        ++it;
+      }
     }
 
     updateFieldOfView();

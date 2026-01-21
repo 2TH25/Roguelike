@@ -14,6 +14,20 @@
 
 namespace rCMI
 {
+  struct posWhBool
+  {
+    static posWhBool getPosWhBool(gf::Vector2i pos, bool active)
+    {
+      posWhBool res;
+      res.position = pos;
+      res.isActive = active;
+      return res;
+    }
+
+    gf::Vector2i position;
+    bool isActive;
+  };
+
   class RogueCMI;
 
   class Map
@@ -37,17 +51,22 @@ namespace rCMI
 
     bool isInFieldOfVision(gf::Vector2i position) { return map.isInFieldOfVision(position); };
 
-    void generate_dungeon(gf::Vector2i Map_size); 
+    void generate_dungeon(gf::Vector2i Map_size);
 
     void clearFieldOfVision() { map.clearFieldOfVision(); };
 
     void computeFieldOfVision(gf::Vector2i pos) { map.computeFieldOfVision(pos, 8); };
+
+    bool isHealing(gf::Vector2i position) const;
+
+    bool usHealing(gf::Vector2i position);
 
   private:
     RogueCMI *m_game = nullptr;
     gf::Vector2i size;
     gf::SquareMap map;
     gf::Vector2i stairs;
+    std::vector<posWhBool>healingZone;
   };
 };
 
