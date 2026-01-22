@@ -66,7 +66,7 @@ namespace rCMI
     gf::Vector2i size;
     gf::SquareMap map;
     gf::Vector2i stairs;
-    std::vector<posWhBool>healingZone;
+    std::vector<posWhBool> healingZone;
   };
 };
 
