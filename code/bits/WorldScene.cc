@@ -14,8 +14,9 @@ namespace rCMI
         m_world_entity(game),
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
-        m_isActivateInventorie(false)
-        
+        m_isActivateInventory(false),
+        m_isActivateMap(false)
+  // m_isActivateMenu(false)
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -59,35 +60,92 @@ namespace rCMI
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
 
+    if (m_isActivateInventory || m_isActivateMap)
+    {
+      if (Controls::isActiveAction("ToggleInventory", m_actions))
+      {
+        if (m_isActivateInventory)
+        {
+          m_game->popScene();
+          m_isActivateInventory = false;
+        }
+        else
+        {
+          m_isActivateMap = false;
+          setWorldViewSize({800, 800});
+          m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+          m_game->pushScene(*(m_game->m_InventoryScene));
+          m_isActivateInventory = true;
+        }
+      }
+      if (Controls::isActiveAction("showMap", m_actions))
+      {
+        if (m_isActivateMap)
+        {
+          setWorldViewSize({800, 800});
+          m_isActivateMap = false;
+        }
+        else
+        {
+          m_isActivateInventory = false;
+          m_game->popScene();
+          setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
+          m_isActivateMap = true;
+        }
+      }
+      // else if (Controls::isActiveAction("showMenu", m_actions))
+      // {
+      //   if (m_isActivateMenu)
+      //   {}
+      //   else
+      //   {}
+
+      //   m_isActivateMenu = !m_isActivateMenu;
+      // }
+
+      return;
+    }
+
+    if (Controls::isActiveAction("ToggleInventory", m_actions))
+    {
+      m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+      m_game->pushScene(*(m_game->m_InventoryScene));
+      m_isActivateInventory = true;
+      return;
+    }
+
+    if (Controls::isActiveAction("showMap", m_actions))
+    {
+      setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
+      m_isActivateMap = true;
+      return;
+    }
+
     bool playerMoved = false;
 
-    if (Controls::isActiveAction("move_up", m_actions))
-      playerMoved = heroInEntity.goUp(m_world_entity);
-
-    else if (Controls::isActiveAction("move_down", m_actions))
-      playerMoved = heroInEntity.goDown(m_world_entity);
-
-    else if (Controls::isActiveAction("move_right", m_actions))
-      playerMoved = heroInEntity.goRight(m_world_entity);
-
-    else if (Controls::isActiveAction("move_left", m_actions))
-      playerMoved = heroInEntity.goLeft(m_world_entity);
-
-    if (Controls::isActiveAction("zoom_cam", m_actions) && world_view_size.x > 300)
-    {
-      if (world_view_size.x / 1.5 < 6000 && world_view_size.x > 6000)
-      {
-        std::cout << "Changement de texture bien\n"; // TODO: afficher avec les textures normales
+    if (Controls::isActiveAction("move_up", m_actions)){
+      if (heroInEntity.goUp(m_world_entity)) {
+        heroInEntity.playAnimation("Up");
+        playerMoved = true;
       }
-      setWorldViewSize(world_view_size / 1.5);
     }
-    else if (Controls::isActiveAction("unzoom_cam", m_actions) && world_view_size.x < 25000)
-    {
-      if (world_view_size.x * 1.5 > 6000 && world_view_size.x < 6000)
-      {
-        std::cout << "Changement de texture null\n"; // TODO: afficher avec les textures amoindrie
+    else if (Controls::isActiveAction("move_down", m_actions)){
+      if (heroInEntity.goDown(m_world_entity)) {
+        heroInEntity.playAnimation("Down");
+        playerMoved = true;
       }
-      setWorldViewSize(world_view_size * 1.5);
+    }
+    else if (Controls::isActiveAction("move_right", m_actions)){
+      if (heroInEntity.goRight(m_world_entity)) {
+        heroInEntity.playAnimation("Right");
+        playerMoved = true;
+      }
+    }
+    else if (Controls::isActiveAction("move_left", m_actions)){
+      if (heroInEntity.goLeft(m_world_entity)) {
+        heroInEntity.playAnimation("Left");
+        playerMoved = true;
+      }
     }
 
     if (Controls::isActiveAction("fire", m_actions))
@@ -107,19 +165,6 @@ namespace rCMI
       }
     }
 
-    if (Controls::isActiveAction("ToggleInventory", m_actions))
-    {
-      if (m_isActivateInventorie)
-        m_game->popScene();
-      else
-      {
-        m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-        m_game->pushScene(*(m_game->m_InventoryScene));
-      }
-
-      m_isActivateInventorie = !m_isActivateInventorie; 
-    }
-
     if (playerMoved)
     {
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
@@ -133,6 +178,24 @@ namespace rCMI
         m_world_entity.m_inventory.addItemToBackpack(itemIndex,m_game);
         m_world_entity.m_itemManager.items.erase(m_world_entity.m_itemManager.items.begin() + itemIndex);
       }
+      if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
+      {
+        if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
+        {
+          // TODO : fait à l’arrache
+          Stat h_stats = m_world_entity.hero().getStat();
+          h_stats.setHealth(h_stats.getHealth() + 50);
+        }
+      }
+      if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
+      {
+        if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
+        {
+          // TODO : fait à l’arrache
+          Stat h_stats = m_world_entity.hero().getStat();
+          h_stats.setHealth(h_stats.getHealth() + 50);
+        }
+      }
       m_world_entity.EnemyTurns();
     
       
@@ -142,7 +205,9 @@ namespace rCMI
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     gf::Vector2i TileVect({TileSize, TileSize});
-    setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
+    gf::Vector2i playerCenter = m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2;
+    gf::Vector2i worldCenter = m_world_entity.getMap().getSize() * TileSize / 2;
+    setWorldViewCenter(m_isActivateMap ? worldCenter : playerCenter);
 
     if (!m_world_entity.hero().alive())
     {

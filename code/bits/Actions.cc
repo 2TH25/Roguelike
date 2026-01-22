@@ -51,7 +51,7 @@ namespace rCMI
   {
     int distance = gf::chebyshevDistance(character.getExistence().getPosition(), target);
 
-    if (distance > 3)
+    if (distance > 5)
       return false;
 
     auto maybe_character = m_world.target_character_at(target);

@@ -9,6 +9,8 @@
 #include <gf/Sprite.h>
 #include <gf/RenderTarget.h>
 #include <gf/Random.h>
+#include <gf/Animation.h>
+#include <gf/AnimatedSprite.h>
 
 namespace rCMI
 {
@@ -19,6 +21,7 @@ namespace rCMI
   public:
     Character() = default;
     Character(const Existence &ex, const Stat &st, const gf::Texture &tex);
+    void update(gf::Time time) override;
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
     void doMove(WorldEntity &m_world);
@@ -29,6 +32,8 @@ namespace rCMI
     bool goDown(WorldEntity &m_world);
     bool goLeft(WorldEntity &m_world);
     bool goRight(WorldEntity &m_world);
+    void addAnimation(std::string name, gf::Animation animation);
+    void playAnimation(std::string name);
 
     Existence &getExistence() { return existence; }
     Stat &getStat() { return stat; }
@@ -70,6 +75,10 @@ namespace rCMI
     Comportment comportment;
     const gf::Texture *texture = nullptr;
     const gf::Texture *deadTexture = nullptr;
+
+    gf::AnimatedSprite m_animatedSprite;
+    std::map<std::string, gf::Animation> m_animations;
+    
     gf::RectI m_homeRoom;
     bool m_hasHome = false;
   };

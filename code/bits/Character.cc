@@ -12,7 +12,24 @@ namespace rCMI
         stat(st),
         texture(&tex)
   {
+    m_animatedSprite.setTexture(tex);
+    m_animatedSprite.setPosition(existence.getPosition() * TileSize);
   }
+
+  void Character::addAnimation(std::string name, gf::Animation animation) {
+      m_animations[name] = animation;
+  }
+
+  void Character::playAnimation(std::string name) {
+      if (m_animations.find(name) != m_animations.end()) {
+          m_animatedSprite.setAnimation(m_animations[name]);
+      }
+  }
+
+  void Character::update(gf::Time time) {
+      m_animatedSprite.update(time);
+  }
+
 
   bool Character::goUp(WorldEntity &m_world)
   {
@@ -111,8 +128,41 @@ namespace rCMI
   {
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
     Stat st(100, 0, 20);
-    return Character(ex, st, tex);
+    Character c(ex, st, tex);
+
+    gf::Vector2f frameSize = {80.0f, 80.0f};    
+    float duration = 0.2f;
+
+    gf::Animation walkRight;
+    walkRight.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 80.0f}, frameSize), gf::seconds(duration)); 
+    walkRight.addFrame(tex, gf::RectF::fromPositionSize({160.0f, 80.0f}, frameSize), gf::seconds(duration));
+    c.addAnimation("Right", walkRight);
+
+    gf::Animation walkLeft;
+    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 80.0f}, frameSize), gf::seconds(duration)); 
+    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 160.0f}, frameSize), gf::seconds(duration));
+    c.addAnimation("Left", walkLeft);
+
+    gf::Animation walkUp;
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 0.0f}, frameSize), gf::seconds(duration)); 
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 80.0f}, frameSize), gf::seconds(duration));
+    c.addAnimation("Up", walkUp);
+
+    gf::Animation walkDown;
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 0.0f}, frameSize), gf::seconds(duration));
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize({160.0f, 0.0f}, frameSize), gf::seconds(duration));
+    c.addAnimation("Down", walkDown);
+
+    gf::Animation defaultAnimation;
+    defaultAnimation.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 0.0f}, frameSize), gf::seconds(duration));
+    c.addAnimation("Default", defaultAnimation);
+
+    c.m_animatedSprite.setTextureRect(gf::RectF::fromPositionSize({0.0f, 0.0f}, frameSize));
+
+
+    return c;
   }
+  
 
   Character Character::skeleton(gf::Vector2i position, const gf::Texture &tex)
   {
@@ -147,17 +197,15 @@ namespace rCMI
   }
   void Character::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    if (!texture)
-      return;
-
-    gf::Sprite sprite(*texture);
-    gf::Vector2u textureSize = texture->getSize();
-    float targetSize = TileSize;
-    gf::Vector2f scale = { targetSize / textureSize.x, targetSize / textureSize.y };
-    sprite.setScale(scale);
     gf::Vector2i gridPosition = existence.getPosition();
-    float tileSize = TileSize;
-    sprite.setPosition({gridPosition.x * tileSize, gridPosition.y * tileSize});
-    target.draw(sprite, states);
-  }
+    m_animatedSprite.setPosition({
+        static_cast<float>(gridPosition.x * TileSize), 
+        static_cast<float>(gridPosition.y * TileSize)
+    });
+
+    float scale = static_cast<float>(TileSize) / 80.0f;
+    m_animatedSprite.setScale(scale);
+
+    target.draw(m_animatedSprite, states);
+  } 
 }

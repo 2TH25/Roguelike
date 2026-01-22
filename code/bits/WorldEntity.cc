@@ -34,10 +34,13 @@ namespace rCMI
     m_map.generate_board();
 
     characters.clear();
-    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso640/Perso640.png"));
+    Character hero = Character::hero({5, 5}, m_game->resources.getTexture("perso640/SetPerso.png"));
     const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
     hero.setDeadTexture(textureMort);
     characters.push_back(hero);
+
+    characters.back().playAnimation("Default");
+
     // characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
     // characters.push_back(Character::zombie({2,6}, m_game->resources.getTexture("squelette.png")));
     // characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("squelette.png")));
@@ -63,6 +66,10 @@ namespace rCMI
   }
 
   bool WorldEntity::isStairs(gf::Vector2i position) const { return m_map.isStairs(position); }
+
+  bool WorldEntity::isHealing(gf::Vector2i position) const { return m_map.isHealing(position); }
+
+  bool WorldEntity::usHealing(gf::Vector2i position) { return m_map.usHealing(position); }
 
   void WorldEntity::EnemyTurns()
   {
@@ -93,6 +100,7 @@ namespace rCMI
         update_tile_at({x, y}, dungeon.getTile({x, y}));
 
     characters.clear();
+    characters.reserve(100);
     std::vector<BSPTree *> leaves;
     generator.getRoot().getRooms(leaves);
 
@@ -106,7 +114,7 @@ namespace rCMI
       {
         gf::Vector2i center = leaf->room.getCenter();
 
-        Character hero = Character::hero(center, m_game->resources.getTexture("perso640/Perso640.png"));
+        Character hero = Character::hero(center, m_game->resources.getTexture("perso640/SetPerso.png"));
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
         hero.setDeadTexture(textureMort);
         characters.push_back(hero);
@@ -125,7 +133,7 @@ namespace rCMI
       }
       else if (leaf->type == RoomType::Healing)
       {
-        // update_tile_at(center, TileType::HealingFloor);
+        update_tile_at(center, TileType::HealingFloor);
         continue;
       }
       else if (leaf->type == RoomType::Start)
@@ -204,6 +212,9 @@ namespace rCMI
 
       gf::Vector2f pixelPos = {x_final * (float)TileSize + TileSize / 2.0f, y_final * (float)TileSize + TileSize / 2.0f};
       m_itemManager.spawnItem(pixelPos,m_game);
+    }
+    if (!characters.empty()) {
+      characters[0].playAnimation("Default");
     }
 
     std::cout << "Donjon peuple avec " << m_itemManager.items.size() << " items." << std::endl;
