@@ -203,7 +203,7 @@ namespace rCMI
         static_cast<float>(gridPosition.y * TileSize)
     });
 
-    float scale = static_cast<float>(TileSize) / 80.0f;
+    float scale = static_cast<float>(TileSize) / 640.0f;
     m_animatedSprite.setScale(scale);
 
     target.draw(m_animatedSprite, states);

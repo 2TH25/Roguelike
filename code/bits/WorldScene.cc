@@ -175,8 +175,10 @@ namespace rCMI
 
         return;
       }else if (int itemIndex = m_world_entity.m_itemManager.isItemOnTile(m_game); itemIndex != -1) {
-        m_world_entity.m_inventory.addItemToBackpack(itemIndex,m_game);
-        m_world_entity.m_itemManager.items.erase(m_world_entity.m_itemManager.items.begin() + itemIndex);
+        if(m_world_entity.m_inventory.addItemToBackpack(itemIndex,m_game)){
+          m_world_entity.m_itemManager.items.erase(m_world_entity.m_itemManager.items.begin() + itemIndex);
+        }
+        
       }
       if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
       {

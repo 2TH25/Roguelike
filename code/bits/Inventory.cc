@@ -6,7 +6,7 @@ namespace rCMI
 
 	Inventory::Inventory(RogueCMI *game)
 			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
-				m_emptySlotTexture(&(game->resources.getTexture("EmptySlot.jpg")))
+				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png")))
 	{
 		float scale = static_cast<float>(TileSize) / 640.0f;
 
@@ -56,6 +56,8 @@ namespace rCMI
 			
 			m_backpackSprites[i].setPosition({x, y});
 			m_backpackSprites[i].setTexture(*m_emptySlotTexture);
+			m_backpackSprites[i].setScale(scale);
+
 		}
 
 		updateStatsText();
