@@ -12,34 +12,34 @@ namespace rCMI
 
 		m_headSlot.setTexture(game->resources.getTexture("SlotCasque.png"));
     	m_headSlot.setScale(scale);
-		m_headSlot.setPosition({220, 110});
+		m_headSlot.setPosition({230, 170});
 
 		m_torsoSlot.setTexture(game->resources.getTexture("SlotArmure.png"));
 		m_torsoSlot.setScale(scale);
-		m_torsoSlot.setPosition({500, 230});
+		m_torsoSlot.setPosition({520, 170});
 
 		m_legSlot.setTexture(game->resources.getTexture("SlotJambe.png"));
 		m_legSlot.setScale(scale);
-		m_legSlot.setPosition({500, 300});
+		m_legSlot.setPosition({520, 260});
 
 		m_handSlot.setTexture(game->resources.getTexture("SlotGants.png"));
 		m_handSlot.setScale(scale);
-		m_handSlot.setPosition({220, 200});
+		m_handSlot.setPosition({230, 260});
 
 		m_bootsSlot.setTexture(game->resources.getTexture("SlotBottes.png"));
 		m_bootsSlot.setScale(scale);
-		m_bootsSlot.setPosition({500, 380});
+		m_bootsSlot.setPosition({520, 350});
 
 		m_accessorySlot.setTexture(game->resources.getTexture("SlotAccessoire.png"));
 		m_accessorySlot.setScale(scale);
-		m_accessorySlot.setPosition({220, 300});
+		m_accessorySlot.setPosition({230, 350});
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 		float scaleFactor = 400.0f / 640.0f;
 		m_heroSprite.setScale({scaleFactor, scaleFactor});
 		m_heroSprite.setPosition({230, 100});
 
-		m_background.setSize({800, 700});
+		m_background.setSize({900, 700});
 		m_background.setColor(gf::Color::White);
 		m_background.setPosition({200, 100});
 
@@ -48,7 +48,7 @@ namespace rCMI
 
 		gf::Vector2f startPos = {220, 500};
 		float slotSize = 80.0f;
-		float padding = 25.0f;
+		float padding = 10.0f;
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			float x = startPos.x + (i % 5) * (slotSize + padding);
@@ -57,7 +57,6 @@ namespace rCMI
 			m_backpackSprites[i].setPosition({x, y});
 			m_backpackSprites[i].setTexture(*m_emptySlotTexture);
 			m_backpackSprites[i].setScale(scale);
-
 		}
 
 		updateStatsText();
@@ -243,8 +242,8 @@ namespace rCMI
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			if (i < m_backpack.size()) {
 				const gf::Texture& tex = *(m_backpack[i].m_texture);
+				m_backpackSprites[i].setOrigin({0.0f, 0.0f});
 				m_backpackSprites[i].setTexture(tex);
-				
 				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
 				
 				float scaleX = 80.0f / tex.getSize().x;

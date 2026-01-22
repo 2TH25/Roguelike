@@ -60,34 +60,3 @@ namespace rCMI
         target.draw(dropped.sprite, states);
   }
 }
-
-
-// gf::Vector2f heroGridPos = m_world_entity.hero().getExistence().getPosition();
-
-//     auto& items = m_world_entity.m_itemManager.items;
-//     for (auto it = items.begin(); it != items.end(); )
-//     {
-//         gf::Vector2i itemGridPos = {
-//             static_cast<int>(it->sprite.getPosition().x / TileSize),
-//             static_cast<int>(it->sprite.getPosition().y / TileSize)
-//         };
-
-//         if (static_cast<int>(heroGridPos.x) == itemGridPos.x && 
-//             static_cast<int>(heroGridPos.y) == itemGridPos.y)
-//         {
-//             if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(it->item, m_game))
-//             {
-//                 std::cout << "Objet ramassé : " << it->item.m_name << std::endl;
-//                 it = items.erase(it);
-                
-//             }
-//             else
-//             {
-//                 ++it;
-//             }
-//         }
-//         else
-//         {
-//             ++it;
-//         }
-//     }
