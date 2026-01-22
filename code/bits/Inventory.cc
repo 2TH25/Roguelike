@@ -341,4 +341,13 @@ namespace rCMI
 		else if (isClicked(m_handSlot)) this->onUnequip(ItemType::Hand, game);
 		else if (isClicked(m_accessorySlot)) this->onUnequip(ItemType::Accessory, game);
 	}
+
+	void Inventory::addItemFromChest(Item item, RogueCMI *game) {
+		if (m_backpack.size() < MaxBackpackSize) {
+			m_backpack.push_back(item);
+			updateBackpackDisplay(game);
+		} else {
+			std::cout << "Sac plein ! Vous ne pouvez pas emporter l'objet." << std::endl;
+		}
+	}
 }

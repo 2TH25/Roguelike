@@ -30,6 +30,8 @@ add_executable(RogueCMI
   code/bits/Item.cc
   code/bits/WorldEntity.cc
   code/bits/ItemManager.cc
+  code/bits/Chest.cc
+  code/bits/ChestManager.cc
 )
 
 target_include_directories(RogueCMI
