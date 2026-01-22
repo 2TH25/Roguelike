@@ -9,7 +9,7 @@
 #include <optional>
 #include "Character.h"
 #include "Map.h"
-#include "ItemManager.h"
+#include "ChestManager.h"
 #include "Inventory.h"
 
 namespace rCMI
@@ -20,8 +20,7 @@ namespace rCMI
   {
   public:
     WorldEntity(RogueCMI *game);
-    ItemManager m_itemManager;
-    Inventory m_inventory;
+    ChestManager m_chestManager;
 
     std::vector<Character> &getCharacters() { return characters; }
 

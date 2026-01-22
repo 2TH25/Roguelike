@@ -21,9 +21,7 @@ namespace rCMI
   WorldEntity::WorldEntity(RogueCMI *game)
       : gf::Entity(0),
         m_game(game),
-        m_map(game),
-        m_itemManager(this),
-        m_inventory(game)
+        m_map(game)
   {
   }
 
@@ -61,6 +59,7 @@ namespace rCMI
 
   void WorldEntity::nextLevel()
   {
+    m_chestManager.clear();
     generate_dungeon(m_map.getSize() * 1.2);
     std::cout << "Niveau suivant atteint !" << std::endl;
   }
@@ -85,7 +84,7 @@ namespace rCMI
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
 
-    m_itemManager.render(target,states);
+    m_chestManager.render(target,states);
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -189,9 +188,9 @@ namespace rCMI
       }
     }
 
-    int numberOfItems = 10;
+    int numberOfChests = 10;
 
-    for (int i = 0; i < numberOfItems; ++i)
+    for (int i = 0; i < numberOfChests; ++i)
     {
       bool found = false;
       int x_final;
@@ -211,13 +210,13 @@ namespace rCMI
       } while (!found);
 
       gf::Vector2f pixelPos = {x_final * (float)TileSize + TileSize / 2.0f, y_final * (float)TileSize + TileSize / 2.0f};
-      m_itemManager.spawnItem(pixelPos,m_game);
+      m_chestManager.spawnChest(pixelPos,m_game);
     }
     if (!characters.empty()) {
       characters[0].playAnimation("Default");
     }
 
-    std::cout << "Donjon peuple avec " << m_itemManager.items.size() << " items." << std::endl;
+    std::cout << "Donjon peuple avec " << m_chestManager.m_chests.size() << " coffres." << std::endl;
   }
 
   struct VectorCompare

@@ -1,26 +1,32 @@
 #include "ChestManager.h"
 #include "RogueCMI.h"
+#include "InventoryScene.h"
 
 namespace rCMI {
 
-    void ChestManager::update(RogueCMI *game) {
+   void ChestManager::update(RogueCMI *game) {
         gf::Vector2f heroPos = game->m_WorldScene.m_world_entity.hero().getExistence().getPosition();
         gf::Vector2i heroGridPos = { (int)heroPos.x, (int)heroPos.y };
 
-        for (auto &chest : m_chests) {
-            if (!chest.isOpen && chest.gridPos == heroGridPos) {
-                openChest(chest, game);
+        for (int i = 0; i < (int)m_chests.size(); ++i) {
+            if (!m_chests[i].isOpen && m_chests[i].gridPos == heroGridPos) {
+                openChest(i, game);
             }
         }
     }
 
-    void ChestManager::openChest(Chest &chest, RogueCMI *game) {
-        chest.isOpen = true;
+    void ChestManager::openChest(int chestIndex, RogueCMI *game) {
+
+        Chest &chest = m_chests[chestIndex];
         
-        chest.sprite.setTexture(game->resources.getTexture("ChestOpen.png"));
-        
-        std::cout << "Vous avez ouvert un coffre contenant : " << chest.content.m_name << std::endl;
-        game->m_WorldScene.m_world_entity.m_inventory.addItemFromChest(chest.content, game);
+        if (game->m_InventoryScene->m_inventory.addItemFromChest(chestIndex, game)) {
+            chest.isOpen = true;
+            chest.sprite.setTexture(game->resources.getTexture("CoffreOuvert.png"));
+            
+            std::cout << "SUCCES : Item ajouté à l'inventaire !" << std::endl;
+        } else {
+            std::cout << "ECHEC : Inventaire plein." << std::endl;
+        }
     }
 
     void ChestManager::spawnChest(gf::Vector2i pos, RogueCMI *game) {
@@ -29,8 +35,10 @@ namespace rCMI {
         c.content = Item::generateRandomItem(game);
         c.isOpen = false;
         
-        c.sprite.setTexture(game->resources.getTexture("ChestClosed.png"));
-        c.sprite.setPosition({ (pos.x * TileSize) + TileSize/2.0f, (pos.y * TileSize) + TileSize/2.0f });
+        c.sprite.setTexture(game->resources.getTexture("Coffre.png"));
+        float scale = static_cast<float>(TileSize) / 640.0f;
+        c.sprite.setScale(scale);
+        c.sprite.setPosition(pos);
         
         gf::Vector2f size = c.sprite.getLocalBounds().getSize();
         c.sprite.setOrigin(size / 2.0f);
@@ -39,9 +47,28 @@ namespace rCMI {
     }
 
     void ChestManager::render(gf::RenderTarget &target, const gf::RenderStates &states) {
-    for (auto &chest : m_chests) {
-        target.draw(chest.sprite, states);
+        for (auto &chest : m_chests) {
+            target.draw(chest.sprite, states);
+        }
     }
-}
+
+    int ChestManager::isChestOnTile(RogueCMI *game) {
+        gf::Vector2f heroPos = game->m_WorldScene.m_world_entity.hero().getExistence().getPosition();
+        gf::Vector2i heroGridPos = { static_cast<int>(heroPos.x), static_cast<int>(heroPos.y) };
+
+        for (int i = 0; i < (int)m_chests.size(); i++) {
+            if (heroGridPos.x == m_chests[i].gridPos.x && 
+                heroGridPos.y == m_chests[i].gridPos.y) {
+                if (!m_chests[i].isOpen) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+    void ChestManager::clear() {
+        m_chests.clear();
+    }
 
 }

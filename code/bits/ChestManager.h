@@ -9,10 +9,13 @@ namespace rCMI {
     class ChestManager {
         public:
             std::vector<Chest> m_chests;
+            Chest& getChest(int index) { return m_chests[index]; }
             void update(RogueCMI *game);
-            void openChest(Chest& chest,RogueCMI *game);
+            void openChest(int chestIndex,RogueCMI *game);
             void spawnChest(gf::Vector2i pos, RogueCMI *game);
             void render(gf::RenderTarget &target, const gf::RenderStates &states);
+            int isChestOnTile(RogueCMI *game);
+            void clear();
     };
 }
 

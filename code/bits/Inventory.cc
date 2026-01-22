@@ -301,20 +301,20 @@ namespace rCMI
 		}
 	}
 
-	bool Inventory::addItemToBackpack(int item, RogueCMI *game)
-	{
+	// bool Inventory::addItemToBackpack(int item, RogueCMI *game)
+	// {
 
-		if (m_backpack.size() >= MaxBackpackSize)
-		{
-			std::cout << "Inventaire plein ! Impossible de ramasser : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
-			return false;
-		}
-		m_backpack.push_back(game->m_WorldScene.m_world_entity.m_itemManager.items[item].item);
-		std::cout << "Item ramassé : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
-		updateBackpackDisplay(game);
+	// 	if (m_backpack.size() >= MaxBackpackSize)
+	// 	{
+	// 		std::cout << "Inventaire plein ! Impossible de ramasser : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
+	// 		return false;
+	// 	}
+	// 	m_backpack.push_back(game->m_WorldScene.m_world_entity.m_itemManager.items[item].item);
+	// 	std::cout << "Item ramassé : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
+	// 	updateBackpackDisplay(game);
 
-		return true;
-	}
+	// 	return true;
+	// }
 
 
 	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
@@ -342,12 +342,18 @@ namespace rCMI
 		else if (isClicked(m_accessorySlot)) this->onUnequip(ItemType::Accessory, game);
 	}
 
-	void Inventory::addItemFromChest(Item item, RogueCMI *game) {
+	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {
+		Item& itemFromChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
+
 		if (m_backpack.size() < MaxBackpackSize) {
-			m_backpack.push_back(item);
+			m_backpack.push_back(itemFromChest);
 			updateBackpackDisplay(game);
+			
+			std::cout << "Vous avez obtenu : " << itemFromChest.m_name << std::endl;
+			return true;
 		} else {
 			std::cout << "Sac plein ! Vous ne pouvez pas emporter l'objet." << std::endl;
+			return false;
 		}
 	}
 }

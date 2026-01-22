@@ -174,11 +174,11 @@ namespace rCMI
         setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
         return;
-      }else if (int itemIndex = m_world_entity.m_itemManager.isItemOnTile(m_game); itemIndex != -1) {
-        if(m_world_entity.m_inventory.addItemToBackpack(itemIndex,m_game)){
-          m_world_entity.m_itemManager.items.erase(m_world_entity.m_itemManager.items.begin() + itemIndex);
-        }
-        
+      } 
+      else if (int chestIndex = m_world_entity.m_chestManager.isChestOnTile(m_game); chestIndex != -1)
+      {
+        m_world_entity.m_chestManager.openChest(chestIndex, m_game);
+
       }
       if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
       {
