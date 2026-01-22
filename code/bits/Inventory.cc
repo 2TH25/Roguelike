@@ -6,32 +6,31 @@ namespace rCMI
 
 	Inventory::Inventory(RogueCMI *game)
 			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
-				m_emptySlotTexture(&(game->resources.getTexture("EmptySlot.jpg"))),
-				m_headSlot(game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg"), game->resources.getTexture("Casque.jpg")),
-				m_torsoSlot(game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png"), game->resources.getTexture("Plastron.png")),
-				m_legSlot(game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg"), game->resources.getTexture("Jambieres.jpg")),
-				m_handSlot(game->resources.getTexture("Gants.jpg"), game->resources.getTexture("Gants.jpg"), game->resources.getTexture("Gants.jpg")),
-				m_bootsSlot(game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg"), game->resources.getTexture("Bottes.jpg")),
-				m_accessorySlot(game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"), game->resources.getTexture("accessoire.jpg"))
+				m_emptySlotTexture(&(game->resources.getTexture("EmptySlot.jpg")))
 	{
+
+		m_headSlot.setTexture(game->resources.getTexture("Casque.jpg"));
 		m_headSlot.setPosition({220, 110});
-		m_legSlot.setPosition({500, 300});
+
+		m_torsoSlot.setTexture(game->resources.getTexture("Plastron.png"));
 		m_torsoSlot.setPosition({500, 230});
+
+		m_legSlot.setTexture(game->resources.getTexture("Jambieres.jpg"));
+		m_legSlot.setPosition({500, 300});
+
+		m_legSlot.setTexture(game->resources.getTexture("Jambieres.jpg"));
 		m_handSlot.setPosition({220, 200});
+
+		m_bootsSlot.setTexture(game->resources.getTexture("Bottes.jpg"));
 		m_bootsSlot.setPosition({500, 380});
+
+		m_accessorySlot.setTexture(game->resources.getTexture("accessoire.jpg"));
 		m_accessorySlot.setPosition({220, 300});
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 		float scaleFactor = 400.0f / 640.0f;
 		m_heroSprite.setScale({scaleFactor, scaleFactor});
 		m_heroSprite.setPosition({230, 100});
-
-		m_container.addWidget(m_headSlot);
-		m_container.addWidget(m_legSlot);
-		m_container.addWidget(m_torsoSlot);
-		m_container.addWidget(m_handSlot);
-		m_container.addWidget(m_bootsSlot);
-		m_container.addWidget(m_accessorySlot);
 
 		m_background.setSize({800, 700});
 		m_background.setColor(gf::Color::White);
@@ -44,37 +43,18 @@ namespace rCMI
 		float slotSize = 80.0f;
 		float padding = 25.0f;
 
-		for (std::size_t i = 0; i < MaxBackpackSize; ++i)
-		{
-			m_backpackWidgets[i] = gf::SpriteWidget(*m_emptySlotTexture, *m_emptySlotTexture, *m_emptySlotTexture);
-
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			float x = startPos.x + (i % 5) * (slotSize + padding);
 			float y = startPos.y + (i / 5) * (slotSize + padding);
-			m_backpackWidgets[i].setPosition({x, y});
-
-			m_container.addWidget(m_backpackWidgets[i]);
-
-			m_backpackWidgets[i].setCallback([this, i, game]()
-																			 { this->equipFromBackpack(i, game); });
+			
+			m_backpackSprites[i].setPosition({x, y});
+			m_backpackSprites[i].setTexture(*m_emptySlotTexture);
 		}
 
 		updateStatsText();
-
-		m_headSlot.setCallback([this, game]()
-													 { this->onUnequip(ItemType::Head, game); });
-		m_legSlot.setCallback([this, game]()
-													{ this->onUnequip(ItemType::Legs, game); });
-		m_torsoSlot.setCallback([this, game]()
-														{ this->onUnequip(ItemType::Torso, game); });
-		m_handSlot.setCallback([this, game]()
-													 { this->onUnequip(ItemType::Hand, game); });
-		m_bootsSlot.setCallback([this, game]()
-													 { this->onUnequip(ItemType::Boots, game); });
-		m_accessorySlot.setCallback([this, game]()
-																{ this->onUnequip(ItemType::Accessory, game); });
 	}
 
-	gf::SpriteWidget *Inventory::getWidgetByType(ItemType type)
+	gf::Sprite *Inventory::getSpriteByType(ItemType type)
 	{
 		switch (type)
 		{
@@ -117,41 +97,45 @@ namespace rCMI
 				slot->hasItem = false;
 		}
 
-		gf::SpriteWidget *targetWidget = getWidgetByType(type);
+		gf::Sprite *targetSprite = getSpriteByType(type);
 
-		if (targetWidget != nullptr)
-		{
-			gf::RectF r = gf::RectF::fromPositionSize({0, 0}, {80, 80});
+		if (targetSprite != nullptr) {
+			if (item != nullptr && item->m_texture != nullptr) {
+				targetSprite->setTexture(*item->m_texture);
+				targetSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
+			} else {
 
-			if (item != nullptr)
-				targetWidget->setDefaultSprite(*item->m_texture, r);
-
-			else
-			{
 				switch (type)
 				{
-				case ItemType::Head:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Casque.jpg"), r);
-					break;
-				case ItemType::Torso:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Plastron.png"), r);
-					break;
-				case ItemType::Legs:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Jambieres.jpg"), r);
-					break;
-				case ItemType::Hand:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Gants.jpg"), r);
-					break;
-				case ItemType::Boots:
-					targetWidget->setDefaultSprite(game->resources.getTexture("Bottes.jpg"), r);
-					break;
-				case ItemType::Accessory:
-					targetWidget->setDefaultSprite(game->resources.getTexture("accessoire.jpg"), r);
-					break;
-				default:
-					break;
+					case ItemType::Head:
+						targetSprite->setTexture(game->resources.getTexture("Casque.jpg"));
+						break;
+
+					case ItemType::Torso:
+						targetSprite->setTexture(game->resources.getTexture("Plastron.png"));
+						break;
+
+					case ItemType::Legs:
+						targetSprite->setTexture(game->resources.getTexture("Jambieres.jpg"));
+						break;
+
+					case ItemType::Hand:
+						targetSprite->setTexture(game->resources.getTexture("Gants.jpg"));
+						break;
+
+					case ItemType::Boots:
+						targetSprite->setTexture(game->resources.getTexture("Bottes.jpg"));
+						break;
+
+					case ItemType::Accessory:
+						targetSprite->setTexture(game->resources.getTexture("accessoire.jpg"));
+						break;
+
+						default:
+						break;
 				}
-			}
+
+			} 
 		}
 
 		updateStatsText();
@@ -215,12 +199,22 @@ namespace rCMI
 		m_statsWidget.setString(str);
 	}
 
-	void Inventory::render(gf::RenderTarget &target, const gf::RenderStates &states)
-	{
+	void Inventory::render(gf::RenderTarget &target, const gf::RenderStates &states) {
 		target.draw(m_background, states);
 		target.draw(m_heroSprite, states);
-		m_container.render(target, states);
-		m_statsWidget.draw(target, states);
+		
+		target.draw(m_headSlot, states);
+		target.draw(m_torsoSlot, states);
+		target.draw(m_legSlot, states);
+		target.draw(m_handSlot, states);
+		target.draw(m_bootsSlot, states);
+		target.draw(m_accessorySlot, states);
+
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+			target.draw(m_backpackSprites[i], states);
+		}
+		
+		target.draw(m_statsWidget, states);
 	}
 
 	void Inventory::updateInventory(RogueCMI *game)
@@ -230,17 +224,23 @@ namespace rCMI
 		updateStatsText();
 	}
 
-	void Inventory::updateBackpackDisplay(RogueCMI *game)
-	{
-		gf::RectF r2 = gf::RectF::fromPositionSize({0, 0}, {50, 50});
-		gf::RectF r = gf::RectF::fromPositionSize({0, 0}, {80, 80});
-
-		for (std::size_t i = 0; i < MaxBackpackSize; ++i)
-		{
-			if (i < m_backpack.size())
-				m_backpackWidgets[i].setDefaultSprite(*m_backpack[i].m_texture, r2);
-			else
-				m_backpackWidgets[i].setDefaultSprite(*m_emptySlotTexture, r);
+	void Inventory::updateBackpackDisplay(RogueCMI *game) {
+		std::cout << "Update fait" << std::endl;
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+			if (i < m_backpack.size()) {
+				const gf::Texture& tex = *(m_backpack[i].m_texture);
+				m_backpackSprites[i].setTexture(tex);
+				
+				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
+				
+				float scaleX = 80.0f / tex.getSize().x;
+				float scaleY = 80.0f / tex.getSize().y;
+				m_backpackSprites[i].setScale({scaleX, scaleY});
+			} else {
+				m_backpackSprites[i].setTexture(*m_emptySlotTexture);
+				m_backpackSprites[i].setScale({1.0f, 1.0f});
+				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(m_emptySlotTexture->getSize()));
+			}
 		}
 	}
 
@@ -288,47 +288,47 @@ namespace rCMI
 		}
 	}
 
-	bool Inventory::addItemToBackpack(Item item, RogueCMI *game)
+	bool Inventory::addItemToBackpack(int item, RogueCMI *game)
 	{
 
 		if (m_backpack.size() >= MaxBackpackSize)
 		{
-			std::cout << "Inventaire plein ! Impossible de ramasser : " << item.m_name << std::endl;
+			std::cout << "Inventaire plein ! Impossible de ramasser : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
 			return false;
 		}
-		m_backpack.push_back(item);
+		m_backpack.push_back(game->m_WorldScene.m_world_entity.m_itemManager.items[item].item);
+		std::cout << "Item ramassé : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
 		updateBackpackDisplay(game);
 
 		return true;
 	}
 
 
-	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game)
-	{
-		for (std::size_t i = 0; i < MaxBackpackSize; ++i)
-		{
-			gf::Vector2f pos = m_backpackWidgets[i].getPosition();
-			gf::Vector2f size = { 80.0f, 80.0f }; 
-
-			gf::RectF box = gf::RectF::fromPositionSize(pos, size);
-
-			if (box.contains(coords))
-			{
+	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
+		for (std::size_t i = 0; i < m_backpack.size(); ++i) {
+			if (m_backpackSprites[i].getLocalBounds().contains(coords - m_backpackSprites[i].getPosition())) {
 				this->equipFromBackpack(i, game);
 				return; 
 			}
 		}
-		gf::SpriteWidget* armorSlots[] = { &m_headSlot, &m_torsoSlot, &m_legSlot, &m_handSlot, &m_bootsSlot, &m_accessorySlot };
-		ItemType types[] = { ItemType::Head, ItemType::Torso, ItemType::Legs, ItemType::Hand, ItemType::Boots, ItemType::Accessory };
 
-		for (int i = 0; i < 6; ++i)
-		{
-			gf::RectF box = gf::RectF::fromPositionSize(armorSlots[i]->getPosition(), { 80.0f, 80.0f });
-			if (box.contains(coords))
-			{
-				this->onUnequip(types[i], game);
-				return;
-			}
+		if (m_headSlot.getLocalBounds().contains(coords - m_headSlot.getPosition())) {
+        	this->onUnequip(ItemType::Head, game);
+		}
+		else if (m_torsoSlot.getLocalBounds().contains(coords - m_torsoSlot.getPosition())) {
+			this->onUnequip(ItemType::Torso, game);
+		}
+		else if (m_legSlot.getLocalBounds().contains(coords - m_legSlot.getPosition())) {
+			this->onUnequip(ItemType::Legs, game);
+		}
+		else if (m_bootsSlot.getLocalBounds().contains(coords - m_bootsSlot.getPosition())) {
+			this->onUnequip(ItemType::Boots, game);
+		}
+		else if (m_handSlot.getLocalBounds().contains(coords - m_handSlot.getPosition())) {
+			this->onUnequip(ItemType::Hand, game);
+		}
+		else if (m_accessorySlot.getLocalBounds().contains(coords - m_accessorySlot.getPosition())) {
+			this->onUnequip(ItemType::Accessory, game);
 		}
 	}
 }

@@ -29,17 +29,17 @@ namespace rCMI
 
     gf::Sprite m_heroSprite;
 
-    gf::SpriteWidget m_headSlot;
-    gf::SpriteWidget m_legSlot;
-    gf::SpriteWidget m_torsoSlot;
-    gf::SpriteWidget m_handSlot;
-    gf::SpriteWidget m_bootsSlot;
-    gf::SpriteWidget m_accessorySlot;
+    gf::Sprite m_headSlot;
+    gf::Sprite m_legSlot;
+    gf::Sprite m_torsoSlot;
+    gf::Sprite m_handSlot;
+    gf::Sprite m_bootsSlot;
+    gf::Sprite m_accessorySlot;
 
     std::vector<Item> m_backpack;
     std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
-    std::array<gf::SpriteWidget, MaxBackpackSize> m_backpackWidgets;
+    gf::Sprite m_backpackSprites[MaxBackpackSize];
     gf::Texture *m_emptySlotTexture; // slot vide du backpack
 
     struct EquippedSlot
@@ -57,12 +57,10 @@ namespace rCMI
 
     gf::RectangleShape m_background;
 
-    gf::SpriteWidget *getWidgetByType(ItemType type);
+    gf::Sprite *getSpriteByType(ItemType type);
 
   public:
     Inventory(RogueCMI *game);
-
-    gf::WidgetContainer m_container;
 
     bool hasEquipment(ItemType type);
     void setEquippedItem(ItemType type, Item *item, RogueCMI *game);
@@ -74,7 +72,7 @@ namespace rCMI
     void updateBackpackDisplay(RogueCMI *game);
     void equipFromBackpack(std::size_t index, RogueCMI *game);
     EquippedSlot *getSlotByType(ItemType type);
-    bool addItemToBackpack(Item item, RogueCMI *game);
+    bool addItemToBackpack(int item, RogueCMI *game);
     void handleItemClick(gf::Vector2f coords, RogueCMI *game);
   };
 }

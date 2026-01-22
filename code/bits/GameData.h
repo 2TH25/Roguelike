@@ -1,3 +1,6 @@
+#ifndef GAMEDATA_H
+#define GAMEDATA_H
+
 #include <gf/Vector.h>
 #include <gf/Paths.h>
 #include <gf/Action.h>
@@ -41,3 +44,5 @@ namespace rCMI
     static std::map<std::string, std::set<const char *>> save_actions;
   };
 }
+
+#endif

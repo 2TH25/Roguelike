@@ -15,6 +15,7 @@ namespace rCMI
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventorie(false)
+        
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
@@ -128,8 +129,13 @@ namespace rCMI
         setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
         return;
+      }else if (int itemIndex = m_world_entity.m_itemManager.isItemOnTile(m_game); itemIndex != -1) {
+        m_world_entity.m_inventory.addItemToBackpack(itemIndex,m_game);
+        m_world_entity.m_itemManager.items.erase(m_world_entity.m_itemManager.items.begin() + itemIndex);
       }
       m_world_entity.EnemyTurns();
+    
+      
     }
   }
 
@@ -145,35 +151,7 @@ namespace rCMI
         m_game->replaceScene(m_game->m_MenuScene);
     }
 
-    gf::Vector2f heroGridPos = m_world_entity.hero().getExistence().getPosition();
-
-    auto& items = m_world_entity.m_itemManager.items;
-    for (auto it = items.begin(); it != items.end(); )
-    {
-        gf::Vector2i itemGridPos = {
-            static_cast<int>(it->sprite.getPosition().x / TileSize),
-            static_cast<int>(it->sprite.getPosition().y / TileSize)
-        };
-
-        if (static_cast<int>(heroGridPos.x) == itemGridPos.x && 
-            static_cast<int>(heroGridPos.y) == itemGridPos.y)
-        {
-            if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(it->item, m_game))
-            {
-                std::cout << "Objet ramassé : " << it->item.m_name << std::endl;
-                it = items.erase(it);
-                
-            }
-            else
-            {
-                ++it;
-            }
-        }
-        else
-        {
-            ++it;
-        }
-    }
+    
 
     updateFieldOfView();
   }

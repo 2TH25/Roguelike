@@ -22,7 +22,8 @@ namespace rCMI
       : gf::Entity(0),
         m_game(game),
         m_map(game),
-        m_itemManager(this)
+        m_itemManager(this),
+        m_inventory(game)
   {
   }
 

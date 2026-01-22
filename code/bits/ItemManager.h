@@ -29,6 +29,8 @@ namespace rCMI
 
     virtual void render(gf::RenderTarget &target, const gf::RenderStates &states);
     void spawnItem(gf::Vector2f position, RogueCMI *game);
+    int isItemOnTile(RogueCMI *game);
+    bool pickupItem(RogueCMI *game);
   };
 }
 
