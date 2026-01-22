@@ -8,23 +8,30 @@ namespace rCMI
 			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
 				m_emptySlotTexture(&(game->resources.getTexture("EmptySlot.jpg")))
 	{
+		float scale = static_cast<float>(TileSize) / 640.0f;
 
-		m_headSlot.setTexture(game->resources.getTexture("Casque.jpg"));
+		m_headSlot.setTexture(game->resources.getTexture("SlotCasque.png"));
+    	m_headSlot.setScale(scale);
 		m_headSlot.setPosition({220, 110});
 
-		m_torsoSlot.setTexture(game->resources.getTexture("Plastron.png"));
+		m_torsoSlot.setTexture(game->resources.getTexture("SlotArmure.png"));
+		m_torsoSlot.setScale(scale);
 		m_torsoSlot.setPosition({500, 230});
 
-		m_legSlot.setTexture(game->resources.getTexture("Jambieres.jpg"));
+		m_legSlot.setTexture(game->resources.getTexture("SlotJambe.png"));
+		m_legSlot.setScale(scale);
 		m_legSlot.setPosition({500, 300});
 
-		m_legSlot.setTexture(game->resources.getTexture("Jambieres.jpg"));
+		m_handSlot.setTexture(game->resources.getTexture("SlotGants.png"));
+		m_handSlot.setScale(scale);
 		m_handSlot.setPosition({220, 200});
 
-		m_bootsSlot.setTexture(game->resources.getTexture("Bottes.jpg"));
+		m_bootsSlot.setTexture(game->resources.getTexture("SlotBottes.png"));
+		m_bootsSlot.setScale(scale);
 		m_bootsSlot.setPosition({500, 380});
 
-		m_accessorySlot.setTexture(game->resources.getTexture("accessoire.jpg"));
+		m_accessorySlot.setTexture(game->resources.getTexture("SlotAccessoire.png"));
+		m_accessorySlot.setScale(scale);
 		m_accessorySlot.setPosition({220, 300});
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
@@ -103,37 +110,42 @@ namespace rCMI
 			if (item != nullptr && item->m_texture != nullptr) {
 				targetSprite->setTexture(*item->m_texture);
 				targetSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
+				float sX = 640.0f / item->m_texture->getSize().x;
+				float sY = 640.0f / item->m_texture->getSize().y;
+				targetSprite->setScale({sX, sY});
 			} else {
 
 				switch (type)
 				{
 					case ItemType::Head:
-						targetSprite->setTexture(game->resources.getTexture("Casque.jpg"));
+						targetSprite->setTexture(game->resources.getTexture("SlotCasque.png"));
 						break;
 
 					case ItemType::Torso:
-						targetSprite->setTexture(game->resources.getTexture("Plastron.png"));
+						targetSprite->setTexture(game->resources.getTexture("SlotArmure.png"));
 						break;
 
 					case ItemType::Legs:
-						targetSprite->setTexture(game->resources.getTexture("Jambieres.jpg"));
+						targetSprite->setTexture(game->resources.getTexture("SlotJambe.png"));
 						break;
 
 					case ItemType::Hand:
-						targetSprite->setTexture(game->resources.getTexture("Gants.jpg"));
+						targetSprite->setTexture(game->resources.getTexture("SlotGants.png"));
 						break;
 
 					case ItemType::Boots:
-						targetSprite->setTexture(game->resources.getTexture("Bottes.jpg"));
+						targetSprite->setTexture(game->resources.getTexture("SlotBottes.png"));
 						break;
 
 					case ItemType::Accessory:
-						targetSprite->setTexture(game->resources.getTexture("accessoire.jpg"));
+						targetSprite->setTexture(game->resources.getTexture("SlotAccessoire.png"));
 						break;
 
 						default:
 						break;
 				}
+
+				targetSprite->setScale(static_cast<float>(TileSize) / 640.0f);
 
 			} 
 		}
@@ -305,30 +317,27 @@ namespace rCMI
 
 
 	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
+    
+		auto isClicked = [&](const gf::Sprite& sprite) {
+			gf::Matrix3f inv = sprite.getInverseTransform();
+			
+			gf::Vector2f localCoords = gf::transform(inv, coords);
+			
+			return sprite.getLocalBounds().contains(localCoords);
+		};
+
 		for (std::size_t i = 0; i < m_backpack.size(); ++i) {
-			if (m_backpackSprites[i].getLocalBounds().contains(coords - m_backpackSprites[i].getPosition())) {
+			if (isClicked(m_backpackSprites[i])) {
 				this->equipFromBackpack(i, game);
 				return; 
 			}
 		}
 
-		if (m_headSlot.getLocalBounds().contains(coords - m_headSlot.getPosition())) {
-        	this->onUnequip(ItemType::Head, game);
-		}
-		else if (m_torsoSlot.getLocalBounds().contains(coords - m_torsoSlot.getPosition())) {
-			this->onUnequip(ItemType::Torso, game);
-		}
-		else if (m_legSlot.getLocalBounds().contains(coords - m_legSlot.getPosition())) {
-			this->onUnequip(ItemType::Legs, game);
-		}
-		else if (m_bootsSlot.getLocalBounds().contains(coords - m_bootsSlot.getPosition())) {
-			this->onUnequip(ItemType::Boots, game);
-		}
-		else if (m_handSlot.getLocalBounds().contains(coords - m_handSlot.getPosition())) {
-			this->onUnequip(ItemType::Hand, game);
-		}
-		else if (m_accessorySlot.getLocalBounds().contains(coords - m_accessorySlot.getPosition())) {
-			this->onUnequip(ItemType::Accessory, game);
-		}
+		if (isClicked(m_headSlot)) this->onUnequip(ItemType::Head, game);
+		else if (isClicked(m_torsoSlot)) this->onUnequip(ItemType::Torso, game);
+		else if (isClicked(m_legSlot)) this->onUnequip(ItemType::Legs, game);
+		else if (isClicked(m_bootsSlot)) this->onUnequip(ItemType::Boots, game);
+		else if (isClicked(m_handSlot)) this->onUnequip(ItemType::Hand, game);
+		else if (isClicked(m_accessorySlot)) this->onUnequip(ItemType::Accessory, game);
 	}
 }
