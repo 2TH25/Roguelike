@@ -60,17 +60,30 @@ namespace rCMI
 
     bool playerMoved = false;
 
-    if (Controls::isActiveAction("move_up", m_actions))
-      playerMoved = heroInEntity.goUp(m_world_entity);
-
-    else if (Controls::isActiveAction("move_down", m_actions))
-      playerMoved = heroInEntity.goDown(m_world_entity);
-
-    else if (Controls::isActiveAction("move_right", m_actions))
-      playerMoved = heroInEntity.goRight(m_world_entity);
-
-    else if (Controls::isActiveAction("move_left", m_actions))
-      playerMoved = heroInEntity.goLeft(m_world_entity);
+    if (Controls::isActiveAction("move_up", m_actions)){
+      if (heroInEntity.goUp(m_world_entity)) {
+        heroInEntity.playAnimation("Up");
+        playerMoved = true;
+      }
+    }
+    else if (Controls::isActiveAction("move_down", m_actions)){
+      if (heroInEntity.goDown(m_world_entity)) {
+        heroInEntity.playAnimation("Down");
+        playerMoved = true;
+      }
+    }
+    else if (Controls::isActiveAction("move_right", m_actions)){
+      if (heroInEntity.goRight(m_world_entity)) {
+        heroInEntity.playAnimation("Right");
+        playerMoved = true;
+      }
+    }
+    else if (Controls::isActiveAction("move_left", m_actions)){
+      if (heroInEntity.goLeft(m_world_entity)) {
+        heroInEntity.playAnimation("Left");
+        playerMoved = true;
+      }
+    }
 
     if (Controls::isActiveAction("zoom_cam", m_actions) && world_view_size.x > 300)
     {
@@ -174,7 +187,12 @@ namespace rCMI
             ++it;
         }
     }
+    
+    m_world_entity.hero().update(time);
 
+    for (auto &character : m_world_entity.getCharacters()) {
+        character.update(time);
+    }
     updateFieldOfView();
   }
 
