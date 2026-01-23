@@ -117,9 +117,8 @@ namespace rCMI
 			if (item != nullptr && item->m_texture != nullptr) {
 				targetSprite->setTexture(*item->m_texture);
 				targetSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
-				float sX = 640.0f / item->m_texture->getSize().x;
-				float sY = 640.0f / item->m_texture->getSize().y;
-				targetSprite->setScale({sX, sY});
+				float scale = static_cast<float>(TileSize) / 640.0f;
+				targetSprite->setScale(scale);
 			} else {
 
 				switch (type)
@@ -251,13 +250,13 @@ namespace rCMI
 				m_backpackSprites[i].setOrigin({0.0f, 0.0f});
 				m_backpackSprites[i].setTexture(tex);
 				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
-				
-				float scaleX = 80.0f / tex.getSize().x;
-				float scaleY = 80.0f / tex.getSize().y;
-				m_backpackSprites[i].setScale({scaleX, scaleY});
+				float scale = static_cast<float>(TileSize) / 640.0f;
+
+				m_backpackSprites[i].setScale(scale);
 			} else {
 				m_backpackSprites[i].setTexture(*m_emptySlotTexture);
-				m_backpackSprites[i].setScale({1.0f, 1.0f});
+				float scale = static_cast<float>(TileSize) / 640.0f;
+				m_backpackSprites[i].setScale(scale);
 				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(m_emptySlotTexture->getSize()));
 			}
 		}
@@ -323,29 +322,39 @@ namespace rCMI
 	// }
 
 
-	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
-    
-		auto isClicked = [&](const gf::Sprite& sprite) {
-			gf::Matrix3f inv = sprite.getInverseTransform();
-			
-			gf::Vector2f localCoords = gf::transform(inv, coords);
-			
-			return sprite.getLocalBounds().contains(localCoords);
-		};
 
-		for (std::size_t i = 0; i < m_backpack.size(); ++i) {
-			if (isClicked(m_backpackSprites[i])) {
-				this->equipFromBackpack(i, game);
-				return; 
+	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
+		const gf::Vector2f slotSize = { 80.0f, 80.0f };
+
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+			gf::Vector2f pos = m_backpackSprites[i].getPosition();
+			
+			gf::RectF box = gf::RectF::fromPositionSize(pos, slotSize);
+
+			if (box.contains(coords)) {
+				if (i < m_backpack.size()) {
+					std::cout << "Equipement de l'item à l'indice : " << i << std::endl;
+					this->equipFromBackpack(i, game);
+				}
+				return;
 			}
 		}
 
-		if (isClicked(m_headSlot)) this->onUnequip(ItemType::Head, game);
-		else if (isClicked(m_torsoSlot)) this->onUnequip(ItemType::Torso, game);
-		else if (isClicked(m_legSlot)) this->onUnequip(ItemType::Legs, game);
-		else if (isClicked(m_bootsSlot)) this->onUnequip(ItemType::Boots, game);
-		else if (isClicked(m_handSlot)) this->onUnequip(ItemType::Hand, game);
-		else if (isClicked(m_accessorySlot)) this->onUnequip(ItemType::Accessory, game);
+		auto checkSlot = [&](gf::Sprite& sprite, ItemType type) {
+			gf::RectF box = gf::RectF::fromPositionSize(sprite.getPosition(), slotSize);
+			if (box.contains(coords)) {
+				this->onUnequip(type, game);
+				return true;
+			}
+			return false;
+		};
+
+		if (checkSlot(m_headSlot, ItemType::Head)) return;
+		if (checkSlot(m_torsoSlot, ItemType::Torso)) return;
+		if (checkSlot(m_legSlot, ItemType::Legs)) return;
+		if (checkSlot(m_bootsSlot, ItemType::Boots)) return;
+		if (checkSlot(m_handSlot, ItemType::Hand)) return;
+		if (checkSlot(m_accessorySlot, ItemType::Accessory)) return;
 	}
 
 	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {

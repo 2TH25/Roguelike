@@ -38,11 +38,9 @@ namespace rCMI {
         c.sprite.setTexture(game->resources.getTexture("Coffre.png"));
         float scale = static_cast<float>(TileSize) / 640.0f;
         c.sprite.setScale(scale);
-        c.sprite.setPosition(pos);
+        c.sprite.setPosition({ (float)pos.x * TileSize, (float)pos.y * TileSize });
         
-        gf::Vector2f size = c.sprite.getLocalBounds().getSize();
-        c.sprite.setOrigin(size / 2.0f);
-        
+        gf::Vector2f size = c.sprite.getLocalBounds().getSize();        
         m_chests.push_back(c);
     }
 
