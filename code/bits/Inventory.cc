@@ -9,44 +9,50 @@ namespace rCMI
 				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png")))
 	{
 		float scale = static_cast<float>(TileSize) / 640.0f;
+		float x_slot_left = 430;
+		float x_slot_right = 720;
+		float y_slot_first = 220;
+		float y_slot_second = 310;
+		float y_slot_third = 400;
 
 		m_headSlot.setTexture(game->resources.getTexture("SlotCasque.png"));
     	m_headSlot.setScale(scale);
-		m_headSlot.setPosition({230, 170});
+		m_headSlot.setPosition({x_slot_left, y_slot_first});
 
 		m_torsoSlot.setTexture(game->resources.getTexture("SlotArmure.png"));
 		m_torsoSlot.setScale(scale);
-		m_torsoSlot.setPosition({520, 170});
+		m_torsoSlot.setPosition({x_slot_right, y_slot_first});
 
 		m_legSlot.setTexture(game->resources.getTexture("SlotJambe.png"));
 		m_legSlot.setScale(scale);
-		m_legSlot.setPosition({520, 260});
+		m_legSlot.setPosition({x_slot_right, y_slot_second});
 
 		m_handSlot.setTexture(game->resources.getTexture("SlotGants.png"));
 		m_handSlot.setScale(scale);
-		m_handSlot.setPosition({230, 260});
+		m_handSlot.setPosition({x_slot_left, y_slot_second});
 
 		m_bootsSlot.setTexture(game->resources.getTexture("SlotBottes.png"));
 		m_bootsSlot.setScale(scale);
-		m_bootsSlot.setPosition({520, 350});
+		m_bootsSlot.setPosition({x_slot_right, y_slot_third});
 
 		m_accessorySlot.setTexture(game->resources.getTexture("SlotAccessoire.png"));
 		m_accessorySlot.setScale(scale);
-		m_accessorySlot.setPosition({230, 350});
+		m_accessorySlot.setPosition({x_slot_left, y_slot_third});
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 		float scaleFactor = 400.0f / 640.0f;
 		m_heroSprite.setScale({scaleFactor, scaleFactor});
-		m_heroSprite.setPosition({230, 100});
+		m_heroSprite.setPosition({430, 150});
 
-		m_background.setSize({900, 700});
-		m_background.setColor(gf::Color::White);
-		m_background.setPosition({200, 100});
+		m_background.setSize({1100, 700});
+		m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
+		// m_background.setScale();
+		m_background.setPosition({300, 100});
 
-		m_statsWidget.setPosition({800, 200});
+		m_statsWidget.setPosition({1000, 280});
 		m_statsWidget.setDefaultTextColor(gf::Color::Black);
 
-		gf::Vector2f startPos = {220, 500};
+		gf::Vector2f startPos = {420, 500};
 		float slotSize = 80.0f;
 		float padding = 10.0f;
 
