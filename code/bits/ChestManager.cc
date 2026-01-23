@@ -46,11 +46,13 @@ namespace rCMI {
         m_chests.push_back(c);
     }
 
-    void ChestManager::render(gf::RenderTarget &target, const gf::RenderStates &states) {
-        for (auto &chest : m_chests) {
+    void ChestManager::render(gf::RenderTarget &target, const gf::RenderStates &states, Map &map) {
+    for (auto &chest : m_chests) {
+        //if (map.isInFieldOfVision(chest.gridPos)) {
             target.draw(chest.sprite, states);
-        }
+        //}
     }
+}
 
     int ChestManager::isChestOnTile(RogueCMI *game) {
         gf::Vector2f heroPos = game->m_WorldScene.m_world_entity.hero().getExistence().getPosition();

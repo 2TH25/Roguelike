@@ -13,7 +13,7 @@ namespace rCMI {
             void update(RogueCMI *game);
             void openChest(int chestIndex,RogueCMI *game);
             void spawnChest(gf::Vector2i pos, RogueCMI *game);
-            void render(gf::RenderTarget &target, const gf::RenderStates &states);
+            void render(gf::RenderTarget &target, const gf::RenderStates &states, class Map &map);
             int isChestOnTile(RogueCMI *game);
             void clear();
     };
