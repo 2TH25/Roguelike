@@ -18,37 +18,37 @@ namespace rCMI
     {
     case ItemType::Head: {
       Stat s(10, 2, 0); 
-      newItem = Item("Casque", ItemType::Head, game->resources.getTexture("Casque_item.jpg"));
+      newItem = Item("Casque", ItemType::Head, game->resources.getTexture("Casque.png"));
       newItem.m_stat = s;
       break;
     }
     case ItemType::Torso: {
       Stat s(30, 5, 0); 
-      newItem = Item("Plastron", ItemType::Torso, game->resources.getTexture("Plastron_item.jpg"));
+      newItem = Item("Plastron", ItemType::Torso, game->resources.getTexture("Plastron.png"));
       newItem.m_stat = s;
       break;
     }
     case ItemType::Legs: {
       Stat s(10, 2, 0); 
-      newItem = Item("Jambieres", ItemType::Legs, game->resources.getTexture("Jambieres_item.jpg"));
+      newItem = Item("Jambieres", ItemType::Legs, game->resources.getTexture("Jambiere.png"));
       newItem.m_stat = s;
       break;
     }
     case ItemType::Hand: {
       Stat s(0, 2, 3); 
-      newItem = Item("Gants", ItemType::Hand, game->resources.getTexture("Gants_item.jpg"));
+      newItem = Item("Gants", ItemType::Hand, game->resources.getTexture("Gants.png"));
       newItem.m_stat = s;
       break;
     }
     case ItemType::Boots: {
       Stat s(10, 2, 0); 
-      newItem = Item("Bottes", ItemType::Boots, game->resources.getTexture("Bottes_item.jpg"));
+      newItem = Item("Bottes", ItemType::Boots, game->resources.getTexture("Bottes.png"));
       newItem.m_stat = s;
       break;
     }
     case ItemType::Accessory: {
       Stat s(0, 2, 10); 
-      newItem = Item("Accessoire", ItemType::Accessory, game->resources.getTexture("Accessoire_item.jpg"));
+      newItem = Item("Accessoire", ItemType::Accessory, game->resources.getTexture("Bracelet.png"));
       newItem.m_stat = s;
       break;
     }
