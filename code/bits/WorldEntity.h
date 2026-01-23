@@ -48,13 +48,23 @@ namespace rCMI
     void clearMap();
     void fieldOfVision();
 
-    Map &getMap(){ return m_map; };
+    Map &getMap() { return m_map; };
 
   private:
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
     Map m_map;
-    
+  };
+
+  class HudEntity : public gf::Entity
+  {
+  public:
+    HudEntity(RogueCMI *m_game, WorldEntity *m_world);
+    void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
+
+  private:
+    RogueCMI *m_game = nullptr;
+    WorldEntity *m_world = nullptr;
   };
 };
 

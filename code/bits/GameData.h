@@ -16,7 +16,7 @@ namespace rCMI
   constexpr gf::Vector2i TestMapSize = {10, 10};
   constexpr int TileSize = 80;
 
-  const std::string PATH_FONT = "../data/RogueCMI/KarmaFuture.ttf";
+  const std::string PATH_FONT = "KarmaFuture.ttf";
   const std::string RESSOURCES_PATH = "../data/RogueCMI";
   const std::initializer_list<gf::Path> PATHS = {gf::Path(RESSOURCES_PATH), gf::Paths::getBasePath(), gf::Paths::getCurrentPath()};
 

@@ -22,7 +22,7 @@ namespace rCMI
 		void doProcessEvent(gf::Event &event) override;
 
 		RogueCMI *m_game = nullptr;
-		gf::Font font;
+		gf::Font &font;
 	};
 }
 

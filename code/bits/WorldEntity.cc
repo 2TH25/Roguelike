@@ -14,6 +14,7 @@
 #include <random>
 #include <iostream>
 #include <gf/Particles.h>
+#include <gf/Text.h>
 
 namespace rCMI
 {
@@ -40,7 +41,7 @@ namespace rCMI
     characters.back().playAnimation("Default");
 
     // characters.push_back(Character::slime({5, 4}, m_game->resources.getTexture("slime.png")));
-    // characters.push_back(Character::zombie({2,6}, m_game->resources.getTexture("squelette.png")));
+    characters.push_back(Character::zombie({2, 6}, m_game->resources.getTexture("zombie.png")));
     // characters.push_back(Character::skeleton({1, 8}, m_game->resources.getTexture("squelette.png")));
   }
 
@@ -204,9 +205,9 @@ namespace rCMI
             mob.setHomeRoom(room);
             characters.push_back(mob);
           }
-          }
         }
       }
+    }
   }
 
   struct VectorCompare
@@ -273,4 +274,38 @@ namespace rCMI
   void WorldEntity::clearMap() { m_map.clearFieldOfVision(); }
 
   void WorldEntity::fieldOfVision() { m_map.computeFieldOfVision(hero().getExistence().getPosition()); }
+
+  HudEntity::HudEntity(RogueCMI *m_game, WorldEntity *m_world)
+      : Entity(1),
+        m_game(m_game),
+        m_world(m_world)
+  {
+  }
+
+  void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
+  {
+    gf::RectangleShape life_lost;
+    life_lost.setColor(gf::Color::Gray());
+    life_lost.setPosition({target.getView().getSize().x / 2, target.getView().getSize().y * 14 / 15});
+    life_lost.setSize({300, 20});
+    life_lost.setAnchor(gf::Anchor::Center);
+
+    gf::RectangleShape life;
+    life.setColor(gf::Color::Red);
+    life.setPosition({life_lost.getPosition().x - life_lost.getSize().x / 2, life_lost.getPosition().y - life_lost.getSize().y / 2});
+    float life_to_size = 300 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
+    life.setSize({life_to_size, 20});
+
+    gf::Text text;
+    text.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
+    text.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text.setColor(gf::Color::Black);
+    text.setCharacterSize(15U);
+    text.setPosition(life_lost.getPosition());
+    text.setAnchor(gf::Anchor::Center);
+
+    life_lost.draw(target, states);
+    life.draw(target, states);
+    text.draw(target, states);
+  }
 }

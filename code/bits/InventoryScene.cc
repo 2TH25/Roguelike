@@ -7,7 +7,7 @@ namespace rCMI
   InventoryScene::InventoryScene(RogueCMI *game)
       : gf::Scene(view_size),
         m_game(game),
-        font(PATH_FONT),
+        font(m_game->resources.getFont(PATH_FONT)),
         m_inventory(game)
   {
     setClearColor(gf::Color::Black);

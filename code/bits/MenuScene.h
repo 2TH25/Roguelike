@@ -24,7 +24,7 @@ namespace rCMI
 		gf::Action up;
 		gf::Action down;
 		gf::Action select;
-		gf::Font font;
+		gf::Font &font;
 		gf::WidgetContainer widgets;
 		gf::TextButtonWidget m_saves;
 		gf::TextButtonWidget m_quit;

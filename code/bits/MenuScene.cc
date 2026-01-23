@@ -10,7 +10,7 @@ namespace rCMI
       : gf::Scene(view_size),
         m_game(game), up("up"),
         down("down"), select("select"),
-        font(PATH_FONT),
+        font(m_game->resources.getFont(PATH_FONT)),
         m_saves("jouer", font),
         m_quit("quitter", font),
         m_test("test zone", font)

@@ -5,6 +5,7 @@
 #include <gf/Time.h>
 #include "InventoryScene.h"
 #include "Actions.h"
+#include <gf/Text.h>
 
 namespace rCMI
 {
@@ -12,6 +13,7 @@ namespace rCMI
       : gf::Scene(view_size),
         m_game(game),
         m_world_entity(game),
+        m_hud(game, &m_world_entity),
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventory(false),
@@ -41,6 +43,7 @@ namespace rCMI
       character.setDeadTexture(textureMort);
 
     addWorldEntity(m_world_entity);
+    addHudEntity(m_hud);
   }
 
   void WorldScene::doProcessEvent(gf::Event &event)

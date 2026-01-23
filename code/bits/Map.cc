@@ -86,7 +86,8 @@ namespace rCMI
     auto it = std::find_if(healingZone.begin(), healingZone.end(), [&](posWhBool healPad)
                            { return position == healPad.position; });
 
-    if (it == healingZone.end()) return false;
+    if (it == healingZone.end())
+      return false;
 
     (*it).isActive = false;
     return !(*it).isActive;
@@ -105,7 +106,14 @@ namespace rCMI
 
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    float scaleFactor = (float)TileSize / 640.0f;
+
+    gf::Texture &tileTexture = m_game->resources.getTexture("SetTileTextureSol.png");
+    gf::Vector2f texture_size = tileTexture.getSize();
+    gf::Vector2f tile_texture_size = texture_size / texture_size / 5;
+
+    gf::SpriteParticles sParticle;
+    sParticle.setTexture(tileTexture);
+    sParticle.setScale(TileSize / (texture_size / 5.0));
 
     for (auto pos : map.getRange())
     {
@@ -116,51 +124,37 @@ namespace rCMI
       if (!explored)
         continue;
 
-      gf::Sprite sprite;
-      std::string textureName;
+      gf::Vector2i texturePosition;
 
       // --- 1. Détermination de la texture (identique à avant) ---
       if (isStairs(pos))
       {
-        textureName = "Stairs.png";
+        texturePosition = {0, 2};
       }
       else
       {
         int hash = (pos.x * 39113 + pos.y * 17569) % 100;
-        bool isWalkable = map.isWalkable(pos);
-        std::string base = isWalkable ? "Floor" : "Wall";
+        int base = map.isWalkable(pos) ? 0 : 1;
 
         if (hash < 45)
         {
-          int variant = (hash % 4) + 2;
-          textureName = base + std::to_string(variant) + ".png";
+          int variant = (hash % 4) + 1;
+          texturePosition = {variant, base};
         }
         else
         {
-          textureName = base + ".png";
+          texturePosition = {0, base};
         }
       }
 
-      // --- 2. Configuration du Sprite ---
-      sprite.setTexture(m_game->resources.getTexture(textureName));
-      sprite.setPosition({(float)(pos.x * TileSize), (float)(pos.y * TileSize)});
-      sprite.setScale({scaleFactor, scaleFactor});
+      gf::Vector2f calculate_tile_position = ((pos * TileSize) + TileSize / 2) / sParticle.getScale();
+      gf::Vector2f calculate_texture_position = texturePosition * tile_texture_size;
 
-      // --- 3. Filtre de luminosité ---
-      if (inFOV)
-      {
-        // Pleine lumière
-        sprite.setColor(gf::Color::White);
-      }
-      else
-      {
-        // Brouillard de guerre : on fonce l'image (R, G, B très bas)
-        // Tu peux ajuster 60, 60, 60 pour faire plus ou moins sombre
-        sprite.setColor(gf::Color::fromRgba32(100, 100, 100, 255));
-      }
-
-      target.draw(sprite, states);
+      sParticle.addSprite(calculate_tile_position,
+                          gf::RectF::fromPositionSize(calculate_texture_position, tile_texture_size),
+                          inFOV ? gf::Color::White : gf::Color::fromRgba32(100, 100, 100, 255));
     }
+    sParticle.draw(target, states);
 
     for (auto healPad : healingZone)
     {

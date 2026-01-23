@@ -14,6 +14,7 @@ namespace rCMI
   {
   public:
     WorldEntity m_world_entity;
+    HudEntity m_hud;
     WorldScene(RogueCMI *game);
     void generateMap(gf::Vector2i size);
 
