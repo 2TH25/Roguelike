@@ -24,7 +24,7 @@ namespace rCMI
     }
     case ItemType::Torso: {
       Stat s(30, 5, 0); 
-      newItem = Item("Plastron", ItemType::Torso, game->resources.getTexture("Plastron.png"));
+      newItem = Item("Plastron", ItemType::Torso, game->resources.getTexture("Armure.png"));
       newItem.m_stat = s;
       break;
     }

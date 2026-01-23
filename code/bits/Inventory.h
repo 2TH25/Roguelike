@@ -29,17 +29,25 @@ namespace rCMI
 
     gf::Sprite m_heroSprite;
 
-    gf::Sprite m_headSlot;
+    gf::Sprite m_headSlot; // slots vides d'armement
     gf::Sprite m_legSlot;
     gf::Sprite m_torsoSlot;
     gf::Sprite m_handSlot;
     gf::Sprite m_bootsSlot;
     gf::Sprite m_accessorySlot;
 
+    gf::Sprite m_equippedHeadSprite; // slots non vides d'armement
+    gf::Sprite m_equippedTorsoSprite;
+    gf::Sprite m_equippedLegsSprite;
+    gf::Sprite m_equippedHandSprite;
+    gf::Sprite m_equippedBootsSprite;
+    gf::Sprite m_equippedAccessorySprite;
+
     std::vector<Item> m_backpack;
     std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
-    gf::Sprite m_backpackSprites[MaxBackpackSize];
+    gf::Sprite m_backpackBackgrounds[MaxBackpackSize]; // Le slot joli
+    gf::Sprite m_itemSprites[MaxBackpackSize];
     gf::Texture *m_emptySlotTexture; // slot vide du backpack
 
     struct EquippedSlot

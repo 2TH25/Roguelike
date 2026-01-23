@@ -39,6 +39,20 @@ namespace rCMI
 		m_accessorySlot.setScale(scale);
 		m_accessorySlot.setPosition({x_slot_left, y_slot_third});
 
+		m_equippedHeadSprite.setPosition(m_headSlot.getPosition());
+		m_equippedTorsoSprite.setPosition(m_torsoSlot.getPosition());
+		m_equippedLegsSprite.setPosition(m_legSlot.getPosition());
+		m_equippedHandSprite.setPosition(m_handSlot.getPosition());
+		m_equippedBootsSprite.setPosition(m_bootsSlot.getPosition());
+		m_equippedAccessorySprite.setPosition(m_accessorySlot.getPosition());
+
+		m_equippedHeadSprite.setColor(gf::Color::Transparent);
+		m_equippedTorsoSprite.setColor(gf::Color::Transparent);
+		m_equippedLegsSprite.setColor(gf::Color::Transparent);
+		m_equippedHandSprite.setColor(gf::Color::Transparent);
+		m_equippedBootsSprite.setColor(gf::Color::Transparent);
+		m_equippedAccessorySprite.setColor(gf::Color::Transparent);
+
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 		float scaleFactor = 400.0f / 640.0f;
 		m_heroSprite.setScale({scaleFactor, scaleFactor});
@@ -60,9 +74,12 @@ namespace rCMI
 			float x = startPos.x + (i % 5) * (slotSize + padding);
 			float y = startPos.y + (i / 5) * (slotSize + padding);
 			
-			m_backpackSprites[i].setPosition({x, y});
-			m_backpackSprites[i].setTexture(*m_emptySlotTexture);
-			m_backpackSprites[i].setScale(scale);
+			m_backpackBackgrounds[i].setPosition({x, y});
+			m_backpackBackgrounds[i].setTexture(*m_emptySlotTexture);
+			m_backpackBackgrounds[i].setScale(scale);
+
+			m_itemSprites[i].setPosition({x, y});
+			m_itemSprites[i].setColor(gf::Color::Transparent);
 		}
 
 		updateStatsText();
@@ -96,68 +113,42 @@ namespace rCMI
 	}
 
 	void Inventory::setEquippedItem(ItemType type, Item *item, RogueCMI *game)
-	{
-		EquippedSlot *slot = getSlotByType(type);
+{
+    EquippedSlot *slot = getSlotByType(type);
+    if (slot != nullptr) {
+        if (item != nullptr) {
+            slot->item = *item;
+            slot->hasItem = true;
+        } else {
+            slot->hasItem = false;
+        }
+    }
 
-		if (slot != nullptr)
-		{
-			if (item != nullptr)
-			{
-				slot->item = *item;
-				slot->hasItem = true;
-				
-			}
-			else
-				slot->hasItem = false;
-		}
+    // On récupère le sprite "Item" correspondant au type
+    gf::Sprite *itemSprite = nullptr;
+    switch (type) {
+        case ItemType::Head:      itemSprite = &m_equippedHeadSprite; break;
+        case ItemType::Torso:     itemSprite = &m_equippedTorsoSprite; break;
+        case ItemType::Legs:      itemSprite = &m_equippedLegsSprite; break;
+        case ItemType::Hand:      itemSprite = &m_equippedHandSprite; break;
+        case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
+        case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
+        default: break;
+    }
 
-		gf::Sprite *targetSprite = getSpriteByType(type);
-
-		if (targetSprite != nullptr) {
-			if (item != nullptr && item->m_texture != nullptr) {
-				targetSprite->setTexture(*item->m_texture);
-				targetSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
-				float scale = static_cast<float>(TileSize) / 640.0f;
-				targetSprite->setScale(scale);
-			} else {
-
-				switch (type)
-				{
-					case ItemType::Head:
-						targetSprite->setTexture(game->resources.getTexture("SlotCasque.png"));
-						break;
-
-					case ItemType::Torso:
-						targetSprite->setTexture(game->resources.getTexture("SlotArmure.png"));
-						break;
-
-					case ItemType::Legs:
-						targetSprite->setTexture(game->resources.getTexture("SlotJambe.png"));
-						break;
-
-					case ItemType::Hand:
-						targetSprite->setTexture(game->resources.getTexture("SlotGants.png"));
-						break;
-
-					case ItemType::Boots:
-						targetSprite->setTexture(game->resources.getTexture("SlotBottes.png"));
-						break;
-
-					case ItemType::Accessory:
-						targetSprite->setTexture(game->resources.getTexture("SlotAccessoire.png"));
-						break;
-
-						default:
-						break;
-				}
-
-				targetSprite->setScale(static_cast<float>(TileSize) / 640.0f);
-
-			} 
-		}
-
-		updateStatsText();
-	}
+    if (itemSprite != nullptr) {
+        if (item != nullptr && item->m_texture != nullptr) {
+            itemSprite->setTexture(*item->m_texture);
+            itemSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
+            itemSprite->setColor(gf::Color::White); // On le rend visible
+            float scale = static_cast<float>(TileSize) / 640.0f;
+            itemSprite->setScale(scale);
+        } else {
+            itemSprite->setColor(gf::Color::Transparent); // On le cache
+        }
+    }
+    updateStatsText();
+}
 
 	Item Inventory::getEquippedItem(ItemType type)
 	{
@@ -228,9 +219,19 @@ namespace rCMI
 		target.draw(m_bootsSlot, states);
 		target.draw(m_accessorySlot, states);
 
+		target.draw(m_equippedHeadSprite, states);
+		target.draw(m_equippedTorsoSprite, states);
+		target.draw(m_equippedLegsSprite, states);
+		target.draw(m_equippedHandSprite, states);
+		target.draw(m_equippedBootsSprite, states);
+		target.draw(m_equippedAccessorySprite, states);
+
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
-			target.draw(m_backpackSprites[i], states);
+			target.draw(m_backpackBackgrounds[i], states);
 		}
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+        	target.draw(m_itemSprites[i], states);
+    	}
 		
 		target.draw(m_statsWidget, states);
 	}
@@ -247,17 +248,14 @@ namespace rCMI
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			if (i < m_backpack.size()) {
 				const gf::Texture& tex = *(m_backpack[i].m_texture);
-				m_backpackSprites[i].setOrigin({0.0f, 0.0f});
-				m_backpackSprites[i].setTexture(tex);
-				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
+				m_itemSprites[i].setTexture(tex);
+				m_itemSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
 				float scale = static_cast<float>(TileSize) / 640.0f;
-
-				m_backpackSprites[i].setScale(scale);
+				m_itemSprites[i].setScale(scale);
+				m_itemSprites[i].setColor(gf::Color::White); // On le rend visible
 			} else {
-				m_backpackSprites[i].setTexture(*m_emptySlotTexture);
-				float scale = static_cast<float>(TileSize) / 640.0f;
-				m_backpackSprites[i].setScale(scale);
-				m_backpackSprites[i].setTextureRect(gf::RectF::fromSize(m_emptySlotTexture->getSize()));
+				m_itemSprites[i].setColor(gf::Color::Transparent);
+				
 			}
 		}
 	}
@@ -327,13 +325,12 @@ namespace rCMI
 		const gf::Vector2f slotSize = { 80.0f, 80.0f };
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
-			gf::Vector2f pos = m_backpackSprites[i].getPosition();
+			gf::Vector2f pos = m_backpackBackgrounds[i].getPosition();
 			
 			gf::RectF box = gf::RectF::fromPositionSize(pos, slotSize);
 
 			if (box.contains(coords)) {
 				if (i < m_backpack.size()) {
-					std::cout << "Equipement de l'item à l'indice : " << i << std::endl;
 					this->equipFromBackpack(i, game);
 				}
 				return;
