@@ -84,7 +84,7 @@ namespace rCMI
       if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
         characters[i].render(target, states);
 
-    m_chestManager.render(target,states);
+    m_chestManager.render(target, states, m_map);
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -99,6 +99,7 @@ namespace rCMI
         update_tile_at({x, y}, dungeon.getTile({x, y}));
 
     characters.clear();
+    m_chestManager.m_chests.clear();
     characters.reserve(100);
     std::vector<BSPTree *> leaves;
     generator.getRoot().getRooms(leaves);
@@ -117,6 +118,7 @@ namespace rCMI
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
         hero.setDeadTexture(textureMort);
         characters.push_back(hero);
+        characters.back().playAnimation("Default");
         break;
       }
     }
@@ -126,14 +128,32 @@ namespace rCMI
       gf::RectI room = leaf->room;
       gf::Vector2i center = room.getCenter();
 
+      std::vector<gf::Vector2i> floorPositions;
+      for (int x = room.min.x + 1; x < room.max.x; ++x) {
+          for (int y = room.min.y + 1; y < room.max.y; ++y) {
+              floorPositions.push_back({x, y});
+          }
+      }
+      std::shuffle(floorPositions.begin(), floorPositions.end(), gen);
+
+      if (leaf->type == RoomType::Chest) { 
+            std::cout << "Génération d'une salle aux trésors en " << room.min.x << "," << room.min.y << std::endl;
+            int chestCount = 4;
+            for (int i = 0; i < chestCount && i < floorPositions.size(); ++i) {
+                m_chestManager.spawnChest(floorPositions[i], m_game);
+            }
+      }
       if (leaf->type == RoomType::End)
       {
         update_tile_at(center, TileType::Stairs);
       }
+      
       else if (leaf->type == RoomType::Healing)
       {
-        update_tile_at(center, TileType::HealingFloor);
-        continue;
+          int healCount = 3;
+          for (int i = 0; i < healCount && i < floorPositions.size(); ++i) {
+              update_tile_at(floorPositions[i], TileType::HealingFloor);
+          }
       }
       else if (leaf->type == RoomType::Start)
       {
@@ -184,39 +204,9 @@ namespace rCMI
             mob.setHomeRoom(room);
             characters.push_back(mob);
           }
+          }
         }
       }
-    }
-
-    int numberOfChests = 10;
-
-    for (int i = 0; i < numberOfChests; ++i)
-    {
-      bool found = false;
-      int x_final;
-      int y_final;
-
-      do
-      {
-        int x = rand() % Map_size.x;
-        int y = rand() % Map_size.y;
-
-        if (isWalkable({x, y}))
-        {
-          found = true;
-          x_final = x;
-          y_final = y;
-        }
-      } while (!found);
-
-      gf::Vector2f pixelPos = {x_final * (float)TileSize + TileSize / 2.0f, y_final * (float)TileSize + TileSize / 2.0f};
-      m_chestManager.spawnChest(pixelPos,m_game);
-    }
-    if (!characters.empty()) {
-      characters[0].playAnimation("Default");
-    }
-
-    std::cout << "Donjon peuple avec " << m_chestManager.m_chests.size() << " coffres." << std::endl;
   }
 
   struct VectorCompare
