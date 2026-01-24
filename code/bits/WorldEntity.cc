@@ -90,6 +90,12 @@ namespace rCMI
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
   {
+
+    std::optional<Stat> savedStats = std::nullopt;
+  
+    if (!characters.empty()) {
+        savedStats = characters[0].getStat();
+    }
     m_map.generate_dungeon(Map_size);
 
     rCMI::BSP generator;
@@ -118,6 +124,9 @@ namespace rCMI
         Character hero = Character::hero(center, m_game->resources.getTexture("perso640/SetPerso.png"));
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
         hero.setDeadTexture(textureMort);
+        if (savedStats.has_value()) {
+          hero.setStat(savedStats.value());
+      }
         characters.push_back(hero);
         characters.back().playAnimation("Default");
         break;

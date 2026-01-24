@@ -115,18 +115,29 @@ namespace rCMI
       die();
   }
 
-  void Character::heal(int amount,RogueCMI *game)
+  void Character::heal(int amount)
   {
     int new_health = stat.getHealth() + amount;
     stat.setHealth(std::clamp(new_health, 0, stat.getMaxHealth()));
-    game->m_InventoryScene->m_inventory.updateStatsText();
+    //game->m_InventoryScene->m_inventory.updateStatsText();
   }
+
+
   void Character::addMaxHealth(int amount) {
-    stat.setMaxHealth(stat.getMaxHealth() + amount);
-    if (amount > 0) {
-        heal(amount);
-    }
+    int oldMax = stat.getMaxHealth();
+    int newMax = oldMax + amount;
+    if (newMax < 1) newMax = 1;
+
+    stat.setMaxHealth(newMax);
+
+    int newHealth = stat.getHealth() + amount;
+
+    if (newHealth > newMax) newHealth = newMax;
+    if (newHealth < 1 && alive()) newHealth = 1; 
+
+    stat.setHealth(newHealth);
   }
+  
 
   void Character::die()
   {

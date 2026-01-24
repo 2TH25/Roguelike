@@ -1,5 +1,8 @@
 #include "Inventory.h"
 #include "RogueCMI.h"
+#include "WorldScene.h" 
+#include "WorldEntity.h"
+#include "Character.h"
 
 namespace rCMI
 {
@@ -114,27 +117,40 @@ namespace rCMI
 
 	void Inventory::setEquippedItem(ItemType type, Item *item, RogueCMI *game)
 {
+	Character &hero = game->m_WorldScene.m_world_entity.hero();
     EquippedSlot *slot = getSlotByType(type);
     if (slot != nullptr) {
-        if (item != nullptr) {
-            slot->item = *item;
-            slot->hasItem = true;
-        } else {
-            slot->hasItem = false;
-        }
-    }
+            
+		if (slot->hasItem) {
+			hero.getStat().setPower(hero.getStat().getPower() - slot->item.m_stat.getPower());
+			hero.getStat().setDefense(hero.getStat().getDefense() - slot->item.m_stat.getDefense());
+			hero.addMaxHealth(-slot->item.m_stat.getHealth());
+		}
 
-    // On récupère le sprite "Item" correspondant au type
-    gf::Sprite *itemSprite = nullptr;
-    switch (type) {
-        case ItemType::Head:      itemSprite = &m_equippedHeadSprite; break;
-        case ItemType::Torso:     itemSprite = &m_equippedTorsoSprite; break;
-        case ItemType::Legs:      itemSprite = &m_equippedLegsSprite; break;
-        case ItemType::Hand:      itemSprite = &m_equippedHandSprite; break;
-        case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
-        case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
-        default: break;
-    }
+		if (item != nullptr) {
+			slot->item = *item;
+			slot->hasItem = true;
+
+			hero.getStat().setPower(hero.getStat().getPower() + item->m_stat.getPower());
+			hero.getStat().setDefense(hero.getStat().getDefense() + item->m_stat.getDefense());
+			hero.addMaxHealth(item->m_stat.getHealth());
+		} else {
+			slot->hasItem = false;
+		}
+	}
+
+	m_stats = hero.getStat();
+
+	gf::Sprite *itemSprite = nullptr;
+	switch (type) {
+		case ItemType::Head:      itemSprite = &m_equippedHeadSprite; break;
+		case ItemType::Torso:     itemSprite = &m_equippedTorsoSprite; break;
+		case ItemType::Legs:      itemSprite = &m_equippedLegsSprite; break;
+		case ItemType::Hand:      itemSprite = &m_equippedHandSprite; break;
+		case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
+		case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
+		default: break;
+	}
 
     if (itemSprite != nullptr) {
         if (item != nullptr && item->m_texture != nullptr) {
@@ -196,10 +212,10 @@ namespace rCMI
 			}
 		}
 		
-		int total_force = m_stats.getPower() + bonus_force;
-		int total_def   = m_stats.getDefense() + bonus_defense;
-		int total_pv    = m_stats.getHealth() + bonus_sante;
-		int max_pv      = m_stats.getMaxHealth() + bonus_sante;
+		int total_force = m_stats.getPower() ;
+		int total_def   = m_stats.getDefense() ;
+		int total_pv    = m_stats.getHealth() ;
+		int max_pv      = m_stats.getMaxHealth() ;
 
 		std::string str = "Force : " + std::to_string(total_force) + " (+" + std::to_string(bonus_force) + ")\n" +
 						"Sante : " + std::to_string(total_pv) + " / " + std::to_string(max_pv) + " (+" + std::to_string(bonus_sante) + ")\n" +

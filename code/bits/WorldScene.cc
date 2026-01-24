@@ -187,7 +187,7 @@ namespace rCMI
       {
         if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
         {
-          heroInEntity.heal(10,m_game);
+          heroInEntity.heal(10);
           std::cout << "Le heros a ete soigne de 10 PV !" << std::endl; // Optionnel pour debug
         }
       }
