@@ -187,18 +187,8 @@ namespace rCMI
       {
         if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
         {
-          // TODO : fait à l’arrache
-          Stat h_stats = m_world_entity.hero().getStat();
-          h_stats.setHealth(h_stats.getHealth() + 50);
-        }
-      }
-      if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
-      {
-        if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
-        {
-          // TODO : fait à l’arrache
-          Stat h_stats = m_world_entity.hero().getStat();
-          h_stats.setHealth(h_stats.getHealth() + 50);
+          heroInEntity.heal(10);
+          std::cout << "Le heros a ete soigne de 10 PV !" << std::endl; // Optionnel pour debug
         }
       }
       m_world_entity.EnemyTurns();

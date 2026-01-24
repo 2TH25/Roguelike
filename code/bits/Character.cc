@@ -114,6 +114,12 @@ namespace rCMI
       die();
   }
 
+  void Character::heal(int amount)
+  {
+    int new_health = stat.getHealth() + amount;
+    stat.setHealth(std::clamp(new_health, 0, stat.getMaxHealth()));
+  }
+
   void Character::die()
   {
     existence.setCharacter(u'%');

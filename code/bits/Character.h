@@ -26,6 +26,7 @@ namespace rCMI
 
     void doMove(WorldEntity &m_world);
     void take_damage(int damage);
+    void heal(int amount);
     void die();
 
     bool goUp(WorldEntity &m_world);
