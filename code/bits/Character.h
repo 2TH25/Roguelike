@@ -14,6 +14,7 @@
 
 namespace rCMI
 {
+  class RogueCMI;
   class WorldEntity;
 
   class Character : public gf::Entity

@@ -3,6 +3,7 @@
 #include "Actions.h"
 #include "GameData.h"
 #include <algorithm>
+#include "RogueCMI.h"
 
 namespace rCMI
 {
@@ -114,10 +115,11 @@ namespace rCMI
       die();
   }
 
-  void Character::heal(int amount)
+  void Character::heal(int amount,RogueCMI *game)
   {
     int new_health = stat.getHealth() + amount;
     stat.setHealth(std::clamp(new_health, 0, stat.getMaxHealth()));
+    game->m_InventoryScene->m_inventory.updateStatsText();
   }
   void Character::addMaxHealth(int amount) {
     stat.setMaxHealth(stat.getMaxHealth() + amount);
