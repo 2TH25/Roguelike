@@ -42,12 +42,17 @@ namespace rCMI
 		m_accessorySlot.setScale(scale);
 		m_accessorySlot.setPosition({x_slot_left, y_slot_third});
 
+		m_weaponSlot.setTexture(game->resources.getTexture("SlotArme.png"));
+		m_weaponSlot.setScale(scale);
+		m_weaponSlot.setPosition({850, y_slot_first});
+
 		m_equippedHeadSprite.setPosition(m_headSlot.getPosition());
 		m_equippedTorsoSprite.setPosition(m_torsoSlot.getPosition());
 		m_equippedLegsSprite.setPosition(m_legSlot.getPosition());
 		m_equippedHandSprite.setPosition(m_handSlot.getPosition());
 		m_equippedBootsSprite.setPosition(m_bootsSlot.getPosition());
 		m_equippedAccessorySprite.setPosition(m_accessorySlot.getPosition());
+		m_equippedWeaponSprite.setPosition(m_weaponSlot.getPosition());
 
 		m_equippedHeadSprite.setColor(gf::Color::Transparent);
 		m_equippedTorsoSprite.setColor(gf::Color::Transparent);
@@ -55,6 +60,7 @@ namespace rCMI
 		m_equippedHandSprite.setColor(gf::Color::Transparent);
 		m_equippedBootsSprite.setColor(gf::Color::Transparent);
 		m_equippedAccessorySprite.setColor(gf::Color::Transparent);
+		m_equippedWeaponSprite.setColor(gf::Color::Transparent);
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 		float scaleFactor = 400.0f / 640.0f;
@@ -104,6 +110,8 @@ namespace rCMI
 			return &m_bootsSlot;
 		case ItemType::Accessory:
 			return &m_accessorySlot;
+		case ItemType::Weapon:
+			return &m_weaponSlot;
 		default:
 			return nullptr;
 		}
@@ -149,6 +157,7 @@ namespace rCMI
 		case ItemType::Hand:      itemSprite = &m_equippedHandSprite; break;
 		case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
 		case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
+		case ItemType::Weapon: itemSprite = &m_equippedWeaponSprite; break;
 		default: break;
 	}
 
@@ -199,7 +208,7 @@ namespace rCMI
 		int bonus_defense = 0;
 
 		ItemType types[] = { ItemType::Head, ItemType::Torso, ItemType::Legs, 
-							ItemType::Hand, ItemType::Boots, ItemType::Accessory };
+							ItemType::Hand, ItemType::Boots, ItemType::Accessory, ItemType::Weapon};
 
 		for (int i = 0; i < 6; ++i)
 		{
@@ -234,6 +243,7 @@ namespace rCMI
 		target.draw(m_handSlot, states);
 		target.draw(m_bootsSlot, states);
 		target.draw(m_accessorySlot, states);
+		target.draw(m_weaponSlot, states);
 
 		target.draw(m_equippedHeadSprite, states);
 		target.draw(m_equippedTorsoSprite, states);
@@ -241,6 +251,7 @@ namespace rCMI
 		target.draw(m_equippedHandSprite, states);
 		target.draw(m_equippedBootsSprite, states);
 		target.draw(m_equippedAccessorySprite, states);
+		target.draw(m_equippedWeaponSprite, states);
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			target.draw(m_backpackBackgrounds[i], states);
@@ -315,25 +326,29 @@ namespace rCMI
 			return &m_equippedBoots;
 		case ItemType::Accessory:
 			return &m_equippedAccessory;
+		case ItemType::Weapon:
+			return &m_equippedWeapon;
 		default:
 			return nullptr;
 		}
 	}
 
-	// bool Inventory::addItemToBackpack(int item, RogueCMI *game)
-	// {
+	bool Inventory::addItemToBackpack(Item item, RogueCMI *game)
+	{
+		if (m_backpack.size() >= MaxBackpackSize)
+		{
+			std::cout << "Inventaire plein ! Impossible de ramasser : " << item.m_name << std::endl;
+			return false;
+		}
 
-	// 	if (m_backpack.size() >= MaxBackpackSize)
-	// 	{
-	// 		std::cout << "Inventaire plein ! Impossible de ramasser : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
-	// 		return false;
-	// 	}
-	// 	m_backpack.push_back(game->m_WorldScene.m_world_entity.m_itemManager.items[item].item);
-	// 	std::cout << "Item ramassé : " << game->m_WorldScene.m_world_entity.m_itemManager.items[item].item.m_name << std::endl;
-	// 	updateBackpackDisplay(game);
+		m_backpack.push_back(item);
+		
+		std::cout << "Item ramasse : " << item.m_name << std::endl;
 
-	// 	return true;
-	// }
+		updateBackpackDisplay(game);
+
+		return true;
+	}
 
 
 
@@ -368,20 +383,30 @@ namespace rCMI
 		if (checkSlot(m_bootsSlot, ItemType::Boots)) return;
 		if (checkSlot(m_handSlot, ItemType::Hand)) return;
 		if (checkSlot(m_accessorySlot, ItemType::Accessory)) return;
+		if (checkSlot(m_weaponSlot, ItemType::Weapon)) return;
 	}
 
 	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {
-		Item& itemFromChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
+		std::vector<Item>& itemsInChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
 
-		if (m_backpack.size() < MaxBackpackSize) {
-			m_backpack.push_back(itemFromChest);
-			updateBackpackDisplay(game);
+		if (itemsInChest.empty()) return true;
+
+		auto it = itemsInChest.begin();
+		while (it != itemsInChest.end()) {
+			if (m_backpack.size() < MaxBackpackSize) {
+				
+				std::cout << "Vous avez obtenu : " << it->m_name << std::endl;
+				m_backpack.push_back(*it);
 			
-			std::cout << "Vous avez obtenu : " << itemFromChest.m_name << std::endl;
-			return true;
-		} else {
-			std::cout << "Sac plein ! Vous ne pouvez pas emporter l'objet." << std::endl;
-			return false;
+				it = itemsInChest.erase(it); 
+			} else {
+				std::cout << "Sac plein ! Certains objets sont restes dans le coffre." << std::endl;
+				updateBackpackDisplay(game);
+				return false;
+			}
 		}
+
+		updateBackpackDisplay(game);
+		return true;
 	}
 }

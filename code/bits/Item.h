@@ -19,6 +19,7 @@ namespace rCMI
 		Boots,
 		Accessory,
 		Consumable,
+		Weapon,
 		Misc
 	};
 

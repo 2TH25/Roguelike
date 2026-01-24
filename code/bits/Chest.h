@@ -10,7 +10,7 @@ namespace rCMI {
         gf::Sprite sprite;
         gf::Vector2i gridPos;
         bool isOpen = false;
-        Item content; 
+        std::vector<Item> content; 
     };
 
 }

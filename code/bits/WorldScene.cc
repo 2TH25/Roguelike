@@ -170,6 +170,30 @@ namespace rCMI
 
     if (playerMoved)
     {
+
+      int chestIndex = m_world_entity.m_chestManager.isChestOnTile(m_game);
+      if (chestIndex != -1) // On est sur un coffre
+      {
+        auto& chest = m_world_entity.m_chestManager.m_chests[chestIndex];
+        if (!chest.isOpen) {
+          m_game->m_ChestScene.setLoots(chest); 
+
+          if (!m_isActivateChest) {
+            m_game->pushScene(m_game->m_ChestScene);
+            m_isActivateChest = true;
+          }
+        } else if (m_isActivateChest) {
+          m_game->popScene();
+          m_isActivateChest = false;
+        }
+      }
+      else if (m_isActivateChest) // On n'est pas sur un coffre mais la scène est active
+      {
+          m_game->popScene();
+          m_isActivateChest = false;
+      }
+
+
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
         m_world_entity.nextLevel();
@@ -178,11 +202,6 @@ namespace rCMI
 
         return;
       } 
-      else if (int chestIndex = m_world_entity.m_chestManager.isChestOnTile(m_game); chestIndex != -1)
-      {
-        m_world_entity.m_chestManager.openChest(chestIndex, m_game);
-
-      }
       if (m_world_entity.isHealing(heroInEntity.getExistence().getPosition()))
       {
         if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))

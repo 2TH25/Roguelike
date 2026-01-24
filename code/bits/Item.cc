@@ -9,7 +9,7 @@ namespace rCMI
 
     std::vector<ItemType> types = {
         ItemType::Head, ItemType::Torso, ItemType::Legs,
-        ItemType::Hand, ItemType::Boots, ItemType::Accessory};
+        ItemType::Hand, ItemType::Boots, ItemType::Accessory, ItemType::Weapon};
 
     ItemType randomType = types[rand() % types.size()];
     Item newItem;
@@ -49,6 +49,13 @@ namespace rCMI
     case ItemType::Accessory: {
       Stat s(0, 2, 10); 
       newItem = Item("Accessoire", ItemType::Accessory, game->resources.getTexture("Bracelet.png"));
+      newItem.m_stat = s;
+      break;
+    }
+
+    case ItemType::Weapon: {
+      Stat s(10, 0, 0); 
+      newItem = Item("Arme", ItemType::Weapon, game->resources.getTexture("Arme.png"));
       newItem.m_stat = s;
       break;
     }

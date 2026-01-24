@@ -7,6 +7,7 @@
 #include "BaseScene.h"
 #include "MenuScene.h"
 #include "InventoryScene.h"
+#include "ChestScene.h"
 #include "GameData.h"
 
 namespace rCMI
@@ -22,6 +23,7 @@ namespace rCMI
     WorldScene m_WorldScene;
     MenuScene m_MenuScene;
     std::unique_ptr<InventoryScene> m_InventoryScene;
+    ChestScene m_ChestScene;
   };
 }
 
