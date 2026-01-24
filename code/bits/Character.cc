@@ -107,7 +107,7 @@ namespace rCMI
 
   void Character::take_damage(int damage)
   {
-    int final_damage = std::max(0, damage - stat.getDefense());
+    int final_damage = std::max(1, damage - stat.getDefense());
     stat.setHealth(stat.getHealth() - final_damage);
     stat.setHealth(std::clamp(stat.getHealth(), 0, stat.getMaxHealth()));
 

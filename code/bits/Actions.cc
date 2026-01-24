@@ -38,11 +38,10 @@ namespace rCMI
     auto maybe_character = m_world.target_character_at(target);
     auto &other = m_world.getCharacters()[*maybe_character];
 
-    int damage = character.getStat().getPower() - other.getStat().getDefense();
+    int damage = character.getStat().getPower();
     std::string description = character.getExistence().getName() + " attacks " + other.getExistence().getName();
 
-    if (damage > 0)
-      other.take_damage(damage);
+    other.take_damage(damage);
 
     return true;
   }
@@ -60,12 +59,10 @@ namespace rCMI
 
     auto &other = m_world.getCharacters()[*maybe_character];
 
-    int damage = character.getStat().getPower() - other.getStat().getDefense();
+    int damage = character.getStat().getPower();
 
-    std::cout << "Tir sur " << other.getExistence().getName() << " (" << damage << " dmg)\n";
-
-    if (damage > 0)
-      other.take_damage(damage);
+    
+    other.take_damage(damage);
 
     return true;
   }
