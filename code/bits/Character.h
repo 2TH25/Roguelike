@@ -27,6 +27,7 @@ namespace rCMI
     void doMove(WorldEntity &m_world);
     void take_damage(int damage);
     void heal(int amount);
+    void addMaxHealth(int amount);
     void die();
 
     bool goUp(WorldEntity &m_world);
@@ -45,6 +46,7 @@ namespace rCMI
     void setExistence(const Existence &ex) { existence = ex; }
     void setStat(const Stat &st) { stat = st; }
     void setComportment(const Comportment &comp) { comportment = comp; }
+    void setMaxHealth(int maxHealth) { stat.setMaxHealth(maxHealth); }
 
     bool alive() const { return stat.getHealth() > 0; }
 

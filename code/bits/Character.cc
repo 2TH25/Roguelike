@@ -119,6 +119,12 @@ namespace rCMI
     int new_health = stat.getHealth() + amount;
     stat.setHealth(std::clamp(new_health, 0, stat.getMaxHealth()));
   }
+  void Character::addMaxHealth(int amount) {
+    stat.setMaxHealth(stat.getMaxHealth() + amount);
+    if (amount > 0) {
+        heal(amount);
+    }
+  }
 
   void Character::die()
   {
