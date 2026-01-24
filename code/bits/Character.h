@@ -14,6 +14,7 @@
 
 namespace rCMI
 {
+  class RogueCMI;
   class WorldEntity;
 
   class Character : public gf::Entity
@@ -26,7 +27,7 @@ namespace rCMI
 
     void doMove(WorldEntity &m_world);
     void take_damage(int damage);
-    void heal(int amount);
+    void heal(int amount,RogueCMI *game);
     void die();
 
     bool goUp(WorldEntity &m_world);
