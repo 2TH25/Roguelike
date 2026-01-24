@@ -32,7 +32,7 @@ namespace rCMI {
     void ChestManager::spawnChest(gf::Vector2i pos, RogueCMI *game) {
         Chest c;
         c.gridPos = pos;
-        c.content = Item::generateRandomItem(game);
+        c.content.push_back(Item::generateRandomItem(game));
         c.isOpen = false;
         
         c.sprite.setTexture(game->resources.getTexture("Coffre.png"));

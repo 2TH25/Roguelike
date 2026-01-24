@@ -35,6 +35,7 @@ namespace rCMI
     gf::Sprite m_handSlot;
     gf::Sprite m_bootsSlot;
     gf::Sprite m_accessorySlot;
+    gf::Sprite m_weaponSlot;
 
     gf::Sprite m_equippedHeadSprite; // slots non vides d'armement
     gf::Sprite m_equippedTorsoSprite;
@@ -42,6 +43,7 @@ namespace rCMI
     gf::Sprite m_equippedHandSprite;
     gf::Sprite m_equippedBootsSprite;
     gf::Sprite m_equippedAccessorySprite;
+    gf::Sprite m_equippedWeaponSprite;
 
     std::vector<Item> m_backpack;
     std::map<ItemType, Item> m_equippedItems;
@@ -62,6 +64,7 @@ namespace rCMI
     EquippedSlot m_equippedHand;
     EquippedSlot m_equippedBoots;
     EquippedSlot m_equippedAccessory;
+    EquippedSlot m_equippedWeapon;
 
     gf::RectangleShape m_background;
 
@@ -80,7 +83,7 @@ namespace rCMI
     void updateBackpackDisplay(RogueCMI *game);
     void equipFromBackpack(std::size_t index, RogueCMI *game);
     EquippedSlot *getSlotByType(ItemType type);
-    bool addItemToBackpack(int item, RogueCMI *game);
+    bool addItemToBackpack(Item item, RogueCMI *game);
     void handleItemClick(gf::Vector2f coords, RogueCMI *game);
     bool addItemFromChest(int chestIndex, RogueCMI *game);
   };
