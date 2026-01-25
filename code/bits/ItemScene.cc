@@ -173,6 +173,7 @@ namespace rCMI {
     void ItemScene::onThrow() {
         if (m_isEquipped) {
             m_game->m_InventoryScene->m_inventory.onUnequip(m_currentItem.m_type, m_game);
+            m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
         } else {
             m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
         }
