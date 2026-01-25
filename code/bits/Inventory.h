@@ -45,7 +45,7 @@ namespace rCMI
     gf::Sprite m_equippedAccessorySprite;
     gf::Sprite m_equippedWeaponSprite;
 
-    std::vector<Item> m_backpack;
+  
     std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
     gf::Sprite m_backpackBackgrounds[MaxBackpackSize]; // Le slot joli
@@ -73,6 +73,8 @@ namespace rCMI
   public:
     Inventory(RogueCMI *game);
 
+    std::vector<Item> m_backpack;
+
     bool hasEquipment(ItemType type);
     void setEquippedItem(ItemType type, Item *item, RogueCMI *game);
     Item getEquippedItem(ItemType type);
@@ -86,6 +88,8 @@ namespace rCMI
     bool addItemToBackpack(Item item, RogueCMI *game);
     void handleItemClick(gf::Vector2f coords, RogueCMI *game);
     bool addItemFromChest(int chestIndex, RogueCMI *game);
+    void removeItemFromBackpack(const Item& item, RogueCMI *game);
+    void consumeItem(const Item& item, RogueCMI *game);
   };
 }
 

@@ -26,6 +26,7 @@ namespace rCMI
 	class Item
 	{
 	public:
+		std::string m_id;
 		std::string m_name;
 		std::string m_description;
 		ItemType m_type;
@@ -34,10 +35,11 @@ namespace rCMI
 
 		Item() = default;
 
-		Item(std::string name, ItemType type, const gf::Texture &tex)
-				: m_name(name),
+		Item(std::string id, ItemType type, const gf::Texture &tex, std::string name)
+				: m_id(id),
 					m_type(type),
-					m_texture(&tex)
+					m_texture(&tex),
+					m_name(name)
 		{
 		}
 

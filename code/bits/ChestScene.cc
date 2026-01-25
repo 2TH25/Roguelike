@@ -25,34 +25,44 @@ namespace rCMI
             gf::Vector2f mouseCoords = event.mouseButton.coords;
 
             for (size_t i = 0; i < m_contentSprites.size(); ++i) {
-                
                 gf::Matrix3f inverseMatrix = m_contentSprites[i].getInverseTransform();
                 gf::Vector2f localMousePos = gf::transform(inverseMatrix, mouseCoords);
 
                 if (m_contentSprites[i].getLocalBounds().contains(localMousePos)) {
-                    if (m_game->m_InventoryScene->m_inventory.addItemToBackpack(m_loots[i], m_game)) {
-                        
-                        m_loots.erase(m_loots.begin() + i);
-                        m_contentSprites.erase(m_contentSprites.begin() + i);
-
-                        if (m_currentChest) {
-                            m_currentChest->content = m_loots;
-                            
-                            if (m_loots.empty()) {
-                                m_currentChest->isOpen = true;
-                                m_currentChest->sprite.setTexture(m_game->resources.getTexture("CoffreOuvert.png"));
-                                m_game->m_WorldScene.m_isActivateChest = false;
-                                m_game->popScene();
-                            }
-                        }
-                        return;
-                    }
+                    m_isItemSceneOpen = true;
+                    m_game->m_ItemScene.setItem(m_loots[i], false, m_currentChestIndex, i);
+                    m_game->pushScene(m_game->m_ItemScene);
+                    return;
                 }
             }
         }
 
         if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Escape) {
+            if (m_game->m_WorldScene.m_isActivateInventory) {
+                return; 
+            }
+            m_game->m_WorldScene.m_isActivateChest = false;
             m_game->popScene();
+            event.type = gf::EventType::MouseMoved;
+            return;
+        }
+    }
+
+
+    void ChestScene::updateChestAfterPickup() {
+        m_isItemSceneOpen = false;
+
+        if (m_currentChest) {
+            m_loots = m_currentChest->content;
+            setLoots(*m_currentChest, m_currentChestIndex);
+
+            if (m_loots.empty()) {
+                m_currentChest->isOpen = true;
+                m_currentChest->sprite.setTexture(m_game->resources.getTexture("CoffreOuvert.png"));
+                m_game->m_WorldScene.m_isActivateChest = false;
+                m_game->popScene();
+                m_game->popScene();
+            }
         }
     }
 
@@ -64,7 +74,8 @@ namespace rCMI
     }
 
 
-    void ChestScene::setLoots(Chest& chest) {
+    void ChestScene::setLoots(Chest& chest, int indexChest) {
+        m_currentChestIndex = indexChest;
         m_currentChest = &chest;
         m_loots = chest.content; 
         m_contentSprites.clear();

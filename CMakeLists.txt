@@ -33,6 +33,7 @@ add_executable(RogueCMI
   code/bits/Chest.cc
   code/bits/ChestManager.cc
   code/bits/ChestScene.cc
+  code/bits/ItemScene.cc
 )
 
 target_include_directories(RogueCMI

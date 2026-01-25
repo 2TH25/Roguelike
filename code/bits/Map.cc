@@ -52,6 +52,12 @@ namespace rCMI
       for (int x = 0; x < size.x; ++x)
         if (x != 0 && y != 0 && x != size.x - 1 && y != size.y - 1)
           x == 1 && y == 1 ? update_tile_at({x, y}, TileType::HealingFloor) : update_tile_at({x, y}, TileType::Floor);
+
+
+    m_game->m_WorldScene.m_world_entity.m_chestManager.spawnChest({8,7}, m_game);
+
+    
+    
   }
 
   bool Map::blocking_entity_at(gf::Vector2i target)

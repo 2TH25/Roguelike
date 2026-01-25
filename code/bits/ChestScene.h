@@ -16,17 +16,19 @@ namespace rCMI {
     class ChestScene : public gf::Scene {
     public:
         ChestScene(RogueCMI *game);
-        void setLoot(Item item);
         virtual void doProcessEvent(gf::Event &event) override;
         virtual void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
-        void setLoots(Chest& chest);
+        void setLoots(Chest& chest, int indexChest);
         Chest* m_currentChest = nullptr;
+        int m_currentChestIndex;
+        void updateChestAfterPickup();
 
     private:
         RogueCMI *m_game;
         std::vector<Item> m_loots;
         gf::RectangleShape m_background;
         gf::TextWidget m_text;
+        bool m_isItemSceneOpen = false;
         
         std::vector<gf::Sprite> m_contentSprites;
     };

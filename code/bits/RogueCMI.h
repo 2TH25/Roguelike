@@ -9,6 +9,7 @@
 #include "InventoryScene.h"
 #include "ChestScene.h"
 #include "GameData.h"
+#include "ItemScene.h"
 
 namespace rCMI
 {
@@ -24,6 +25,7 @@ namespace rCMI
     MenuScene m_MenuScene;
     std::unique_ptr<InventoryScene> m_InventoryScene;
     ChestScene m_ChestScene;
+    ItemScene m_ItemScene;
   };
 }
 

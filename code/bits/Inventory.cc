@@ -362,7 +362,8 @@ namespace rCMI
 
 			if (box.contains(coords)) {
 				if (i < m_backpack.size()) {
-					this->equipFromBackpack(i, game);
+					game->m_ItemScene.setItem(m_backpack[i], false);
+                	game->pushScene(game->m_ItemScene);
 				}
 				return;
 			}
@@ -371,8 +372,11 @@ namespace rCMI
 		auto checkSlot = [&](gf::Sprite& sprite, ItemType type) {
 			gf::RectF box = gf::RectF::fromPositionSize(sprite.getPosition(), slotSize);
 			if (box.contains(coords)) {
-				this->onUnequip(type, game);
-				return true;
+				if (hasEquipment(type)) {
+					Item equippedItem = getEquippedItem(type);
+					game->m_ItemScene.setItem(equippedItem, true);
+					game->pushScene(game->m_ItemScene);
+				}
 			}
 			return false;
 		};
@@ -408,5 +412,33 @@ namespace rCMI
 
 		updateBackpackDisplay(game);
 		return true;
+	}
+
+
+	void Inventory::removeItemFromBackpack(const Item& item, RogueCMI *game) {
+
+		auto it = std::find_if(m_backpack.begin(), m_backpack.end(), [&](const Item& backpackItem) {
+			return backpackItem.m_name == item.m_name && backpackItem.m_type == item.m_type;
+		});
+
+		if (it != m_backpack.end()) {
+			m_backpack.erase(it);
+			std::cout << item.m_name << " a été retiré du sac." << std::endl;
+			updateBackpackDisplay(game);
+		}
+	}
+
+
+	void Inventory::consumeItem(const Item& item, RogueCMI *game) {
+
+		Character &hero = game->m_WorldScene.m_world_entity.hero();
+		int healAmount = item.m_stat.getHealth();
+		
+		if (healAmount > 0) {
+			hero.heal(healAmount);
+			std::cout << "Vous consommez " << item.m_name << " et récupérez " << healAmount << " PV." << std::endl;
+		}
+		removeItemFromBackpack(item, game);
+		updateStatsText();
 	}
 }

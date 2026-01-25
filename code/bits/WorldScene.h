@@ -19,6 +19,8 @@ namespace rCMI
     bool m_isActivateChest = false;
     void generateMap(gf::Vector2i size);
 
+    bool m_isActivateInventory;
+
   private:
     void doHandleActions(gf::Window &window) override;
     void doUpdate(gf::Time time) override;
@@ -35,7 +37,7 @@ namespace rCMI
     gf::Action *m_fireAction = nullptr;
 
     gf::Time m_timeSinceDeath;
-    bool m_isActivateInventory;
+    
     bool m_isActivateMap;
     // bool m_isActivateMenu;
   };

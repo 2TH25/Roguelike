@@ -62,6 +62,7 @@ namespace rCMI
   {
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
+    
 
     if (m_isActivateInventory || m_isActivateMap)
     {
@@ -80,6 +81,7 @@ namespace rCMI
           m_game->pushScene(*(m_game->m_InventoryScene));
           m_isActivateInventory = true;
         }
+        return;
       }
       if (Controls::isActiveAction("showMap", m_actions))
       {
@@ -88,10 +90,12 @@ namespace rCMI
           setWorldViewSize({800, 800});
           m_isActivateMap = false;
         }
-        else
+        else  
         {
-          m_isActivateInventory = false;
-          m_game->popScene();
+          if (m_isActivateInventory) {
+            m_game->popScene();
+            m_isActivateInventory = false;
+          }
           setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
           m_isActivateMap = true;
         }
@@ -176,7 +180,7 @@ namespace rCMI
       {
         auto& chest = m_world_entity.m_chestManager.m_chests[chestIndex];
         if (!chest.isOpen) {
-          m_game->m_ChestScene.setLoots(chest); 
+          m_game->m_ChestScene.setLoots(chest, chestIndex); 
 
           if (!m_isActivateChest) {
             m_game->pushScene(m_game->m_ChestScene);
