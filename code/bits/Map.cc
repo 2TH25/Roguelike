@@ -12,6 +12,7 @@
 #include <random>
 #include <iostream>
 #include <gf/Particles.h>
+#include <gf/Math.h>
 
 namespace rCMI
 {
@@ -53,11 +54,7 @@ namespace rCMI
         if (x != 0 && y != 0 && x != size.x - 1 && y != size.y - 1)
           x == 1 && y == 1 ? update_tile_at({x, y}, TileType::HealingFloor) : update_tile_at({x, y}, TileType::Floor);
 
-
-    m_game->m_WorldScene.m_world_entity.m_chestManager.spawnChest({8,7}, m_game);
-
-    
-    
+    m_game->m_WorldScene.m_world_entity.m_chestManager.spawnChest({8, 7}, m_game);
   }
 
   bool Map::blocking_entity_at(gf::Vector2i target)
@@ -112,14 +109,15 @@ namespace rCMI
 
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-
+    // english for training 
+    float nbTilesFLine = 5; // Number of tiles for one line and one column in the texture
     gf::Texture &tileTexture = m_game->resources.getTexture("SetTileTextureSol.png");
-    gf::Vector2f texture_size = tileTexture.getSize();
-    gf::Vector2f tile_texture_size = texture_size / texture_size / 5;
+    gf::Vector2f texture_size = tileTexture.getSize();                           // Save of the texture size for calculate positions and scaling
+    gf::Vector2f tile_texture_size = texture_size / texture_size / nbTilesFLine; // texture_size / texture_size to do {1, 1} / nbTilesFLine
 
-    gf::SpriteParticles sParticle;
+    gf::SpriteParticles sParticle; // SpriteParticles to print all tiles wth just one draw call
     sParticle.setTexture(tileTexture);
-    sParticle.setScale(TileSize / (texture_size / 5.0));
+    sParticle.setScale(TileSize / (texture_size / nbTilesFLine)); // Calculation of the scale for print tiles at the good size (tiles size on the map / tile size in the texture)
 
     for (auto pos : map.getRange())
     {
@@ -133,6 +131,7 @@ namespace rCMI
       gf::Vector2i texturePosition;
 
       // --- 1. Détermination de la texture (identique à avant) ---
+      // TODO pour 2TH : metre ça dans le constructeur
       if (isStairs(pos))
       {
         texturePosition = {0, 2};
@@ -153,12 +152,12 @@ namespace rCMI
         }
       }
 
-      gf::Vector2f calculate_tile_position = ((pos * TileSize) + TileSize / 2) / sParticle.getScale();
-      gf::Vector2f calculate_texture_position = texturePosition * tile_texture_size;
+      gf::Vector2f calculate_tile_position = ((pos * TileSize) + TileSize / 2) / sParticle.getScale(); // Position of the tile on the map : ((matrix position * tile size) + midle of a tile) * (1 / Sprite scaling)
+      gf::Vector2f calculate_texture_position = texturePosition * tile_texture_size;                   // Position of the good part of the texture for this tile
 
       sParticle.addSprite(calculate_tile_position,
                           gf::RectF::fromPositionSize(calculate_texture_position, tile_texture_size),
-                          inFOV ? gf::Color::White : gf::Color::fromRgba32(100, 100, 100, 255));
+                          inFOV ? gf::Color::White : gf::Color::fromRgba32(100, 100, 100, 255)); // for the war fog
     }
     sParticle.draw(target, states);
 
