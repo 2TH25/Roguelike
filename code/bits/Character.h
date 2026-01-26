@@ -26,10 +26,11 @@ namespace rCMI
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
     void doMove(WorldEntity &m_world);
-    void take_damage(int damage);
+    bool take_damage(int damage);
     void heal(int amount);
     void addMaxHealth(int amount);
     void die();
+    void addKill() { stat.addKill(); }
 
     bool goUp(WorldEntity &m_world);
     bool goDown(WorldEntity &m_world);

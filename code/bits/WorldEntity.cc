@@ -15,6 +15,7 @@
 #include <iostream>
 #include <gf/Particles.h>
 #include <gf/Text.h>
+#include <gf/Math.h>
 
 namespace rCMI
 {
@@ -99,9 +100,10 @@ namespace rCMI
   {
 
     std::optional<Stat> savedStats = std::nullopt;
-  
-    if (!characters.empty()) {
-        savedStats = characters[0].getStat();
+
+    if (!characters.empty())
+    {
+      savedStats = characters[0].getStat();
     }
     m_map.generate_dungeon(Map_size);
 
@@ -131,9 +133,10 @@ namespace rCMI
         Character hero = Character::hero(center, m_game->resources.getTexture("perso640/SetPerso.png"));
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
         hero.setDeadTexture(textureMort);
-        if (savedStats.has_value()) {
+        if (savedStats.has_value())
+        {
           hero.setStat(savedStats.value());
-      }
+        }
         characters.push_back(hero);
         characters.back().playAnimation("Default");
         break;
@@ -146,31 +149,36 @@ namespace rCMI
       gf::Vector2i center = room.getCenter();
 
       std::vector<gf::Vector2i> floorPositions;
-      for (int x = room.min.x + 1; x < room.max.x; ++x) {
-          for (int y = room.min.y + 1; y < room.max.y; ++y) {
-              floorPositions.push_back({x, y});
-          }
+      for (int x = room.min.x + 1; x < room.max.x; ++x)
+      {
+        for (int y = room.min.y + 1; y < room.max.y; ++y)
+        {
+          floorPositions.push_back({x, y});
+        }
       }
       std::shuffle(floorPositions.begin(), floorPositions.end(), gen);
 
-      if (leaf->type == RoomType::Chest) { 
-            std::cout << "Génération d'une salle aux trésors en " << room.min.x << "," << room.min.y << std::endl;
-            int chestCount = 4;
-            for (int i = 0; i < chestCount && i < floorPositions.size(); ++i) {
-                m_chestManager.spawnChest(floorPositions[i], m_game);
-            }
+      if (leaf->type == RoomType::Chest)
+      {
+        std::cout << "Génération d'une salle aux trésors en " << room.min.x << "," << room.min.y << std::endl;
+        int chestCount = 4;
+        for (int i = 0; i < chestCount && i < floorPositions.size(); ++i)
+        {
+          m_chestManager.spawnChest(floorPositions[i], m_game);
+        }
       }
       if (leaf->type == RoomType::End)
       {
         update_tile_at(center, TileType::Stairs);
       }
-      
+
       else if (leaf->type == RoomType::Healing)
       {
-          int healCount = 3;
-          for (int i = 0; i < healCount && i < floorPositions.size(); ++i) {
-              update_tile_at(floorPositions[i], TileType::HealingFloor);
-          }
+        int healCount = 3;
+        for (int i = 0; i < healCount && i < floorPositions.size(); ++i)
+        {
+          update_tile_at(floorPositions[i], TileType::HealingFloor);
+        }
       }
       else if (leaf->type == RoomType::Start)
       {
@@ -304,29 +312,48 @@ namespace rCMI
     if (m_world->getCharacters().empty()) {
         return; 
     }
+    const gf::Vector2f target_vue_size(target.getView().getSize());
+
     gf::RectangleShape life_lost;
     life_lost.setColor(gf::Color::Gray());
-    life_lost.setPosition({target.getView().getSize().x / 2, target.getView().getSize().y * 14 / 15});
-    life_lost.setSize({300, 20});
+    life_lost.setPosition({target_vue_size.x / 2, target_vue_size.y * 14 / 15});
+    life_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
     life_lost.setAnchor(gf::Anchor::Center);
 
     gf::RectangleShape life;
     life.setColor(gf::Color::Red);
     life.setPosition({life_lost.getPosition().x - life_lost.getSize().x / 2, life_lost.getPosition().y - life_lost.getSize().y / 2});
-    float life_to_size = 300 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
-    life.setSize({life_to_size, 20});
+    float life_to_size = target_vue_size.x * 10 / 49 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
+    life.setSize({life_to_size, target_vue_size.y * 20 / 817});
 
-    gf::Text text;
-    text.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
-    text.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
-    text.setColor(gf::Color::Black);
-    text.setCharacterSize(15U);
-    text.setPosition(life_lost.getPosition());
-    text.setAnchor(gf::Anchor::Center);
+    gf::Text text_life;
+    text_life.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
+    text_life.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_life.setColor(gf::Color::Black);
+    text_life.setCharacterSize(life_lost.getSize().y * 15 / 20);
+    text_life.setPosition(life_lost.getPosition());
+    text_life.setAnchor(gf::Anchor::Center);
+
+    gf::Sprite player_kills_image;
+    gf::Texture &skeleton_texture = m_game->resources.getTexture("squelette.png");
+    player_kills_image.setTexture(skeleton_texture);
+    player_kills_image.setPosition({target_vue_size.x * 94 / 100, target_vue_size.y * 5 / 100});
+    player_kills_image.setScale(life.getSize().y * 3 / skeleton_texture.getSize());
+    player_kills_image.setAnchor(gf::Anchor::Center);
+
+    gf::Text text_kills;
+    text_kills.setString(std::to_string(m_world->hero().getStat().getKills()));
+    text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_kills.setColor(gf::Color::Red);
+    text_kills.setCharacterSize(life_lost.getSize().y);
+    text_kills.setPosition({player_kills_image.getPosition().x + 30, player_kills_image.getPosition().y});
+    text_kills.setAnchor(gf::Anchor::CenterLeft);
 
     life_lost.draw(target, states);
     life.draw(target, states);
-    text.draw(target, states);
+    text_life.draw(target, states);
+    player_kills_image.draw(target, states);
+    text_kills.draw(target, states);
   }
 
   void WorldEntity::reset()

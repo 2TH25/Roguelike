@@ -148,6 +148,8 @@ namespace rCMI
     case Phase::Finish:
       random = m_random;
       break;
+    default:
+      break;
     }
 
     setPhase(Phase::Finish);
