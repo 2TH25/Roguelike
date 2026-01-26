@@ -39,11 +39,12 @@ namespace rCMI {
         setClearColor(gf::Color::Transparent);
 
         m_background.setSize({400.0f, 500.0f});
+        m_background.setTexture(game->resources.getTexture("backgroundItem.png"));
         m_background.setAnchor(gf::Anchor::Center);
         m_background.setPosition({600.0f, 400.0f});
-        m_background.setColor(gf::Color::fromRgba32(30, 30, 30, 240));
-        m_background.setOutlineColor(gf::Color::White);
+        m_background.setOutlineColor(gf::Color::Black);
         m_background.setOutlineThickness(2.0f);
+		
 
         m_nameText.setColor(gf::Color::Yellow);
         m_typeText.setColor(gf::Color::Azure);
@@ -73,10 +74,10 @@ namespace rCMI {
         m_itemIndexInChest = itemIndex;
 
         m_nameText.setString(item.m_name);
-        centerText(m_nameText, 180.0f);
+        centerText(m_nameText, 200.0f);
 
         m_typeText.setString("Type: " + itemTypeToString(item.m_type)); 
-        centerText(m_typeText, 220.0f);
+        centerText(m_typeText, 240.0f);
 
         m_descText.setString(item.m_description.empty() ? "Aucune description." : item.m_description);
         m_descText.setAnchor(gf::Anchor::Center);
@@ -93,10 +94,8 @@ namespace rCMI {
         const gf::Texture& tex = m_game->resources.getTexture(textureKey);
         
         if (m_currentItem.m_texture != nullptr) {
-            // ON COPIE LA LOGIQUE DE CHESTSCENE ICI :
             m_itemSprite.setTexture(*m_currentItem.m_texture); 
             
-            // On règle l'affichage au centre
             m_itemSprite.setAnchor(gf::Anchor::Center);
             m_itemSprite.setPosition({600.0f, 300.0f});
             m_itemSprite.setScale(static_cast<float>(TileSize) / 640.0f); 

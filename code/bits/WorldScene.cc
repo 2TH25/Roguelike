@@ -6,6 +6,7 @@
 #include "InventoryScene.h"
 #include "Actions.h"
 #include <gf/Text.h>
+#include "EndMenuScene.h"
 
 namespace rCMI
 {
@@ -231,7 +232,7 @@ namespace rCMI
     {
       m_timeSinceDeath += time;
       if (m_timeSinceDeath.asSeconds() > 2.0f)
-        m_game->replaceScene(m_game->m_MenuScene);
+        m_game->replaceScene(m_game->m_EndMenuScene);
     }
 
     
@@ -264,5 +265,15 @@ namespace rCMI
     res.push_back(fire);
 
     return res;
+  }
+
+  void WorldScene::reset() {
+    m_timeSinceDeath = gf::Time::Zero;
+    m_isActivateInventory = false;
+    m_isActivateMap = false;
+    
+    m_world_entity.reset(); 
+    
+    generateMap(MapSize); 
   }
 }

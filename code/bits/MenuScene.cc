@@ -42,7 +42,7 @@ namespace rCMI
     };
 
     createButtons(m_saves, [&]()
-                  { m_game->m_WorldScene.generateMap(MapSize);
+                  { m_game->m_WorldScene.reset();
                     m_game->replaceScene(m_game->m_WorldScene); });
 
     createButtons(m_quit, [&]()

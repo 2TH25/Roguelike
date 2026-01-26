@@ -54,6 +54,12 @@ namespace rCMI
     return std::nullopt;
   }
 
+
+   Character& WorldEntity::hero() 
+   { if (characters.empty()) {
+    throw std::runtime_error("Tentative d'accès au Hero alors que la liste est vide !");
+  }return characters.front(); }
+
   bool WorldEntity::blocking_entity_at(gf::Vector2i target) { return m_map.blocking_entity_at(target) ? true : target_character_at(target).has_value(); }
 
   bool WorldEntity::isWalkable(gf::Vector2i position) const { return m_map.isWalkable(position); }
@@ -62,6 +68,7 @@ namespace rCMI
   {
     m_chestManager.clear();
     generate_dungeon(m_map.getSize() * 1.2);
+    highest_level++;
     std::cout << "Niveau suivant atteint !" << std::endl;
   }
 
@@ -293,6 +300,10 @@ namespace rCMI
 
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
+
+    if (m_world->getCharacters().empty()) {
+        return; 
+    }
     gf::RectangleShape life_lost;
     life_lost.setColor(gf::Color::Gray());
     life_lost.setPosition({target.getView().getSize().x / 2, target.getView().getSize().y * 14 / 15});
@@ -317,4 +328,16 @@ namespace rCMI
     life.draw(target, states);
     text.draw(target, states);
   }
+
+  void WorldEntity::reset()
+{
+    highest_level = 1; 
+    m_chestManager.clear();
+    characters.clear();
+    generate_dungeon(MapSize); 
+    clearMap();
+    fieldOfVision(); 
+    
+    std::cout << "WorldEntity réinitialisée : Nouvelle partie lancée." << std::endl;
+}
 }

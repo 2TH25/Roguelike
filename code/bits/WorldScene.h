@@ -18,6 +18,7 @@ namespace rCMI
     WorldScene(RogueCMI *game);
     bool m_isActivateChest = false;
     void generateMap(gf::Vector2i size);
+    void reset();
 
     bool m_isActivateInventory;
 

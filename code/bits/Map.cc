@@ -180,5 +180,6 @@ namespace rCMI
   {
     size = Map_size;
     map = gf::SquareMap(size);
+    healingZone.clear();
   }
 }

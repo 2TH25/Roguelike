@@ -62,7 +62,7 @@ namespace rCMI
     case ItemType::Weapon: {
       Stat s(10, 0, 0); 
       newItem = Item("Arme", ItemType::Weapon, game->resources.getTexture("Arme.png"), "Tranchant Sanguinolent");
-      newItem.m_description = "Une épée qu'on dit capable de trancher tout ce qui est constitué de sang... \n Fait partie de l'ensemble Sanguinolent";
+      newItem.m_description = "Une épée qu'on dit capable de scinder tout ce qui est constitué de sang... \n Fait partie de l'ensemble Sanguinolent";
       newItem.m_stat = s;
       break;
     }

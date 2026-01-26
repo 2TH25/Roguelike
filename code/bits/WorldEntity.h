@@ -24,7 +24,7 @@ namespace rCMI
 
     std::vector<Character> &getCharacters() { return characters; }
 
-    Character &hero() { return characters.front(); }
+    Character &hero();
 
     std::optional<std::size_t> target_character_at(gf::Vector2i target);
     bool blocking_entity_at(gf::Vector2i target);
@@ -48,8 +48,13 @@ namespace rCMI
     void clearMap();
     void fieldOfVision();
 
+    void reset();
+
     Map &getMap() { return m_map; };
 
+    int highest_level = 1;
+    int kills = 12;
+    int score = 200;
   private:
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
