@@ -17,20 +17,23 @@ namespace rCMI
     m_animatedSprite.setPosition(existence.getPosition() * TileSize);
   }
 
-  void Character::addAnimation(std::string name, gf::Animation animation) {
-      m_animations[name] = animation;
+  void Character::addAnimation(std::string name, gf::Animation animation)
+  {
+    m_animations[name] = animation;
   }
 
-  void Character::playAnimation(std::string name) {
-      if (m_animations.find(name) != m_animations.end()) {
-          m_animatedSprite.setAnimation(m_animations[name]);
-      }
+  void Character::playAnimation(std::string name)
+  {
+    if (m_animations.find(name) != m_animations.end())
+    {
+      m_animatedSprite.setAnimation(m_animations[name]);
+    }
   }
 
-  void Character::update(gf::Time time) {
-      m_animatedSprite.update(time);
+  void Character::update(gf::Time time)
+  {
+    m_animatedSprite.update(time);
   }
-
 
   bool Character::goUp(WorldEntity &m_world)
   {
@@ -100,44 +103,53 @@ namespace rCMI
     case 3:
       target.x += 1;
       break;
+    default:
+      break;
     }
     if (m_world.isWalkable(target))
       bump(m_world, *this, target);
   }
 
-  void Character::take_damage(int damage)
+  bool Character::take_damage(int damage)
   {
     int final_damage = std::max(1, damage - stat.getDefense());
     stat.setHealth(stat.getHealth() - final_damage);
     stat.setHealth(std::clamp(stat.getHealth(), 0, stat.getMaxHealth()));
 
     if (stat.getHealth() <= 0)
+    {
+      return true;
       die();
+    }
+
+    return false;
   }
 
   void Character::heal(int amount)
   {
     int new_health = stat.getHealth() + amount;
     stat.setHealth(std::clamp(new_health, 0, stat.getMaxHealth()));
-    //game->m_InventoryScene->m_inventory.updateStatsText();
+    // game->m_InventoryScene->m_inventory.updateStatsText();
   }
 
-
-  void Character::addMaxHealth(int amount) {
+  void Character::addMaxHealth(int amount)
+  {
     int oldMax = stat.getMaxHealth();
     int newMax = oldMax + amount;
-    if (newMax < 1) newMax = 1;
+    if (newMax < 1)
+      newMax = 1;
 
     stat.setMaxHealth(newMax);
 
     int newHealth = stat.getHealth() + amount;
 
-    if (newHealth > newMax) newHealth = newMax;
-    if (newHealth < 1 && alive()) newHealth = 1; 
+    if (newHealth > newMax)
+      newHealth = newMax;
+    if (newHealth < 1 && alive())
+      newHealth = 1;
 
     stat.setHealth(newHealth);
   }
-  
 
   void Character::die()
   {
@@ -155,21 +167,21 @@ namespace rCMI
     Stat st(100, 0, 20);
     Character c(ex, st, tex);
 
-    gf::Vector2f frameSize = {80.0f, 80.0f};    
+    gf::Vector2f frameSize = {80.0f, 80.0f};
     float duration = 0.2f;
 
     gf::Animation walkRight;
-    walkRight.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 80.0f}, frameSize), gf::seconds(duration)); 
+    walkRight.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 80.0f}, frameSize), gf::seconds(duration));
     walkRight.addFrame(tex, gf::RectF::fromPositionSize({160.0f, 80.0f}, frameSize), gf::seconds(duration));
     c.addAnimation("Right", walkRight);
 
     gf::Animation walkLeft;
-    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 80.0f}, frameSize), gf::seconds(duration)); 
+    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 80.0f}, frameSize), gf::seconds(duration));
     walkLeft.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 160.0f}, frameSize), gf::seconds(duration));
     c.addAnimation("Left", walkLeft);
 
     gf::Animation walkUp;
-    walkUp.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 0.0f}, frameSize), gf::seconds(duration)); 
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 0.0f}, frameSize), gf::seconds(duration));
     walkUp.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 80.0f}, frameSize), gf::seconds(duration));
     c.addAnimation("Up", walkUp);
 
@@ -184,10 +196,8 @@ namespace rCMI
 
     c.m_animatedSprite.setTextureRect(gf::RectF::fromPositionSize({0.0f, 0.0f}, frameSize));
 
-
     return c;
   }
-  
 
   Character Character::skeleton(gf::Vector2i position, const gf::Texture &tex)
   {
@@ -223,14 +233,12 @@ namespace rCMI
   void Character::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     gf::Vector2i gridPosition = existence.getPosition();
-    m_animatedSprite.setPosition({
-        static_cast<float>(gridPosition.x * TileSize), 
-        static_cast<float>(gridPosition.y * TileSize)
-    });
+    m_animatedSprite.setPosition({static_cast<float>(gridPosition.x * TileSize),
+                                  static_cast<float>(gridPosition.y * TileSize)});
 
     float scale = static_cast<float>(TileSize) / 640.0f;
     m_animatedSprite.setScale(scale);
 
     target.draw(m_animatedSprite, states);
-  } 
+  }
 }

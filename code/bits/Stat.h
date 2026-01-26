@@ -20,6 +20,7 @@ namespace rCMI
     int getMaxHealth() const { return max_health; }
     int getDefense() const { return defense; }
     int getPower() const { return power; }
+    int getKills() const { return nb_kills; }
   
 
     void setHealth(int h) { health = h; }
@@ -28,12 +29,15 @@ namespace rCMI
     void setPower(int p) { power = p; }
     void addStat(int h, int d, int p) { health += h; max_health += h; defense += d; power += p; }
     void retireStat(int h, int d, int p) { health -= h; max_health -= h; defense -= d; power -= p; }
+    void addKill() { nb_kills += 1; }
 
   private:
     int max_health = 0;
     int health = 0;
     int defense = 0;
     int power = 0;
+
+    int nb_kills = 0;
   };
 
 }

@@ -41,7 +41,8 @@ namespace rCMI
     int damage = character.getStat().getPower();
     std::string description = character.getExistence().getName() + " attacks " + other.getExistence().getName();
 
-    other.take_damage(damage);
+    if (other.take_damage(damage))
+      character.addKill();
 
     return true;
   }
@@ -62,7 +63,8 @@ namespace rCMI
     int damage = character.getStat().getPower();
 
     
-    other.take_damage(damage);
+    if (other.take_damage(damage))
+      character.addKill();
 
     return true;
   }
