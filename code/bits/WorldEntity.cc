@@ -14,8 +14,6 @@
 #include <random>
 #include <iostream>
 #include <gf/Particles.h>
-#include <gf/Text.h>
-#include <gf/Math.h>
 
 namespace rCMI
 {
@@ -306,6 +304,20 @@ namespace rCMI
         m_game(m_game),
         m_world(m_world)
   {
+    life_lost.setColor(gf::Color::Gray());
+    life.setColor(gf::Color::Red);
+    text_life.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_life.setColor(gf::Color::Black);
+
+    xp_lost.setColor(gf::Color::Gray());
+    xp.setColor(gf::Color::Green);
+    text_xp.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_xp.setColor(gf::Color::Black);
+
+    gf::Texture &skeleton_texture = m_game->resources.getTexture("squelette.png");
+    player_kills_image.setTexture(skeleton_texture);
+    text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_kills.setColor(gf::Color::Red);
   }
 
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
@@ -316,59 +328,39 @@ namespace rCMI
 
     const gf::Vector2f target_vue_size(target.getView().getSize());
 
-    gf::RectangleShape life_lost;
-    life_lost.setColor(gf::Color::Gray());
     life_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 5 / 100});
     life_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
     life_lost.setAnchor(gf::Anchor::CenterLeft);
 
-    gf::RectangleShape life;
-    life.setColor(gf::Color::Red);
     life.setPosition(life_lost.getPosition());
     float life_to_size = target_vue_size.x * 10 / 49 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
     life.setSize({life_to_size, target_vue_size.y * 20 / 817});
     life.setAnchor(gf::Anchor::CenterLeft);
     
-    gf::Text text_life;
     text_life.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
-    text_life.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
-    text_life.setColor(gf::Color::Black);
     text_life.setCharacterSize(life_lost.getSize().y * 15 / 20);
     text_life.setPosition({life_lost.getPosition().x + life_lost.getSize().x / 2, life_lost.getPosition().y});
     text_life.setAnchor(gf::Anchor::Center);
 
-    gf::RectangleShape xp_lost;
-    xp_lost.setColor(gf::Color::Gray());
     xp_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 8 / 100});
     xp_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
     xp_lost.setAnchor(gf::Anchor::CenterLeft);
 
-    gf::RectangleShape xp;
-    xp.setColor(gf::Color::Green);
     xp.setPosition(xp_lost.getPosition());
     float xp_to_size = xp_lost.getSize().x * m_world->hero().getStat().getXp() / m_world->hero().getStat().getMaxXp();
     xp.setSize({xp_to_size, xp_lost.getSize().y});
     xp.setAnchor(gf::Anchor::CenterLeft);
 
-    gf::Text text_xp;
     text_xp.setString(std::to_string(m_world->hero().getStat().getLevel()));
-    text_xp.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
-    text_xp.setColor(gf::Color::Black);
     text_xp.setCharacterSize(xp_lost.getSize().y * 15 / 20);
     text_xp.setPosition({xp_lost.getPosition().x + xp_lost.getSize().x / 2, xp_lost.getPosition().y});
     text_xp.setAnchor(gf::Anchor::Center);
     
-    gf::Sprite player_kills_image;
-    gf::Texture &skeleton_texture = m_game->resources.getTexture("squelette.png");
-    player_kills_image.setTexture(skeleton_texture);
     player_kills_image.setPosition({target_vue_size.x * 94 / 100, target_vue_size.y * 5 / 100});
-    player_kills_image.setScale(life.getSize().y * 3 / skeleton_texture.getSize());
+    player_kills_image.setScale(life.getSize().y * 3 / player_kills_image.getTexture().getSize());
     player_kills_image.setAnchor(gf::Anchor::Center);
 
-    gf::Text text_kills;
     text_kills.setString(std::to_string(m_world->hero().getStat().getKills()));
-    text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
-    text_kills.setColor(gf::Color::Red);
     text_kills.setCharacterSize(life_lost.getSize().y);
     text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);

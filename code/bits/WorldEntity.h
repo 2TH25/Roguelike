@@ -11,6 +11,7 @@
 #include "Map.h"
 #include "ChestManager.h"
 #include "Inventory.h"
+#include <gf/Text.h>
 
 namespace rCMI
 {
@@ -70,6 +71,17 @@ namespace rCMI
   private:
     RogueCMI *m_game = nullptr;
     WorldEntity *m_world = nullptr;
+
+    gf::RectangleShape life_lost;
+    gf::RectangleShape life;
+    gf::Text text_life;
+    
+    gf::RectangleShape xp_lost;
+    gf::RectangleShape xp;
+    gf::Text text_xp;
+
+    gf::Sprite player_kills_image;
+    gf::Text text_kills;
   };
 };
 
