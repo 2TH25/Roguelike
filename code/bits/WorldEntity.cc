@@ -55,11 +55,13 @@ namespace rCMI
     return std::nullopt;
   }
 
+  Character &WorldEntity::hero()
+  {
+    if (characters.empty())
+      throw std::runtime_error("Tentative d'accès au Hero alors que la liste est vide !");
 
-   Character& WorldEntity::hero() 
-   { if (characters.empty()) {
-    throw std::runtime_error("Tentative d'accès au Hero alors que la liste est vide !");
-  }return characters.front(); }
+    return characters.front();
+  }
 
   bool WorldEntity::blocking_entity_at(gf::Vector2i target) { return m_map.blocking_entity_at(target) ? true : target_character_at(target).has_value(); }
 
@@ -309,31 +311,53 @@ namespace rCMI
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
 
-    if (m_world->getCharacters().empty()) {
-        return; 
-    }
+    if (m_world->getCharacters().empty())
+      return;
+
     const gf::Vector2f target_vue_size(target.getView().getSize());
 
     gf::RectangleShape life_lost;
     life_lost.setColor(gf::Color::Gray());
-    life_lost.setPosition({target_vue_size.x / 2, target_vue_size.y * 14 / 15});
+    life_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 5 / 100});
     life_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
-    life_lost.setAnchor(gf::Anchor::Center);
+    life_lost.setAnchor(gf::Anchor::CenterLeft);
 
     gf::RectangleShape life;
     life.setColor(gf::Color::Red);
-    life.setPosition({life_lost.getPosition().x - life_lost.getSize().x / 2, life_lost.getPosition().y - life_lost.getSize().y / 2});
+    life.setPosition(life_lost.getPosition());
     float life_to_size = target_vue_size.x * 10 / 49 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
     life.setSize({life_to_size, target_vue_size.y * 20 / 817});
-
+    life.setAnchor(gf::Anchor::CenterLeft);
+    
     gf::Text text_life;
     text_life.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
     text_life.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
     text_life.setColor(gf::Color::Black);
     text_life.setCharacterSize(life_lost.getSize().y * 15 / 20);
-    text_life.setPosition(life_lost.getPosition());
+    text_life.setPosition({life_lost.getPosition().x + life_lost.getSize().x / 2, life_lost.getPosition().y});
     text_life.setAnchor(gf::Anchor::Center);
 
+    gf::RectangleShape xp_lost;
+    xp_lost.setColor(gf::Color::Gray());
+    xp_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 8 / 100});
+    xp_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
+    xp_lost.setAnchor(gf::Anchor::CenterLeft);
+
+    gf::RectangleShape xp;
+    xp.setColor(gf::Color::Green);
+    xp.setPosition(xp_lost.getPosition());
+    float xp_to_size = xp_lost.getSize().x * m_world->hero().getStat().getXp() / m_world->hero().getStat().getMaxXp();
+    xp.setSize({xp_to_size, xp_lost.getSize().y});
+    xp.setAnchor(gf::Anchor::CenterLeft);
+
+    gf::Text text_xp;
+    text_xp.setString(std::to_string(m_world->hero().getStat().getLevel()));
+    text_xp.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_xp.setColor(gf::Color::Black);
+    text_xp.setCharacterSize(xp_lost.getSize().y * 15 / 20);
+    text_xp.setPosition({xp_lost.getPosition().x + xp_lost.getSize().x / 2, xp_lost.getPosition().y});
+    text_xp.setAnchor(gf::Anchor::Center);
+    
     gf::Sprite player_kills_image;
     gf::Texture &skeleton_texture = m_game->resources.getTexture("squelette.png");
     player_kills_image.setTexture(skeleton_texture);
@@ -346,25 +370,30 @@ namespace rCMI
     text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
     text_kills.setColor(gf::Color::Red);
     text_kills.setCharacterSize(life_lost.getSize().y);
-    text_kills.setPosition({player_kills_image.getPosition().x + 30, player_kills_image.getPosition().y});
+    text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);
 
     life_lost.draw(target, states);
     life.draw(target, states);
     text_life.draw(target, states);
+
+    xp_lost.draw(target, states);
+    xp.draw(target, states);
+    text_xp.draw(target, states);
+
     player_kills_image.draw(target, states);
     text_kills.draw(target, states);
   }
 
   void WorldEntity::reset()
-{
-    highest_level = 1; 
+  {
+    highest_level = 1;
     m_chestManager.clear();
     characters.clear();
-    generate_dungeon(MapSize); 
+    generate_dungeon(MapSize);
     clearMap();
-    fieldOfVision(); 
-    
+    fieldOfVision();
+
     std::cout << "WorldEntity réinitialisée : Nouvelle partie lancée." << std::endl;
-}
+  }
 }

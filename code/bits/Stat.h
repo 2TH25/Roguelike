@@ -18,6 +18,9 @@ namespace rCMI
 
     int getHealth() const { return health; }
     int getMaxHealth() const { return max_health; }
+    int getXp() const { return m_xp; }
+    int getMaxXp() const { return max_xp; }
+    int getLevel() const { return m_level; }
     int getDefense() const { return defense; }
     int getPower() const { return power; }
     int getKills() const { return nb_kills; }
@@ -29,7 +32,8 @@ namespace rCMI
     void setPower(int p) { power = p; }
     void addStat(int h, int d, int p) { health += h; max_health += h; defense += d; power += p; }
     void retireStat(int h, int d, int p) { health -= h; max_health -= h; defense -= d; power -= p; }
-    void addKill() { nb_kills += 1; }
+    void addKill();
+    void addXp(int xp);
 
   private:
     int max_health = 0;
@@ -38,6 +42,9 @@ namespace rCMI
     int power = 0;
 
     int nb_kills = 0;
+    int m_level = 0;
+    int m_xp = 0;
+    int max_xp = 200;
   };
 
 }
