@@ -163,7 +163,7 @@ namespace rCMI
 
     for (auto healPad : healingZone)
     {
-      if (!healPad.isActive)
+      if (!healPad.isActive || !map.isExplored(healPad.position))
         continue;
 
       gf::Sprite sprite;

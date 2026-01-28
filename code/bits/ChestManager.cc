@@ -46,9 +46,9 @@ namespace rCMI {
 
     void ChestManager::render(gf::RenderTarget &target, const gf::RenderStates &states, Map &map) {
     for (auto &chest : m_chests) {
-        //if (map.isInFieldOfVision(chest.gridPos)) {
+        if (map.isInFieldOfVision(chest.gridPos)) {
             target.draw(chest.sprite, states);
-        //}
+        }
     }
 }
 
