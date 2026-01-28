@@ -53,7 +53,7 @@ namespace rCMI
     }
     case ItemType::Accessory: {
       Stat s(0, 2, 10); 
-      newItem = Item("Accessoire", ItemType::Accessory, game->resources.getTexture("Bracelet.png"), "Bracelet Sanguinolent");
+      newItem = Item("Bracelet", ItemType::Accessory, game->resources.getTexture("Bracelet.png"), "Bracelet Sanguinolent");
       newItem.m_description = "Ce bracelet résonne en vous, et vous fait vibrer du plius profond de votre être... \n Fait partie de l'ensemble Sanguinolent";
       newItem.m_stat = s;
       break;
