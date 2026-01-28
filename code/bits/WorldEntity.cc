@@ -314,10 +314,11 @@ namespace rCMI
     text_xp.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
     text_xp.setColor(gf::Color::Black);
 
-    gf::Texture &skeleton_texture = m_game->resources.getTexture("squelette.png");
-    player_kills_image.setTexture(skeleton_texture);
+    player_kills_image.setTexture(m_game->resources.getTexture("squelette.png"));
     text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
     text_kills.setColor(gf::Color::Red);
+
+    sword_slot.setTexture(m_game->resources.getTexture("SlotArme.png"));
   }
 
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
@@ -365,6 +366,16 @@ namespace rCMI
     text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);
 
+    sword_slot.setPosition({life_lost.getPosition().x, target_vue_size.y - life_lost.getPosition().x});
+    sword_slot.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
+    sword_slot.setAnchor(gf::Anchor::BottomLeft);
+
+    Item weapon = m_game->m_InventoryScene.get()->m_inventory.getEquippedItem(ItemType::Weapon);
+    sword.setTexture(*weapon.m_texture);
+    sword.setPosition({life_lost.getPosition().x, target_vue_size.y - life_lost.getPosition().x});
+    sword.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
+    sword.setAnchor(gf::Anchor::BottomLeft);
+
     life_lost.draw(target, states);
     life.draw(target, states);
     text_life.draw(target, states);
@@ -375,6 +386,9 @@ namespace rCMI
 
     player_kills_image.draw(target, states);
     text_kills.draw(target, states);
+
+    sword_slot.draw(target, states);
+    sword.draw(target, states);
   }
 
   void WorldEntity::reset()

@@ -82,6 +82,9 @@ namespace rCMI
 
     gf::Sprite player_kills_image;
     gf::Text text_kills;
+
+    gf::Sprite sword_slot;
+    gf::Sprite sword;
   };
 };
 
