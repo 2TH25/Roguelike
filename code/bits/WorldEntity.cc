@@ -27,6 +27,12 @@ namespace rCMI
 
   void WorldEntity::update_tile_at(gf::Vector2i pos, TileType type) { m_map.update_tile_at(pos, type); }
 
+  void WorldEntity::update(gf::Time time){
+    for (auto &character : characters){
+      character.update(time);
+    }
+  }
+
   void WorldEntity::generate_board()
   {
     m_map.generate_board();

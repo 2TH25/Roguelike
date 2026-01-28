@@ -35,82 +35,148 @@ namespace rCMI
   void Character::update(gf::Time time)
   {
     m_animatedSprite.update(time);
+
+    if (m_isMoving)
+    {
+        m_moveTime += time.asSeconds();        
+        float t = m_moveTime / m_moveDuration;
+
+        if (t >= 1.0f) {
+            t = 1.0f;
+            m_isMoving = false;
+           
+        }
+
+        gf::Vector2f currentPos = gf::lerp(m_pixelsStart, m_pixelsEnd, t);
+        m_animatedSprite.setPosition(currentPos);
+    }
+  
   }
 
   bool Character::goUp(WorldEntity &m_world)
   {
-    if (!alive())
-      return false;
+    if (!alive() || m_isMoving) return false; 
+    m_pixelsStart = existence.getPosition() * TileSize;
 
-    gf::Vector2i current = existence.getPosition();
-    gf::Vector2i target = {current.x, current.y - 1};
-    return bump(m_world, *this, target);
+    
+    gf::Vector2i targetGridPos = existence.getPosition() + gf::Vector2i(0, -1);
+    m_pixelsEnd = targetGridPos * TileSize;
+
+    bool moved = bump(m_world, *this, targetGridPos);
+
+    if (moved) {
+        m_isMoving = true;
+        m_moveTime = 0.0f;
+        playAnimation("Up");
+    }
+    
+    return moved;
   }
 
   bool Character::goDown(WorldEntity &m_world)
   {
-    if (!alive())
-      return false;
+    if (!alive() || m_isMoving) return false; 
+    m_pixelsStart = existence.getPosition() * TileSize;
 
-    gf::Vector2i current = existence.getPosition();
-    gf::Vector2i target = {current.x, current.y + 1};
-    return bump(m_world, *this, target);
+    
+    gf::Vector2i targetGridPos = existence.getPosition() + gf::Vector2i(0, 1);
+    m_pixelsEnd = targetGridPos * TileSize;
+
+    bool moved = bump(m_world, *this, targetGridPos);
+
+    if (moved) {
+        m_isMoving = true;
+        m_moveTime = 0.0f;
+        playAnimation("Down");
+    }
+    
+    return moved;
   }
 
   bool Character::goLeft(WorldEntity &m_world)
   {
-    if (!alive())
-      return false;
+    if (!alive() || m_isMoving) return false; 
+    m_pixelsStart = existence.getPosition() * TileSize;
 
-    gf::Vector2i current = existence.getPosition();
-    gf::Vector2i target = {current.x - 1, current.y};
-    return bump(m_world, *this, target);
+    
+    gf::Vector2i targetGridPos = existence.getPosition() + gf::Vector2i(-1, 0);
+    m_pixelsEnd = targetGridPos * TileSize;
+
+    bool moved = bump(m_world, *this, targetGridPos);
+
+    if (moved) {
+        m_isMoving = true;
+        m_moveTime = 0.0f;
+        playAnimation("Left");
+    }
+    
+    return moved;
   }
 
   bool Character::goRight(WorldEntity &m_world)
   {
-    if (!alive())
-      return false;
+    if (!alive() || m_isMoving) return false; 
+    m_pixelsStart = existence.getPosition() * TileSize;
 
-    gf::Vector2i current = existence.getPosition();
-    gf::Vector2i target = {current.x + 1, current.y};
-    return bump(m_world, *this, target);
+    gf::Vector2i targetGridPos = existence.getPosition() + gf::Vector2i(1, 0);
+    m_pixelsEnd = targetGridPos * TileSize;
+
+    bool moved = bump(m_world, *this, targetGridPos);
+
+    if (moved) {
+        m_isMoving = true;
+        m_moveTime = 0.0f;
+        playAnimation("Right");
+    }
+    
+    return moved;
   }
 
   void Character::doMove(WorldEntity &m_world)
-  {
-    if (!alive())
-      return;
-
-    if (comportment.perform(*this, m_world))
-      return;
-
-    static gf::Random random;
-    int choice = random.computeUniformInteger(0, 3);
-
-    gf::Vector2i current = existence.getPosition();
-    gf::Vector2i target = current;
-
-    switch (choice)
     {
-    case 0:
-      target.y -= 1;
-      break;
-    case 1:
-      target.y += 1;
-      break;
-    case 2:
-      target.x -= 1;
-      break;
-    case 3:
-      target.x += 1;
-      break;
-    default:
-      break;
+      if (!alive() || m_isMoving) return; 
+
+      if (comportment.perform(*this, m_world))
+        return;
+
+      static gf::Random random;
+      int choice = random.computeUniformInteger(0, 3);
+
+      gf::Vector2i current = existence.getPosition();
+      gf::Vector2i target = current;
+
+      std::string animName = "Default";
+      switch (choice)
+      {
+      case 0: target.y -= 1; animName = "Up";    break;
+      case 1: target.y += 1; animName = "Down";  break;
+      case 2: target.x -= 1; animName = "Left";  break;
+      case 3: target.x += 1; animName = "Right"; break;
+      }
+
+      if (m_world.isWalkable(target))
+      {
+        m_pixelsStart = existence.getPosition() * TileSize;
+        
+        if (bump(m_world, *this, target))
+        {
+          m_pixelsEnd = existence.getPosition() * TileSize;
+          m_isMoving = true;
+          m_moveTime = 0.0f;
+          playAnimation(animName);
+        }
+      }
     }
-    if (m_world.isWalkable(target))
-      bump(m_world, *this, target);
-  }
+
+  void Character::startVisualMovement(gf::Vector2i oldGridPos, gf::Vector2i newGridPos){
+    m_isMoving = true;
+    m_moveTime = 0.0f;
+    
+    m_pixelsStart = oldGridPos * TileSize;
+    m_pixelsEnd = newGridPos * TileSize;
+    
+    m_animatedSprite.setPosition(m_pixelsStart);
+}
 
   bool Character::take_damage(int damage)
   {
@@ -168,7 +234,7 @@ namespace rCMI
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
     Stat st(100, 0, 20);
     Character c(ex, st, tex);
-    float duration = 0.2f;
+    float duration = 0.5f;
     float nbTilesFLine = 4;
 
     gf::Vector2f texture_size = tex.getSize();
@@ -187,13 +253,13 @@ namespace rCMI
     c.addAnimation("Left", walkLeft);
 
     gf::Animation walkUp;
-    walkUp.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 3 * Y_dir, tile_texture_size), gf::seconds(duration));
-    walkUp.addFrame(tex, gf::RectF::fromPositionSize(1 * X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize(3* X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Up", walkUp);
 
     gf::Animation walkDown;
-    walkDown.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
-    walkDown.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 2 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize(1 * X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize(2 * X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Down", walkDown);
 
     gf::Animation defaultAnimation;
@@ -206,13 +272,52 @@ namespace rCMI
     return c;
   }
 
+  // void setupMonsterAnimations(Character &c, const gf::Texture &tex, int lineIndex)
+  // {
+  //   float duration = 0.5f;
+  //   float nbTilesFLine = 4;
+  //   gf::Vector2f texSize = tex.getSize();
+
+  //   gf::Vector2f tileSize = { 1.0f / nbTilesFLine, 1.0f / nbTilesFLine }; 
+
+  //   gf::Vector2f X = { tileSize.x, 0 };
+  //   gf::Vector2f Y = { 0, tileSize.y };
+  //   gf::Vector2f rowOffset = (float)lineIndex * Y;
+
+    
+  //   gf::Animation walkDown;
+  //   walkDown.addFrame(tex, gf::RectF::fromPositionSize(rowOffset + 0*X, tileSize), gf::seconds(duration));
+  //   c.addAnimation("Down", walkDown);
+
+  //   gf::Animation walkLeft;
+  //   walkLeft.addFrame(tex, gf::RectF::fromPositionSize(rowOffset + 1*X, tileSize), gf::seconds(duration));
+  //   c.addAnimation("Left", walkLeft);
+
+  //   gf::Animation walkRight;
+  //   walkRight.addFrame(tex, gf::RectF::fromPositionSize(rowOffset + 2*X, tileSize), gf::seconds(duration));
+  //   c.addAnimation("Right", walkRight);
+
+  //   gf::Animation walkUp;
+  //   walkUp.addFrame(tex, gf::RectF::fromPositionSize(rowOffset + 3*X, tileSize), gf::seconds(duration));
+  //   c.addAnimation("Up", walkUp);
+
+  //   gf::Animation def;
+  //   def.addFrame(tex, gf::RectF::fromPositionSize(rowOffset + 0*X, tileSize), gf::seconds(duration));
+  //   c.addAnimation("Default", def);
+
+  //   c.m_animatedSprite.setTextureRect(gf::RectF::fromPositionSize(rowOffset, tileSize));
+  //   // Calcul du scale basé sur la largeur d'une tuile réelle
+  //   c.m_animatedSprite.setScale(TileSize / (texSize.x / nbTilesFLine));
+  // }
+
   Character Character::skeleton(gf::Vector2i position, const gf::Texture &tex)
   {
     Existence ex{position, u'S', gf::Color::White, "Skeleton", true};
     Stat st(150, 2, 10);
-    Comportment comp(Comportment::hostile());
     Character c(ex, st, tex);
-    c.setComportment(comp);
+    c.setComportment(Comportment::hostile());
+    
+    //setupMonsterAnimations(c, tex, 0); // Utilise la ligne 0
     return c;
   }
 
@@ -220,10 +325,10 @@ namespace rCMI
   {
     Existence ex{position, u'Z', gf::Color::Orange, "Zombie", true};
     Stat st(100, 3, 7);
-    Comportment comp(Comportment::hostile());
-
     Character c(ex, st, tex);
-    c.setComportment(comp);
+    c.setComportment(Comportment::hostile());
+
+    //setupMonsterAnimations(c, tex, 1); // Utilise la ligne 1
     return c;
   }
 
@@ -231,18 +336,15 @@ namespace rCMI
   {
     Existence ex{position, u's', gf::Color::Green, "Slime", true};
     Stat st(50, 0, 3);
-    Comportment comp(Comportment::hostile());
-
     Character c(ex, st, tex);
-    c.setComportment(comp);
+    c.setComportment(Comportment::hostile());
+
+    //setupMonsterAnimations(c, tex, 2); // Utilise la ligne 2
     return c;
   }
   void Character::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    gf::Vector2i gridPosition = existence.getPosition();
-    m_animatedSprite.setPosition({static_cast<float>(gridPosition.x * TileSize),
-                                  static_cast<float>(gridPosition.y * TileSize)});
-
     target.draw(m_animatedSprite, states);
+
   }
 }

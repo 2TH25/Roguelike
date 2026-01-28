@@ -223,9 +223,12 @@ namespace rCMI
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
-    gf::Vector2i TileVect({TileSize, TileSize});
-    gf::Vector2i playerCenter = m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2;
-    gf::Vector2i worldCenter = m_world_entity.getMap().getSize() * TileSize / 2;
+    m_world_entity.update(time);
+    gf::Vector2f playerPixelPos = m_world_entity.hero().getPixelPosition();
+    gf::Vector2f playerCenter = playerPixelPos + (gf::Vector2f(TileSize, TileSize) / 2.0f);
+
+    gf::Vector2f worldCenter = m_world_entity.getMap().getSize() * TileSize / 2;
+    
     setWorldViewCenter(m_isActivateMap ? worldCenter : playerCenter);
 
     if (!m_world_entity.hero().alive())

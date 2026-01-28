@@ -38,10 +38,14 @@ namespace rCMI
     bool goRight(WorldEntity &m_world);
     void addAnimation(std::string name, gf::Animation animation);
     void playAnimation(std::string name);
+    void startVisualMovement(gf::Vector2i oldGridPos, gf::Vector2i newGridPos);
+    void setupMonsterAnimations(Character &c, const gf::Texture &tex, int lineIndex);
+
 
     Existence &getExistence() { return existence; }
     Stat &getStat() { return stat; }
     Comportment &getComportment() { return comportment; }
+    gf::Vector2f getPixelPosition() const { return m_animatedSprite.getPosition(); }
 
     void setAppearance(const gf::Texture &tex) { texture = &tex; }
     void setDeadTexture(const gf::Texture &tex) { deadTexture = &tex; }
@@ -86,6 +90,12 @@ namespace rCMI
     
     gf::RectI m_homeRoom;
     bool m_hasHome = false;
+
+    bool m_isMoving = false;          
+    float m_moveTime = 0.0f;    
+    float m_moveDuration = 1.0f;
+    gf::Vector2f m_pixelsStart;
+    gf::Vector2f m_pixelsEnd;
   };
 }
 #endif // CHARACTER_H
