@@ -75,6 +75,11 @@ namespace rCMI
     m_quit.setParagraphWidth(width);
     m_quit.setPadding(padding);
 
+    m_statsText.setCharacterSize(r_size);
+    m_statsText.setAnchor(gf::Anchor::Center); 
+    m_statsText.setPosition(coords.getRelativePoint({0.5f, 0.4f}));
+
     widgets.render(target, states);
+    target.draw(m_statsText,states);
   }
 }

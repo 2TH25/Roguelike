@@ -3,6 +3,7 @@
 #include "WorldScene.h" 
 #include "WorldEntity.h"
 #include "Character.h"
+#include <gf/Coordinates.h>
 
 namespace rCMI
 {
@@ -12,39 +13,35 @@ namespace rCMI
 				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png")))
 	{
 		float scale = static_cast<float>(TileSize) / 640.0f;
-		float x_slot_left = 430;
-		float x_slot_right = 720;
-		float y_slot_first = 220;
-		float y_slot_second = 310;
-		float y_slot_third = 400;
+		
 
 		m_headSlot.setTexture(game->resources.getTexture("SlotCasque.png"));
     	m_headSlot.setScale(scale);
-		m_headSlot.setPosition({x_slot_left, y_slot_first});
+		
 
 		m_torsoSlot.setTexture(game->resources.getTexture("SlotArmure.png"));
 		m_torsoSlot.setScale(scale);
-		m_torsoSlot.setPosition({x_slot_right, y_slot_first});
+		
 
 		m_legSlot.setTexture(game->resources.getTexture("SlotJambe.png"));
 		m_legSlot.setScale(scale);
-		m_legSlot.setPosition({x_slot_right, y_slot_second});
+		
 
 		m_handSlot.setTexture(game->resources.getTexture("SlotGants.png"));
 		m_handSlot.setScale(scale);
-		m_handSlot.setPosition({x_slot_left, y_slot_second});
+		
 
 		m_bootsSlot.setTexture(game->resources.getTexture("SlotBottes.png"));
 		m_bootsSlot.setScale(scale);
-		m_bootsSlot.setPosition({x_slot_right, y_slot_third});
+		
 
 		m_accessorySlot.setTexture(game->resources.getTexture("SlotAccessoire.png"));
 		m_accessorySlot.setScale(scale);
-		m_accessorySlot.setPosition({x_slot_left, y_slot_third});
+		
 
 		m_weaponSlot.setTexture(game->resources.getTexture("SlotArme.png"));
 		m_weaponSlot.setScale(scale);
-		m_weaponSlot.setPosition({850, y_slot_first});
+		
 
 		m_equippedHeadSprite.setPosition(m_headSlot.getPosition());
 		m_equippedTorsoSprite.setPosition(m_torsoSlot.getPosition());
@@ -63,14 +60,8 @@ namespace rCMI
 		m_equippedWeaponSprite.setColor(gf::Color::Transparent);
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
-		float scaleFactor = 400.0f / 640.0f;
-		m_heroSprite.setScale({scaleFactor, scaleFactor});
-		m_heroSprite.setPosition({430, 150});
 
-		m_background.setSize({1100, 700});
 		m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
-		// m_background.setScale();
-		m_background.setPosition({300, 100});
 
 		m_statsWidget.setPosition({1000, 280});
 		m_statsWidget.setDefaultTextColor(gf::Color::Black);
@@ -234,32 +225,78 @@ namespace rCMI
 	}
 
 	void Inventory::render(gf::RenderTarget &target, const gf::RenderStates &states) {
+		const gf::Vector2f vSize = target.getView().getSize();
+		gf::Coordinates coords(target);
+
+		
+		gf::Vector2f invSize = vSize * 0.7f;
+		gf::Vector2f invPos = (vSize - invSize) / 2.0f;
+
+		m_background.setSize(invSize);
+		m_background.setPosition(invPos);
 		target.draw(m_background, states);
-		target.draw(m_heroSprite, states);
-		
-		target.draw(m_headSlot, states);
-		target.draw(m_torsoSlot, states);
-		target.draw(m_legSlot, states);
-		target.draw(m_handSlot, states);
-		target.draw(m_bootsSlot, states);
-		target.draw(m_accessorySlot, states);
-		target.draw(m_weaponSlot, states);
 
-		target.draw(m_equippedHeadSprite, states);
-		target.draw(m_equippedTorsoSprite, states);
-		target.draw(m_equippedLegsSprite, states);
-		target.draw(m_equippedHandSprite, states);
-		target.draw(m_equippedBootsSprite, states);
-		target.draw(m_equippedAccessorySprite, states);
-		target.draw(m_equippedWeaponSprite, states);
+	
+		float slotSize = 70.0f;
+		float scale = slotSize / 640.0f; 
+
+		auto setPos = [&](gf::Sprite& s, gf::Sprite& equipped, float rx, float ry) {
+			s.setScale(scale);
+			s.setPosition({invPos.x + invSize.x * rx, invPos.y + invSize.y * ry});
+			equipped.setScale(scale);
+			equipped.setPosition(s.getPosition());
+		};
+
+		float y_first = 0.17f;
+		float y_second = 0.32f;
+		float y_third = 0.47f;
+
+		setPos(m_headSlot, m_equippedHeadSprite, 0.15f,y_first);
+		setPos(m_handSlot, m_equippedHandSprite, 0.15f, y_second);
+		setPos(m_accessorySlot, m_equippedAccessorySprite, 0.15f, y_third);
+		
+		setPos(m_torsoSlot, m_equippedTorsoSprite, 0.415f, y_first);
+		setPos(m_legSlot, m_equippedLegsSprite, 0.415f, y_second);
+		setPos(m_bootsSlot, m_equippedBootsSprite, 0.415f, y_third);
+		
+		setPos(m_weaponSlot, m_equippedWeaponSprite, 0.50f, y_first);
+
+	
+		float heroScale = 400.0f / 640.0f; 
+		m_heroSprite.setScale({heroScale, heroScale});
+		m_heroSprite.setPosition({invPos.x + invSize.x * 0.15f, invPos.y + invSize.y * 0.05f});
+
+	
+		float padding = 4.0f;
+		float startX = invPos.x + (invSize.x * 0.15f);
+		float startY = invPos.y + (invSize.y * 0.60f);
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+			float x = startX + (i % 5) * (slotSize + padding);
+			float y = startY + (i / 5) * (slotSize + padding);
+			
+			m_backpackBackgrounds[i].setScale(scale);
+			m_backpackBackgrounds[i].setPosition({x, y});
+			m_itemSprites[i].setScale(scale);
+			m_itemSprites[i].setPosition({x, y});
+
 			target.draw(m_backpackBackgrounds[i], states);
+			target.draw(m_itemSprites[i], states);
 		}
-		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
-        	target.draw(m_itemSprites[i], states);
-    	}
+
 		
+		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.60f, invPos.y + invSize.y * 0.25f});
+
+	
+		target.draw(m_heroSprite, states);
+		target.draw(m_headSlot, states); target.draw(m_equippedHeadSprite, states);
+		target.draw(m_torsoSlot, states); target.draw(m_equippedTorsoSprite, states);
+		target.draw(m_legSlot, states); target.draw(m_equippedLegsSprite, states);
+		target.draw(m_handSlot, states); target.draw(m_equippedHandSprite, states);
+		target.draw(m_bootsSlot, states); target.draw(m_equippedBootsSprite, states);
+		target.draw(m_accessorySlot, states); target.draw(m_equippedAccessorySprite, states);
+		target.draw(m_weaponSlot, states); target.draw(m_equippedWeaponSprite, states);
 		target.draw(m_statsWidget, states);
 	}
 
