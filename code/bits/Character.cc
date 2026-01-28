@@ -4,6 +4,7 @@
 #include "GameData.h"
 #include <algorithm>
 #include "RogueCMI.h"
+#include <gf/Math.h>
 
 namespace rCMI
 {
@@ -14,6 +15,7 @@ namespace rCMI
         texture(&tex)
   {
     m_animatedSprite.setTexture(tex);
+    m_animatedSprite.setScale((float) TileSize / tex.getSize().x);
     m_animatedSprite.setPosition(existence.getPosition() * TileSize);
   }
 
@@ -166,35 +168,40 @@ namespace rCMI
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
     Stat st(100, 0, 20);
     Character c(ex, st, tex);
-
-    gf::Vector2f frameSize = {80.0f, 80.0f};
     float duration = 0.2f;
+    float nbTilesFLine = 4;
+
+    gf::Vector2f texture_size = tex.getSize();
+    gf::Vector2f tile_texture_size = texture_size / texture_size / nbTilesFLine;
 
     gf::Animation walkRight;
-    walkRight.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 80.0f}, frameSize), gf::seconds(duration));
-    walkRight.addFrame(tex, gf::RectF::fromPositionSize({160.0f, 80.0f}, frameSize), gf::seconds(duration));
+    gf::Vector2f X_dir = {tile_texture_size.x, 0};
+    gf::Vector2f Y_dir = {0, tile_texture_size.y};  
+    walkRight.addFrame(tex, gf::RectF::fromPositionSize(1 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkRight.addFrame(tex, gf::RectF::fromPositionSize(2 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Right", walkRight);
 
     gf::Animation walkLeft;
-    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 80.0f}, frameSize), gf::seconds(duration));
-    walkLeft.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 160.0f}, frameSize), gf::seconds(duration));
+    walkLeft.addFrame(tex, gf::RectF::fromPositionSize(3 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkLeft.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 2 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Left", walkLeft);
 
     gf::Animation walkUp;
-    walkUp.addFrame(tex, gf::RectF::fromPositionSize({240.0f, 0.0f}, frameSize), gf::seconds(duration));
-    walkUp.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 80.0f}, frameSize), gf::seconds(duration));
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 3 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkUp.addFrame(tex, gf::RectF::fromPositionSize(1 * X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Up", walkUp);
 
     gf::Animation walkDown;
-    walkDown.addFrame(tex, gf::RectF::fromPositionSize({80.0f, 0.0f}, frameSize), gf::seconds(duration));
-    walkDown.addFrame(tex, gf::RectF::fromPositionSize({160.0f, 0.0f}, frameSize), gf::seconds(duration));
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 1 * Y_dir, tile_texture_size), gf::seconds(duration));
+    walkDown.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 2 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Down", walkDown);
 
     gf::Animation defaultAnimation;
-    defaultAnimation.addFrame(tex, gf::RectF::fromPositionSize({0.0f, 0.0f}, frameSize), gf::seconds(duration));
+    defaultAnimation.addFrame(tex, gf::RectF::fromPositionSize(0 * X_dir + 0 * Y_dir, tile_texture_size), gf::seconds(duration));
     c.addAnimation("Default", defaultAnimation);
 
-    c.m_animatedSprite.setTextureRect(gf::RectF::fromPositionSize({0.0f, 0.0f}, frameSize));
+    c.m_animatedSprite.setTextureRect(gf::RectF::fromPositionSize(0 * X_dir + 0 * Y_dir, tile_texture_size));
+    c.m_animatedSprite.setScale(TileSize / (texture_size / nbTilesFLine));
 
     return c;
   }
@@ -235,9 +242,6 @@ namespace rCMI
     gf::Vector2i gridPosition = existence.getPosition();
     m_animatedSprite.setPosition({static_cast<float>(gridPosition.x * TileSize),
                                   static_cast<float>(gridPosition.y * TileSize)});
-
-    float scale = static_cast<float>(TileSize) / 640.0f;
-    m_animatedSprite.setScale(scale);
 
     target.draw(m_animatedSprite, states);
   }

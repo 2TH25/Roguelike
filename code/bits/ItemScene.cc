@@ -15,7 +15,7 @@ namespace rCMI {
             case ItemType::Legs:      return "Jambières";
             case ItemType::Boots:     return "Bottes";
             case ItemType::Hand:     return "Gants";
-            case ItemType::Accessory:     return "Accessoire";
+            case ItemType::Accessory:     return "Bracelet";
             default: break;
         }
         return "Inconnu";

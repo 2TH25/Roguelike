@@ -64,7 +64,7 @@ namespace rCMI
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
     
-
+    // TODO : bloquer mouvement quand tab
     if (m_isActivateInventory || m_isActivateMap)
     {
       if (Controls::isActiveAction("ToggleInventory", m_actions))
