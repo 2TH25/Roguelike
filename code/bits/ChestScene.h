@@ -23,6 +23,8 @@ namespace rCMI {
         int m_currentChestIndex;
         void updateChestAfterPickup();
 
+        std::vector<int> m_itemSlotIndices;
+
     private:
         RogueCMI *m_game;
         std::vector<Item> m_loots;

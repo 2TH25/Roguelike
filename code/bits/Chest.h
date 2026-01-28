@@ -11,6 +11,7 @@ namespace rCMI {
         gf::Vector2i gridPos;
         bool isOpen = false;
         std::vector<Item> content; 
+        std::vector<int> itemSlotsPosition;
     };
 
 }
