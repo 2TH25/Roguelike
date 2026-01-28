@@ -12,7 +12,7 @@ namespace rCMI {
             case ItemType::Weapon:     return "Arme";
             case ItemType::Head:      return "Casque";
             case ItemType::Torso:     return "Plastron";
-            case ItemType::Legs:      return "Jambières";
+            case ItemType::Legs:      return "Jambiere";
             case ItemType::Boots:     return "Bottes";
             case ItemType::Hand:     return "Gants";
             case ItemType::Accessory:     return "Bracelet";
