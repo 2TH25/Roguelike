@@ -67,7 +67,7 @@ namespace rCMI
 		m_statsWidget.setDefaultTextColor(gf::Color::Black);
 
 		gf::Vector2f startPos = {420, 500};
-		float slotSize = 80.0f;
+		float slotSize = 70.0f;
 		float padding = 10.0f;
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
@@ -228,16 +228,14 @@ namespace rCMI
 		const gf::Vector2f vSize = target.getView().getSize();
 		gf::Coordinates coords(target);
 
-		
-		gf::Vector2f invSize = vSize * 0.7f;
+		gf::Vector2f invSize = vSize * 0.75f;
 		gf::Vector2f invPos = (vSize - invSize) / 2.0f;
 
 		m_background.setSize(invSize);
 		m_background.setPosition(invPos);
 		target.draw(m_background, states);
 
-	
-		float slotSize = 70.0f;
+		float slotSize = invSize.x * 0.06;
 		float scale = slotSize / 640.0f; 
 
 		auto setPos = [&](gf::Sprite& s, gf::Sprite& equipped, float rx, float ry) {
@@ -247,27 +245,41 @@ namespace rCMI
 			equipped.setPosition(s.getPosition());
 		};
 
+		
+		float colLeft = 0.15f;
+		float colMid  = 0.43f;
+		float colRight = 0.55f;
+
 		float y_first = 0.17f;
 		float y_second = 0.32f;
 		float y_third = 0.47f;
 
-		setPos(m_headSlot, m_equippedHeadSprite, 0.15f,y_first);
-		setPos(m_handSlot, m_equippedHandSprite, 0.15f, y_second);
-		setPos(m_accessorySlot, m_equippedAccessorySprite, 0.15f, y_third);
+		setPos(m_headSlot, m_equippedHeadSprite, colLeft, y_first);
+		setPos(m_handSlot, m_equippedHandSprite, colLeft, y_second);
+		setPos(m_accessorySlot, m_equippedAccessorySprite, colLeft, y_third);
 		
-		setPos(m_torsoSlot, m_equippedTorsoSprite, 0.415f, y_first);
-		setPos(m_legSlot, m_equippedLegsSprite, 0.415f, y_second);
-		setPos(m_bootsSlot, m_equippedBootsSprite, 0.415f, y_third);
+		setPos(m_torsoSlot, m_equippedTorsoSprite, colMid, y_first);
+		setPos(m_legSlot, m_equippedLegsSprite, colMid, y_second);
+		setPos(m_bootsSlot, m_equippedBootsSprite, colMid, y_third);
 		
-		setPos(m_weaponSlot, m_equippedWeaponSprite, 0.50f, y_first);
+		setPos(m_weaponSlot, m_equippedWeaponSprite, colRight, y_first);
 
 	
-		float heroScale = 400.0f / 640.0f; 
+		float hero_rx = (colLeft + colMid) / 2.0f; 
+		
+
+		float heroScale = (invSize.x * 0.35f) / 640.0f; 
 		m_heroSprite.setScale({heroScale, heroScale});
-		m_heroSprite.setPosition({invPos.x + invSize.x * 0.15f, invPos.y + invSize.y * 0.05f});
+
+		
+		float heroWidth = 640.0f * heroScale;
+		m_heroSprite.setPosition({
+			invPos.x + (invSize.x * hero_rx) - (heroWidth / 2.5f),
+			invPos.y + (invSize.y * 0.05f)
+		});
 
 	
-		float padding = 4.0f;
+		float padding = invSize.x * 0.01f;
 		float startX = invPos.x + (invSize.x * 0.15f);
 		float startY = invPos.y + (invSize.y * 0.60f);
 
@@ -284,11 +296,11 @@ namespace rCMI
 			target.draw(m_itemSprites[i], states);
 		}
 
-		
-		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_statsWidget.setPosition({invPos.x + invSize.x * 0.60f, invPos.y + invSize.y * 0.25f});
-
 	
+		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.30f});
+
+		
 		target.draw(m_heroSprite, states);
 		target.draw(m_headSlot, states); target.draw(m_equippedHeadSprite, states);
 		target.draw(m_torsoSlot, states); target.draw(m_equippedTorsoSprite, states);

@@ -32,7 +32,7 @@ namespace rCMI
     }
     case ItemType::Legs: {
       Stat s(10, 2, 0); 
-      newItem = Item("Jambieres", ItemType::Legs, game->resources.getTexture("Jambiere.png"), "Jambières Sanguinolentes");
+      newItem = Item("Jambiere", ItemType::Legs, game->resources.getTexture("Jambiere.png"), "Jambières Sanguinolentes");
       newItem.m_description = "Des jambières qui semblent maudites... \n Fait partie de l'ensemble Sanguinolent";
       newItem.m_stat = s;
       break;
