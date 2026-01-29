@@ -26,6 +26,7 @@ namespace rCMI
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
     void doMove(WorldEntity &m_world);
+    void setupMonsterAnimations(const gf::Texture &tex, int lineIndex);
     bool take_damage(int damage);
     void heal(int amount);
     void addMaxHealth(int amount);
@@ -93,7 +94,7 @@ namespace rCMI
 
     bool m_isMoving = false;          
     float m_moveTime = 0.0f;    
-    float m_moveDuration = 1.0f;
+    float m_moveDuration = 0.6f;
     gf::Vector2f m_pixelsStart;
     gf::Vector2f m_pixelsEnd;
   };

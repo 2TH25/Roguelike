@@ -220,18 +220,21 @@ namespace rCMI
             Character mob;
             int nombre_aleatoire = dist_type(gen);
 
+            const gf::Texture &textureMonstres = m_game->resources.getTexture("SetTextureMonstre.png"); 
+
             if (nombre_aleatoire <= 60)
             {
-              mob = Character::slime(pos_aleatoire, m_game->resources.getTexture("slime.png"));
+              mob = Character::slime(pos_aleatoire, textureMonstres);
             }
             else if (nombre_aleatoire <= 85)
             {
-              mob = Character::zombie(pos_aleatoire, m_game->resources.getTexture("zombie.png"));
+              mob = Character::zombie(pos_aleatoire, textureMonstres);
             }
             else
             {
-              mob = Character::skeleton(pos_aleatoire, m_game->resources.getTexture("squelette.png"));
+              mob = Character::skeleton(pos_aleatoire, textureMonstres);
             }
+            
             mob.setHomeRoom(room);
             characters.push_back(mob);
           }

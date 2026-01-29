@@ -61,12 +61,18 @@ namespace rCMI
 
     bool usHealing(gf::Vector2i position);
 
+    void setMinimapMode(bool active, const gf::Texture* floorTex = nullptr, const gf::Texture* wallTex = nullptr);
+
   private:
     RogueCMI *m_game = nullptr;
     gf::Vector2i size;
     gf::SquareMap map;
     gf::Vector2i stairs;
     std::vector<posWhBool> healingZone;
+
+    bool m_minimapMode = false;
+    const gf::Texture* m_miniFloorTexture = nullptr;
+    const gf::Texture* m_miniWallTexture = nullptr;
   };
 };
 

@@ -33,6 +33,7 @@ namespace rCMI
     std::vector<gf::Vector2i> compute_path(gf::Vector2i origin, gf::Vector2i target);
     void update_tile_at(gf::Vector2i pos, TileType type);
     void update(gf::Time time) override;
+    void toggleMinimapMode(bool active);
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
@@ -61,6 +62,7 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
     Map m_map;
+    std::map<Character*, const gf::Texture*> m_savedTextures;
   };
 
   class HudEntity : public gf::Entity
