@@ -64,7 +64,6 @@ namespace rCMI
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
     
-    // TODO : bloquer mouvement quand tab
     if (m_isActivateInventory || m_isActivateMap)
     {
       if (Controls::isActiveAction("ToggleInventory", m_actions))
@@ -76,8 +75,9 @@ namespace rCMI
         }
         else
         {
-          m_isActivateMap = false;
           setWorldViewSize({800, 800});
+          m_isActivateMap = false;
+          m_world_entity.activateMiniMap();
           m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
           m_game->pushScene(*(m_game->m_InventoryScene));
           m_isActivateInventory = true;
@@ -90,6 +90,7 @@ namespace rCMI
         {
           setWorldViewSize({800, 800});
           m_isActivateMap = false;
+          m_world_entity.activateMiniMap();
         }
         else  
         {
@@ -99,6 +100,7 @@ namespace rCMI
           }
           setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
           m_isActivateMap = true;
+          m_world_entity.activateMiniMap();
         }
       }
       // else if (Controls::isActiveAction("showMenu", m_actions))
@@ -126,6 +128,7 @@ namespace rCMI
     {
       setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
       m_isActivateMap = true;
+      m_world_entity.activateMiniMap();
       return;
     }
 
