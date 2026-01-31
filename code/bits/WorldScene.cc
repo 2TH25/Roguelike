@@ -103,16 +103,6 @@ namespace rCMI
           m_world_entity.activateMiniMap();
         }
       }
-      // else if (Controls::isActiveAction("showMenu", m_actions))
-      // {
-      //   if (m_isActivateMenu)
-      //   {}
-      //   else
-      //   {}
-
-      //   m_isActivateMenu = !m_isActivateMenu;
-      // }
-
       return;
     }
 
@@ -132,31 +122,64 @@ namespace rCMI
       return;
     }
 
+    // Gestion du déplacement et Interaction PNJ
+
     bool playerMoved = false;
+    
+    gf::Vector2i targetPos = heroInEntity.getExistence().getPosition();
+    bool attemptMove = false;
+    std::string direction = "";
 
     if (Controls::isActiveAction("move_up", m_actions)){
-      if (heroInEntity.goUp(m_world_entity)) {
-        heroInEntity.playAnimation("Up");
-        playerMoved = true;
-      }
+      targetPos.y -= 1;
+      direction = "Up";
+      attemptMove = true;
     }
     else if (Controls::isActiveAction("move_down", m_actions)){
-      if (heroInEntity.goDown(m_world_entity)) {
-        heroInEntity.playAnimation("Down");
-        playerMoved = true;
-      }
+      targetPos.y += 1;
+      direction = "Down";
+      attemptMove = true;
     }
     else if (Controls::isActiveAction("move_right", m_actions)){
-      if (heroInEntity.goRight(m_world_entity)) {
-        heroInEntity.playAnimation("Right");
-        playerMoved = true;
-      }
+      targetPos.x += 1;
+      direction = "Right";
+      attemptMove = true;
     }
     else if (Controls::isActiveAction("move_left", m_actions)){
-      if (heroInEntity.goLeft(m_world_entity)) {
-        heroInEntity.playAnimation("Left");
-        playerMoved = true;
-      }
+      targetPos.x -= 1;
+      direction = "Left";
+      attemptMove = true;
+    }
+
+    if (attemptMove) {
+        auto charIndex = m_world_entity.target_character_at(targetPos);
+        bool interactionHappened = false;
+
+        if (charIndex.has_value()) {
+            Character& targetChar = m_world_entity.getCharacters()[charIndex.value()];
+            
+            if (targetChar.getExistence().getName() == "PNJ") {
+                m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+                m_game->pushScene(*(m_game->m_InventoryScene));
+                m_isActivateInventory = true;
+                
+                interactionHappened = true;
+                return; 
+            }
+        }
+
+        if (!interactionHappened) {
+            bool moved = false;
+            if (direction == "Up") moved = heroInEntity.goUp(m_world_entity);
+            else if (direction == "Down") moved = heroInEntity.goDown(m_world_entity);
+            else if (direction == "Right") moved = heroInEntity.goRight(m_world_entity);
+            else if (direction == "Left") moved = heroInEntity.goLeft(m_world_entity);
+
+            if (moved) {
+                heroInEntity.playAnimation(direction);
+                playerMoved = true;
+            }
+        }
     }
 
     if (Controls::isActiveAction("fire", m_actions))
@@ -176,9 +199,9 @@ namespace rCMI
       }
     }
 
+    // Gestion du tour (Coffres, Escaliers, Ennemis)
     if (playerMoved)
     {
-
       int chestIndex = m_world_entity.m_chestManager.isChestOnTile(m_game);
       if (chestIndex != -1) // On est sur un coffre
       {
@@ -201,7 +224,6 @@ namespace rCMI
           m_isActivateChest = false;
       }
 
-
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
         m_world_entity.nextLevel();
@@ -215,12 +237,10 @@ namespace rCMI
         if (m_world_entity.usHealing(heroInEntity.getExistence().getPosition()))
         {
           heroInEntity.heal(10);
-          std::cout << "Le heros a ete soigne de 10 PV !" << std::endl; // Optionnel pour debug
+          std::cout << "Le heros a ete soigne de 10 PV !" << std::endl; 
         }
       }
       m_world_entity.EnemyTurns();
-    
-      
     }
   }
 
@@ -240,8 +260,6 @@ namespace rCMI
       if (m_timeSinceDeath.asSeconds() > 2.0f)
         m_game->replaceScene(m_game->m_EndMenuScene);
     }
-
-    
 
     updateFieldOfView();
   }
