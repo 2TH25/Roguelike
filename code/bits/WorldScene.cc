@@ -159,12 +159,19 @@ namespace rCMI
             Character& targetChar = m_world_entity.getCharacters()[charIndex.value()];
             
             if (targetChar.getExistence().getName() == "PNJ") {
-                m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-                m_game->pushScene(*(m_game->m_InventoryScene));
-                m_isActivateInventory = true;
+                std::vector<std::string> discours = {
+                    "Bonjour jeune voyageur !",
+                    "Je suis la fée du plateau et je serais là pour te venir en aide. \n ",
+                    "Fais attention aux monstres qui rodent...\n Ils sont puissants et surtout ils ne veulent pas que \ntu atteignes la fin du donjon.",
+                    "Bonne chance dans ton aventure ! \n Voici un petit cadeau pour t'aider.",
+                    "Tu as reçu une potion de soin ! Utilise-la judicieusement."
+                };
+
+                // Configuration et lancement de la scène
+                m_game->m_FeeScene->setDialogue(discours);
+                m_game->pushScene(*(m_game->m_FeeScene));
                 
-                interactionHappened = true;
-                return; 
+                return; // On arrête l'action ici
             }
         }
 
