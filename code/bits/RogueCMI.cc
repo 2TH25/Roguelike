@@ -11,7 +11,8 @@ namespace rCMI
         m_InventoryScene(std::make_unique<InventoryScene>(this)),
         m_ChestScene(this),
         m_ItemScene(this), 
-        m_EndMenuScene(this)
+        m_EndMenuScene(this),
+        m_FeeScene(std::make_unique<FeeScene>(this))
   {
     pushScene(m_BaseScene);
     pushScene(m_MenuScene);

@@ -11,10 +11,13 @@
 #include "GameData.h"
 #include "ItemScene.h"
 #include "EndMenuScene.h"
+#include "feeScene.h"
 
 namespace rCMI
 {
   class InventoryScene;
+  class FeeScene;
+
   class RogueCMI : public gf::GameManager
   {
   public:
@@ -28,6 +31,7 @@ namespace rCMI
     ChestScene m_ChestScene;
     ItemScene m_ItemScene;
     EndMenuScene m_EndMenuScene;
+    std::unique_ptr<FeeScene> m_FeeScene;
   };
 }
 
