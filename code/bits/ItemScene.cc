@@ -1,6 +1,7 @@
 #include "ItemScene.h"
 #include <gf/Coordinates.h>
 #include "RogueCMI.h"
+#include "Item.h"
 
 
 namespace rCMI {
@@ -47,7 +48,6 @@ namespace rCMI {
         m_background.setOutlineThickness(2.0f);
 		
 
-        m_nameText.setColor(gf::Color::Yellow);
         m_typeText.setColor(gf::Color::Azure);
         m_descText.setParagraphWidth(350.0f);
         m_descText.setAlignment(gf::Alignment::Center);
@@ -73,6 +73,36 @@ namespace rCMI {
         m_isEquipped = isEquipped;
         m_currentChestIndex = chestIndex;
         m_itemIndexInChest = itemIndex;
+
+
+        switch (item.m_rarity) {
+            case Item::Rarity::Common:
+                m_nameText.setColor(gf::Color::White); // Blanc pour le commun
+                break;
+            case Item::Rarity::Uncommon:
+                m_nameText.setColor(gf::Color::Green); // Vert pour l'insolite
+                break;
+            case Item::Rarity::Rare:
+                m_nameText.setColor(gf::Color::Azure); // Bleu/Azure pour le rare
+                break;
+            case Item::Rarity::Epic:
+                m_nameText.setColor(gf::Color::fromRgba32(0xA335EEFF)); // Violet épique
+                break;
+            case Item::Rarity::Legendary:
+                m_nameText.setColor(gf::Color::Orange); // Orange pour le légendaire
+                break;
+            default:
+                m_nameText.setColor(gf::Color::White);
+                break;
+        }
+
+        
+
+
+
+
+
+
 
         m_nameText.setString(item.m_name);
         centerText(m_nameText, 200.0f);
@@ -228,21 +258,17 @@ namespace rCMI {
 
 
     void ItemScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states) {
-        // 1. Le fond gris transparent (on le dessine en premier)
         target.draw(m_background, states);
 
-        // 2. L'IMAGE (On la dessine juste après le fond)
         if (m_currentItem.m_texture != nullptr) {
             target.draw(m_itemSprite, states);
         }
 
-        // 3. Les textes (Par-dessus l'image si besoin)
         target.draw(m_nameText, states);
         target.draw(m_typeText, states);
         target.draw(m_descText, states);
         target.draw(m_statsText, states);
         
-        // 4. Les boutons
         if (!m_buttonEquip.isDisabled()) m_buttonEquip.draw(target, states);
         if (!m_buttonUnequip.isDisabled()) m_buttonUnequip.draw(target, states);
         if (!m_buttonConsume.isDisabled()) m_buttonConsume.draw(target, states);
