@@ -28,13 +28,24 @@ namespace rCMI
     if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
       return;
 
+    int hash = (pos.x * 39113 + pos.y * 17569) % 100;
+
     if (type == TileType::Floor)
+    {
       map.setEmpty(pos);
+      texturePosition[pos.x][pos.y] = {hash < 45 ? (hash % 4) + 1 : 0, 0};
+    }
 
     if (type == TileType::Stairs)
     {
       map.setEmpty(pos);
       stairs = pos;
+      texturePosition[pos.x][pos.y] = {0, 2};
+    }
+
+    if (type == TileType::Wall)
+    {
+      texturePosition[pos.x][pos.y] = {hash < 45 ? (hash % 4) + 1 : 0, 1};
     }
 
     if (type == TileType::HealingFloor)
@@ -109,15 +120,31 @@ namespace rCMI
 
   void Map::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
-    // english for training 
+    if (is_mini_map)
+    {
+      gf::ShapeParticles shParticle;
+      
+      for (auto pos : map.getRange())
+      {
+        if (!map.isExplored(pos))
+          continue;;
+
+        if (texturePosition.at(pos.x).at(pos.y).y == 0)
+          shParticle.addRectangle((pos * TileSize), {TileSize, TileSize}, gf::Color::fromRgba32(58, 48, 47));
+      }
+
+      shParticle.draw(target, states);
+      return;
+    }
+
     float nbTilesFLine = 5; // Number of tiles for one line and one column in the texture
     gf::Texture &tileTexture = m_game->resources.getTexture("SetTileTextureSol.png");
     gf::Vector2f texture_size = tileTexture.getSize();                           // Save of the texture size for calculate positions and scaling
     gf::Vector2f tile_texture_size = texture_size / texture_size / nbTilesFLine; // texture_size / texture_size to do {1, 1} / nbTilesFLine
 
-    gf::SpriteParticles sParticle; // SpriteParticles to print all tiles wth just one draw call
-    sParticle.setTexture(tileTexture);
-    sParticle.setScale(TileSize / (texture_size / nbTilesFLine)); // Calculation of the scale for print tiles at the good size (tiles size on the map / tile size in the texture)
+    gf::SpriteParticles spParticle; // SpriteParticles to print all tiles wth just one draw call
+    spParticle.setTexture(tileTexture);
+    spParticle.setScale(TileSize / (texture_size / nbTilesFLine)); // Calculation of the scale for print tiles at the good size (tiles size on the map / tile size in the texture)
 
     for (auto pos : map.getRange())
     {
@@ -128,38 +155,14 @@ namespace rCMI
       if (!explored)
         continue;
 
-      gf::Vector2i texturePosition;
+      gf::Vector2f calculate_tile_position = ((pos * TileSize) + TileSize / 2) / spParticle.getScale(); // Position of the tile on the map : ((matrix position * tile size) + midle of a tile) * (1 / Sprite scaling)
+      gf::Vector2f calculate_texture_position = texturePosition.at(pos.x).at(pos.y) * tile_texture_size;                   // Position of the good part of the texture for this tile
 
-      // --- 1. Détermination de la texture (identique à avant) ---
-      // TODO pour 2TH : metre ça dans le constructeur
-      if (isStairs(pos))
-      {
-        texturePosition = {0, 2};
-      }
-      else
-      {
-        int hash = (pos.x * 39113 + pos.y * 17569) % 100;
-        int base = map.isWalkable(pos) ? 0 : 1;
-
-        if (hash < 45)
-        {
-          int variant = (hash % 4) + 1;
-          texturePosition = {variant, base};
-        }
-        else
-        {
-          texturePosition = {0, base};
-        }
-      }
-
-      gf::Vector2f calculate_tile_position = ((pos * TileSize) + TileSize / 2) / sParticle.getScale(); // Position of the tile on the map : ((matrix position * tile size) + midle of a tile) * (1 / Sprite scaling)
-      gf::Vector2f calculate_texture_position = texturePosition * tile_texture_size;                   // Position of the good part of the texture for this tile
-
-      sParticle.addSprite(calculate_tile_position,
+      spParticle.addSprite(calculate_tile_position,
                           gf::RectF::fromPositionSize(calculate_texture_position, tile_texture_size),
                           inFOV ? gf::Color::White : gf::Color::fromRgba32(100, 100, 100, 255)); // for the war fog
     }
-    sParticle.draw(target, states);
+    spParticle.draw(target, states);
 
     for (auto healPad : healingZone)
     {
@@ -180,5 +183,10 @@ namespace rCMI
     size = Map_size;
     map = gf::SquareMap(size);
     healingZone.clear();
+  }
+
+  void Map::activateMiniMap()
+  {
+    is_mini_map = !is_mini_map;
   }
 }

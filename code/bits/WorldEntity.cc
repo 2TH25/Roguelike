@@ -27,8 +27,10 @@ namespace rCMI
 
   void WorldEntity::update_tile_at(gf::Vector2i pos, TileType type) { m_map.update_tile_at(pos, type); }
 
-  void WorldEntity::update(gf::Time time){
-    for (auto &character : characters){
+  void WorldEntity::update(gf::Time time)
+  {
+    for (auto &character : characters)
+    {
       character.update(time);
     }
   }
@@ -95,11 +97,19 @@ namespace rCMI
   {
     m_map.render(target, states);
 
-    for (std::size_t i = 0; i < characters.size(); ++i)
-      if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
-        characters[i].render(target, states);
-
-    m_chestManager.render(target, states, m_map);
+    if (!m_map.isMiniMap())
+    {
+      m_chestManager.render(target, states, m_map);
+      for (std::size_t i = 0; i < characters.size(); ++i)
+        if ((characters[i].alive() || i == 0) && m_map.isInFieldOfVision(characters[i].getExistence().getPosition()))
+          characters[i].render(target, states);
+    }
+    else
+    {
+      gf::RectangleShape player_chape(gf::RectF::fromPositionSize(hero().getExistence().getPosition() * TileSize, {TileSize, TileSize}));
+      player_chape.setColor(gf::Color::fromRgba32(234, 51, 35));
+      player_chape.draw(target, states);
+    }
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -220,7 +230,7 @@ namespace rCMI
             Character mob;
             int nombre_aleatoire = dist_type(gen);
 
-            const gf::Texture &textureMonstres = m_game->resources.getTexture("SetTextureMonstre.png"); 
+            const gf::Texture &textureMonstres = m_game->resources.getTexture("SetTextureMonstre.png");
 
             if (nombre_aleatoire <= 60)
             {
@@ -234,7 +244,7 @@ namespace rCMI
             {
               mob = Character::skeleton(pos_aleatoire, textureMonstres);
             }
-            
+
             mob.setHomeRoom(room);
             characters.push_back(mob);
           }
@@ -346,7 +356,7 @@ namespace rCMI
     float life_to_size = target_vue_size.x * 10 / 49 * m_world->hero().getStat().getHealth() / m_world->hero().getStat().getMaxHealth();
     life.setSize({life_to_size, target_vue_size.y * 20 / 817});
     life.setAnchor(gf::Anchor::CenterLeft);
-    
+
     text_life.setString(std::to_string(m_world->hero().getStat().getHealth()) + " / " + std::to_string(m_world->hero().getStat().getMaxHealth()));
     text_life.setCharacterSize(life_lost.getSize().y * 15 / 20);
     text_life.setPosition({life_lost.getPosition().x + life_lost.getSize().x / 2, life_lost.getPosition().y});
@@ -365,7 +375,7 @@ namespace rCMI
     text_xp.setCharacterSize(xp_lost.getSize().y * 15 / 20);
     text_xp.setPosition({xp_lost.getPosition().x + xp_lost.getSize().x / 2, xp_lost.getPosition().y});
     text_xp.setAnchor(gf::Anchor::Center);
-    
+
     player_kills_image.setPosition({target_vue_size.x * 94 / 100, target_vue_size.y * 5 / 100});
     player_kills_image.setScale(life.getSize().y * 3 / player_kills_image.getTexture().getSize());
     player_kills_image.setAnchor(gf::Anchor::Center);
@@ -410,5 +420,10 @@ namespace rCMI
     fieldOfVision();
 
     std::cout << "WorldEntity réinitialisée : Nouvelle partie lancée." << std::endl;
+  }
+
+  void WorldEntity::activateMiniMap()
+  {
+    m_map.activateMiniMap();
   }
 }
