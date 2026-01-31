@@ -4,6 +4,7 @@
 #include <string>
 #include <gf/Texture.h>
 #include "Stat.h"
+#include <gf/Color.h>
 
 namespace rCMI
 {
@@ -33,15 +34,24 @@ namespace rCMI
 		const gf::Texture *m_texture = nullptr;
 		Stat m_stat;
 
+		enum class Rarity { Common, Uncommon, Rare, Epic, Legendary };
+
+		Rarity m_rarity;
+
 		Item() = default;
 
-		Item(std::string id, ItemType type, const gf::Texture &tex, std::string name)
+		Item(std::string name, std::string id, ItemType type, Rarity rarity, gf::Texture& tex, std::string desc, Stat s)
 				: m_id(id),
 					m_type(type),
 					m_texture(&tex),
-					m_name(name)
+					m_name(name), 
+					m_rarity(rarity),
+					m_description(desc),
+					m_stat(s)
+
 		{
 		}
+		float getChance();
 
 		void setTexture(gf::Texture &texture) { this->m_texture = &texture; }
 		
