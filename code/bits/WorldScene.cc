@@ -35,6 +35,15 @@ namespace rCMI
     else
       m_world_entity.generate_dungeon(size);
 
+    Item starterPotion;
+    starterPotion.m_name = "Potion de départ";
+    starterPotion.m_id = "ItemSoin";
+    starterPotion.m_type = ItemType::Consumable;
+    starterPotion.m_description = "Une petite potion de soin offerte par la fée.";
+    starterPotion.m_stat.setHealth(20);
+    starterPotion.m_texture = &m_game->resources.getTexture("ItemSoin.png");
+    m_game->m_InventoryScene->m_inventory.addItemToBackpack(starterPotion, m_game);
+
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
