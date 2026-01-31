@@ -21,7 +21,8 @@ namespace rCMI
 		Accessory,
 		Consumable,
 		Weapon,
-		Misc
+		Misc,
+		None
 	};
 
 	class Item
@@ -38,7 +39,7 @@ namespace rCMI
 
 		Rarity m_rarity;
 
-		Item() = default;
+		Item();
 
 		Item(std::string name, std::string id, ItemType type, Rarity rarity, gf::Texture& tex, std::string desc, Stat s)
 				: m_id(id),

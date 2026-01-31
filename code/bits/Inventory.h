@@ -26,6 +26,7 @@ namespace rCMI
     
     Stat m_stats;
     gf::TextWidget m_statsWidget;
+    gf::TextWidget m_skillpoints;
 
     gf::Sprite m_heroSprite;
 
@@ -76,7 +77,7 @@ namespace rCMI
     std::vector<Item> m_backpack;
 
     bool hasEquipment(ItemType type);
-    void setEquippedItem(ItemType type, Item *item, RogueCMI *game);
+    Item setEquippedItem(ItemType type, Item *item, RogueCMI *game);
     Item getEquippedItem(ItemType type);
     void onUnequip(ItemType type, RogueCMI *game);
     void updateStatsText();
@@ -90,6 +91,7 @@ namespace rCMI
     bool addItemFromChest(int chestIndex, RogueCMI *game);
     void removeItemFromBackpack(const Item& item, RogueCMI *game);
     void consumeItem(const Item& item, RogueCMI *game);
+    void updateSkillPointsText();
   };
 }
 

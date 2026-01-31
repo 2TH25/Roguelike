@@ -2,6 +2,8 @@
 #include <gf/Coordinates.h>
 #include "RogueCMI.h"
 #include "Item.h"
+#include <thread>
+#include <chrono>
 
 
 namespace rCMI {
@@ -21,7 +23,6 @@ namespace rCMI {
         }
         return "Inconnu";
     }
-
 
 
 
@@ -178,13 +179,24 @@ namespace rCMI {
 
 
     void ItemScene::onEquip() {
-        if (m_currentChestIndex != -1) { // CAS : COFFRE
+        if (m_currentChestIndex != -1) { 
             m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
-            m_game->m_ChestScene.updateChestAfterPickup();
+            bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
+            if (isChestEmpty) {
+                m_game->popScene();
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                m_game->popScene();
+                return;
+            }
         } 
-        else { // CAS : INVENTAIRE
-            m_game->m_InventoryScene->m_inventory.setEquippedItem(m_currentItem.m_type, &m_currentItem, m_game);
+        else { 
+            Item oldItem = m_game->m_InventoryScene->m_inventory.setEquippedItem(m_currentItem.m_type, &m_currentItem, m_game);
+            
             m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
+            
+            if (oldItem.m_name.empty()) {
+                m_game->m_InventoryScene->m_inventory.addItemToBackpack(oldItem, m_game);
+            }
         }
         m_game->popScene();
     }
@@ -197,16 +209,15 @@ namespace rCMI {
 
     void ItemScene::onConsume() {
         this->m_game->m_InventoryScene->m_inventory.consumeItem(m_currentItem, this->m_game);
-        this->m_game->popScene();
+        m_game->popScene();
     }
 
     void ItemScene::onThrow() {
         if (m_isEquipped) {
             m_game->m_InventoryScene->m_inventory.onUnequip(m_currentItem.m_type, m_game);
-            m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
-        } else {
-            m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
-        }
+        } 
+        
+        m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
         m_game->popScene();
     }
 

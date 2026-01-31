@@ -4,6 +4,13 @@
 namespace rCMI
 {
 
+  Item::Item() 
+  : m_name("")
+  , m_texture(nullptr)
+  , m_type(ItemType::None)
+{
+}
+
   Item Item::generateRandomItem(RogueCMI *game)
   {
 

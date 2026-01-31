@@ -10,6 +10,7 @@ namespace rCMI
 
 	Inventory::Inventory(RogueCMI *game)
 			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
+			m_skillpoints("Points de compétences\n", game->resources.getFont(PATH_FONT), 20),
 				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png")))
 	{
 		float scale = static_cast<float>(TileSize) / 640.0f;
@@ -114,25 +115,27 @@ namespace rCMI
 		return (slot != nullptr && slot->hasItem);
 	}
 
-	void Inventory::setEquippedItem(ItemType type, Item *item, RogueCMI *game)
+	Item Inventory::setEquippedItem(ItemType type, Item *Newitem, RogueCMI *game)
 {
 	Character &hero = game->m_WorldScene.m_world_entity.hero();
     EquippedSlot *slot = getSlotByType(type);
+	Item oldItem;
     if (slot != nullptr) {
             
 		if (slot->hasItem) {
+			oldItem = slot->item;
 			hero.getStat().setPower(hero.getStat().getPower() - slot->item.m_stat.getPower());
 			hero.getStat().setDefense(hero.getStat().getDefense() - slot->item.m_stat.getDefense());
 			hero.addMaxHealth(-slot->item.m_stat.getHealth());
 		}
 
-		if (item != nullptr) {
-			slot->item = *item;
+		if (Newitem != nullptr) {
+			slot->item = *Newitem;
 			slot->hasItem = true;
 
-			hero.getStat().setPower(hero.getStat().getPower() + item->m_stat.getPower());
-			hero.getStat().setDefense(hero.getStat().getDefense() + item->m_stat.getDefense());
-			hero.addMaxHealth(item->m_stat.getHealth());
+			hero.getStat().setPower(hero.getStat().getPower() + Newitem->m_stat.getPower());
+			hero.getStat().setDefense(hero.getStat().getDefense() + Newitem->m_stat.getDefense());
+			hero.addMaxHealth(Newitem->m_stat.getHealth());
 		} else {
 			slot->hasItem = false;
 		}
@@ -153,9 +156,9 @@ namespace rCMI
 	}
 
     if (itemSprite != nullptr) {
-        if (item != nullptr && item->m_texture != nullptr) {
-            itemSprite->setTexture(*item->m_texture);
-            itemSprite->setTextureRect(gf::RectF::fromSize(item->m_texture->getSize()));
+        if (Newitem != nullptr && Newitem->m_texture != nullptr) {
+            itemSprite->setTexture(*Newitem->m_texture);
+            itemSprite->setTextureRect(gf::RectF::fromSize(Newitem->m_texture->getSize()));
             itemSprite->setColor(gf::Color::White); // On le rend visible
             float scale = static_cast<float>(TileSize) / 640.0f;
             itemSprite->setScale(scale);
@@ -164,6 +167,7 @@ namespace rCMI
         }
     }
     updateStatsText();
+	return oldItem;
 }
 
 	Item Inventory::getEquippedItem(ItemType type)
@@ -222,6 +226,10 @@ namespace rCMI
 						"Defense : " + std::to_string(total_def) + " (+" + std::to_string(bonus_defense) + ")";
 		
 		m_statsWidget.setString(str);
+	}
+
+	void Inventory::updateSkillPointsText() {
+		
 	}
 
 	void Inventory::render(gf::RenderTarget &target, const gf::RenderStates &states) {
@@ -296,9 +304,12 @@ namespace rCMI
 			target.draw(m_itemSprites[i], states);
 		}
 
+		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
+		m_skillpoints.setPosition({invPos.x + invSize.x * 0.50f, invPos.y + invSize.y * 0.25f});
+
 	
 		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.30f});
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.35f});
 
 		
 		target.draw(m_heroSprite, states);
@@ -382,20 +393,17 @@ namespace rCMI
 		}
 	}
 
-	bool Inventory::addItemToBackpack(Item item, RogueCMI *game)
-	{
-		if (m_backpack.size() >= MaxBackpackSize)
-		{
-			std::cout << "Inventaire plein ! Impossible de ramasser : " << item.m_name << std::endl;
+	bool Inventory::addItemToBackpack(Item item, RogueCMI *game) {
+		if (item.m_name.empty() || item.m_texture == nullptr) {
+			return false; 
+		}
+
+		if (m_backpack.size() >= MaxBackpackSize) {
 			return false;
 		}
 
 		m_backpack.push_back(item);
-		
-		std::cout << "Item ramasse : " << item.m_name << std::endl;
-
 		updateBackpackDisplay(game);
-
 		return true;
 	}
 

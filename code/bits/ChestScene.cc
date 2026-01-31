@@ -4,8 +4,7 @@
 #include "Chest.h"
 #include <algorithm>
 #include <random>
-#include <thread>
-#include <chrono>
+
 
 namespace rCMI
 {
@@ -51,7 +50,7 @@ namespace rCMI
     }
 
 
-    void ChestScene::updateChestAfterPickup() {
+    bool ChestScene::updateChestAfterPickup() {
         m_isItemSceneOpen = false;
 
         if (m_currentChest) {
@@ -61,12 +60,11 @@ namespace rCMI
             if (m_loots.empty()) {
                 m_currentChest->isOpen = true;
                 m_currentChest->sprite.setTexture(m_game->resources.getTexture("CoffreOuvert.png"));
-                m_game->popScene();
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 m_game->m_WorldScene.m_isActivateChest = false;
-                m_game->popScene();
+                return true;
             }
         }
+        return false;
     }
 
     void ChestScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states) {

@@ -21,7 +21,7 @@ namespace rCMI {
         void setLoots(Chest& chest, int indexChest);
         Chest* m_currentChest = nullptr;
         int m_currentChestIndex;
-        void updateChestAfterPickup();
+        bool updateChestAfterPickup();
 
         std::vector<int> m_itemSlotIndices;
 
