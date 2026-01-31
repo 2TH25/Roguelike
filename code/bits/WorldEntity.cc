@@ -145,6 +145,7 @@ namespace rCMI
       if (leaf->type == RoomType::Start)
       {
         gf::Vector2i center = leaf->room.getCenter();
+        m_map.setTileTexture(center, {1, 2});
 
         Character hero = Character::hero(center, m_game->resources.getTexture("perso640/SetPerso.png"));
         const gf::Texture &textureMort = m_game->resources.getTexture("mort.png");
@@ -155,6 +156,12 @@ namespace rCMI
         }
         characters.push_back(hero);
         characters.back().playAnimation("Default");
+
+        gf::Vector2i pnjPos = center + gf::Vector2i(1, 1);
+    
+        const gf::Texture &texPNJ = m_game->resources.getTexture("Fée.png"); 
+        characters.push_back(Character::pnj(pnjPos, texPNJ));
+
         break;
       }
     }

@@ -54,6 +54,7 @@ namespace rCMI
     void setStat(const Stat &st) { stat = st; }
     void setComportment(const Comportment &comp) { comportment = comp; }
     void setMaxHealth(int maxHealth) { stat.setMaxHealth(maxHealth); }
+    void setAutoMove(bool active) { m_autoMove = active; }
 
     bool alive() const { return stat.getHealth() > 0; }
 
@@ -75,6 +76,7 @@ namespace rCMI
     }
 
     static Character hero(gf::Vector2i position, const gf::Texture &tex);
+    static Character pnj(gf::Vector2i position, const gf::Texture &tex);
     static Character skeleton(gf::Vector2i position, const gf::Texture &tex);
     static Character zombie(gf::Vector2i position, const gf::Texture &tex);
     static Character slime(gf::Vector2i position, const gf::Texture &tex);
@@ -91,6 +93,7 @@ namespace rCMI
     
     gf::RectI m_homeRoom;
     bool m_hasHome = false;
+    bool m_autoMove = true;
 
     bool m_isMoving = false;          
     float m_moveTime = 0.0f;    

@@ -60,6 +60,7 @@ namespace rCMI
     bool isHealing(gf::Vector2i position) const;
 
     bool usHealing(gf::Vector2i position);
+    void setTileTexture(gf::Vector2i pos, gf::Vector2i textureCoords);
 
     void activateMiniMap();
     bool isMiniMap() { return is_mini_map; };

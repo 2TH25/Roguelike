@@ -185,6 +185,14 @@ namespace rCMI
     healingZone.clear();
   }
 
+  void Map::setTileTexture(gf::Vector2i pos, gf::Vector2i textureCoords)
+  {
+    if (pos.x < 0 || pos.y < 0 || pos.x >= size.x || pos.y >= size.y)
+      return;
+      
+    texturePosition[pos.x][pos.y] = textureCoords;
+  }
+
   void Map::activateMiniMap()
   {
     is_mini_map = !is_mini_map;
