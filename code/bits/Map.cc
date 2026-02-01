@@ -131,6 +131,8 @@ namespace rCMI
 
         if (texturePosition.at(pos.x).at(pos.y).y == 0)
           shParticle.addRectangle((pos * TileSize), {TileSize, TileSize}, gf::Color::fromRgba32(58, 48, 47));
+        else if (texturePosition.at(pos.x).at(pos.y).y == 2 && texturePosition.at(pos.x).at(pos.y).x == 0)
+          shParticle.addRectangle((pos * TileSize), {TileSize, TileSize}, gf::Color::fromRgba32(78, 90, 166));
       }
 
       shParticle.draw(target, states);
