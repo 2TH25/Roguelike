@@ -76,8 +76,8 @@ namespace rCMI
   void WorldEntity::nextLevel()
   {
     m_chestManager.clear();
-    generate_dungeon(m_map.getSize() * 1.2);
     highest_level++;
+    generate_dungeon(m_map.getSize() * 1.2);
     std::cout << "Niveau suivant atteint !" << std::endl;
   }
 
@@ -157,10 +157,12 @@ namespace rCMI
         characters.push_back(hero);
         characters.back().playAnimation("Default");
 
-        gf::Vector2i pnjPos = center + gf::Vector2i(1, 1);
-    
-        const gf::Texture &texPNJ = m_game->resources.getTexture("Fée.png"); 
-        characters.push_back(Character::pnj(pnjPos, texPNJ));
+        if (highest_level == 1) {
+            gf::Vector2i pnjPos = center + gf::Vector2i(1, 1);
+            const gf::Texture &texPNJ = m_game->resources.getTexture("Fée.png"); 
+            characters.push_back(Character::pnj(pnjPos, texPNJ));
+        }
+        
 
         break;
       }
@@ -422,6 +424,7 @@ namespace rCMI
     highest_level = 1;
     m_chestManager.clear();
     characters.clear();
+    m_feeVisitee = false;
     generate_dungeon(MapSize);
     clearMap();
     fieldOfVision();

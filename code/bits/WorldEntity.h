@@ -58,6 +58,7 @@ namespace rCMI
     int highest_level = 1;
     int kills = 12;
     int score = 200;
+    bool m_feeVisitee = false;
   private:
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
