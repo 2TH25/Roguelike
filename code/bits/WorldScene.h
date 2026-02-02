@@ -40,6 +40,7 @@ namespace rCMI
     gf::Time m_timeSinceDeath;
     
     bool m_isActivateMap;
+    
     // bool m_isActivateMenu;
   };
 }

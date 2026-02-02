@@ -307,6 +307,11 @@ namespace rCMI
       for (const auto key_name : key_name_tab)
         action->addKeycodeKeyControl(gf::Keyboard::getKeycodeFromName(key_name));
 
+      if (key_name_tab.count("Up") > 0 ||
+          key_name_tab.count("Down") > 0 ||
+          key_name_tab.count("Left") > 0 ||
+          key_name_tab.count("Right") > 0)
+        action->setContinuous();
       res.push_back(action);
     }
     gf::Action *fire = new gf::Action("fire");
