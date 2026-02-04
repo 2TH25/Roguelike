@@ -8,9 +8,9 @@
 namespace rCMI
 {
 
-  std::map<std::string, std::set<const char *>> Controls::save_actions = {};
+  std::map<std::string, std::set<gf::Keycode>> Controls::save_actions = {};
 
-  std::map<std::string, std::set<const char *>> Controls::getControls()
+  std::map<std::string, std::set<gf::Keycode>> Controls::getControls()
   {
     if (!save_actions.empty())
       return save_actions;
@@ -36,13 +36,13 @@ namespace rCMI
     //   }
     // }
 
-    save_actions["move_up"] = {"Z", "Up"};
-    save_actions["move_down"] = {"S", "Down"};
-    save_actions["move_left"] = {"Q", "Left"};
-    save_actions["move_right"] = {"D", "Right"};
-    save_actions["ToggleInventory"] = {"Tab"};
-    save_actions["showMap"] = {"A"};
-    save_actions["showMenu"] = {"Escape"};
+    save_actions["move_up"] = {gf::Keycode::Z, gf::Keycode::Up};
+    save_actions["move_down"] = {gf::Keycode::S, gf::Keycode::Down};
+    save_actions["move_left"] = {gf::Keycode::Q, gf::Keycode::Left};
+    save_actions["move_right"] = {gf::Keycode::D, gf::Keycode::Right};
+    save_actions["ToggleInventory"] = {gf::Keycode::Tab};
+    save_actions["showMap"] = {gf::Keycode::A};
+    save_actions["showMenu"] = {gf::Keycode::Escape};
 
     return save_actions;
   }

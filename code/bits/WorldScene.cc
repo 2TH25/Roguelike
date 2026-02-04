@@ -304,13 +304,15 @@ namespace rCMI
     for (const auto &[action_name, key_name_tab] : controls)
     {
       gf::Action *action = new gf::Action(action_name);
-      for (const auto key_name : key_name_tab)
-        action->addKeycodeKeyControl(gf::Keyboard::getKeycodeFromName(key_name));
+      for (const auto key_code : key_name_tab)
+      {
+        action->addKeycodeKeyControl(key_code);
+      }
 
-      if (key_name_tab.count("Up") > 0 ||
-          key_name_tab.count("Down") > 0 ||
-          key_name_tab.count("Left") > 0 ||
-          key_name_tab.count("Right") > 0)
+      if (key_name_tab.count(gf::Keycode::Up) > 0 ||
+          key_name_tab.count(gf::Keycode::Down) > 0 ||
+          key_name_tab.count(gf::Keycode::Left) > 0 ||
+          key_name_tab.count(gf::Keycode::Right) > 0)
         action->setContinuous();
       res.push_back(action);
     }

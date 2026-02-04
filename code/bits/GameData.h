@@ -38,10 +38,10 @@ namespace rCMI
   public:
     static bool isActiveAction(std::string name, std::vector<gf::Action *> actions);
     // static bool setControls(std::string name, std::set<const char *> new_keys, std::vector<gf::Action *> actions);
-    static std::map<std::string, std::set<const char *>> getControls();
+    static std::map<std::string, std::set<gf::Keycode>> getControls();
 
   private:
-    static std::map<std::string, std::set<const char *>> save_actions;
+    static std::map<std::string, std::set<gf::Keycode>> save_actions;
   };
 }
 
