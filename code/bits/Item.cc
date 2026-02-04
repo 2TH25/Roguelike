@@ -136,7 +136,7 @@ namespace rCMI
         switch (pick) {
               case 0:
                 newItem = Item( std::string("Heaume Argenté"),std::string("CasqueBleu"), ItemType::Head, Rarity::Rare,
-                game->resources.getTexture("Casque.png"),std::string("Un casque duquel dégage une puissante Uncommonodeur de sang... \n Fait partie de l'ensemble Sanguinolent"),
+                game->resources.getTexture("CasqueBleu.png"),std::string("Un casque duquel dégage une puissante Uncommonodeur de sang... \n Fait partie de l'ensemble Sanguinolent"),
                 Stat(10, 2, 0));
                 break;
 

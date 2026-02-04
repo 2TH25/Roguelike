@@ -14,7 +14,10 @@ namespace rCMI
   }
 
   void InventoryScene::doProcessEvent(gf::Event &event)
-{
+  {
+    if(!isActive()) {
+      return;
+    }
     if (event.type == gf::EventType::MouseButtonPressed)
     {
         gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseButton.coords, getHudView());
