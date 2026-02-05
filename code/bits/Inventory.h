@@ -37,6 +37,7 @@ namespace rCMI
     gf::Sprite m_bootsSlot;
     gf::Sprite m_accessorySlot;
     gf::Sprite m_weaponSlot;
+    gf::Sprite m_bowSlot;
 
     gf::Sprite m_equippedHeadSprite; // slots non vides d'armement
     gf::Sprite m_equippedTorsoSprite;
@@ -45,6 +46,7 @@ namespace rCMI
     gf::Sprite m_equippedBootsSprite;
     gf::Sprite m_equippedAccessorySprite;
     gf::Sprite m_equippedWeaponSprite;
+    gf::Sprite m_equippedBowSprite;
 
   
     std::map<ItemType, Item> m_equippedItems;
@@ -66,6 +68,7 @@ namespace rCMI
     EquippedSlot m_equippedBoots;
     EquippedSlot m_equippedAccessory;
     EquippedSlot m_equippedWeapon;
+    EquippedSlot m_equippedBow;
 
     gf::RectangleShape m_background;
 

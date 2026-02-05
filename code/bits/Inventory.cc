@@ -42,6 +42,9 @@ namespace rCMI
 
 		m_weaponSlot.setTexture(game->resources.getTexture("SlotArme.png"));
 		m_weaponSlot.setScale(scale);
+
+		m_bowSlot.setTexture(game->resources.getTexture("SlotVide.png"));
+		m_bowSlot.setScale(scale);
 		
 
 		m_equippedHeadSprite.setPosition(m_headSlot.getPosition());
@@ -51,6 +54,7 @@ namespace rCMI
 		m_equippedBootsSprite.setPosition(m_bootsSlot.getPosition());
 		m_equippedAccessorySprite.setPosition(m_accessorySlot.getPosition());
 		m_equippedWeaponSprite.setPosition(m_weaponSlot.getPosition());
+		m_equippedBowSprite.setPosition(m_weaponSlot.getPosition());
 
 		m_equippedHeadSprite.setColor(gf::Color::Transparent);
 		m_equippedTorsoSprite.setColor(gf::Color::Transparent);
@@ -59,6 +63,7 @@ namespace rCMI
 		m_equippedBootsSprite.setColor(gf::Color::Transparent);
 		m_equippedAccessorySprite.setColor(gf::Color::Transparent);
 		m_equippedWeaponSprite.setColor(gf::Color::Transparent);
+		m_equippedBowSprite.setColor(gf::Color::Transparent);
 
 		m_heroSprite.setTexture(game->resources.getTexture("perso640/Perso640.png"));
 
@@ -104,6 +109,8 @@ namespace rCMI
 			return &m_accessorySlot;
 		case ItemType::Weapon:
 			return &m_weaponSlot;
+		case ItemType::Bow:
+			return &m_bowSlot;
 		default:
 			return nullptr;
 		}
@@ -152,6 +159,7 @@ namespace rCMI
 		case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
 		case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
 		case ItemType::Weapon: itemSprite = &m_equippedWeaponSprite; break;
+		case ItemType::Bow: itemSprite = &m_equippedBowSprite; break;
 		default: break;
 	}
 
@@ -271,6 +279,7 @@ namespace rCMI
 		setPos(m_bootsSlot, m_equippedBootsSprite, colMid, y_third);
 		
 		setPos(m_weaponSlot, m_equippedWeaponSprite, colRight, y_first);
+		setPos(m_bowSlot, m_equippedBowSprite, colRight, y_second);
 
 	
 		float hero_rx = (colLeft + colMid) / 2.0f; 
@@ -320,6 +329,7 @@ namespace rCMI
 		target.draw(m_bootsSlot, states); target.draw(m_equippedBootsSprite, states);
 		target.draw(m_accessorySlot, states); target.draw(m_equippedAccessorySprite, states);
 		target.draw(m_weaponSlot, states); target.draw(m_equippedWeaponSprite, states);
+		target.draw(m_bowSlot, states); target.draw(m_equippedBowSprite, states);
 		target.draw(m_statsWidget, states);
 	}
 
@@ -388,6 +398,8 @@ namespace rCMI
 			return &m_equippedAccessory;
 		case ItemType::Weapon:
 			return &m_equippedWeapon;
+		case ItemType::Bow:
+			return &m_equippedBow;
 		default:
 			return nullptr;
 		}
@@ -445,6 +457,7 @@ namespace rCMI
 		if (checkSlot(m_handSlot, ItemType::Hand)) return;
 		if (checkSlot(m_accessorySlot, ItemType::Accessory)) return;
 		if (checkSlot(m_weaponSlot, ItemType::Weapon)) return;
+		if (checkSlot(m_bowSlot, ItemType::Bow)) return;
 	}
 
 	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {

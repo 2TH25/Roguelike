@@ -22,6 +22,7 @@ namespace rCMI
 		Consumable,
 		Weapon,
 		Misc,
+		Bow,
 		None
 	};
 

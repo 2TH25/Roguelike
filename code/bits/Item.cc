@@ -132,7 +132,7 @@ namespace rCMI
 
       case Rarity::Rare: {
 
-        int pick = rand() % 7;
+        int pick = rand() % 8;
         switch (pick) {
               case 0:
                 newItem = Item( std::string("Heaume Argenté"),std::string("CasqueBleu"), ItemType::Head, Rarity::Rare,
@@ -175,6 +175,13 @@ namespace rCMI
                 game->resources.getTexture("ArmeBleu.png"),std::string("Une épée qu'on dit capable de trancher des monstres, attention à vos doigts... \n Fait partie de l'ensemble Argenté"),
                 Stat(0, 2, 10));
                 break;
+
+
+              case 7:
+                newItem = Item( std::string("Arc"),std::string("Arc"), ItemType::Bow, Rarity::Rare,
+                  game->resources.getTexture("Arc.png"),std::string("Un arc tout ce qu'il y a de plus banal, mais qui a le mérite de pouvoir blesser à distance. \n (Cliquez sur l'ennemi pour tirer) \n (Nécessite des flèches pour son utilisation)."),
+                  Stat(0,0,0));
+                  break;
         } 
         break;
       } // Fin des Rare
@@ -230,10 +237,22 @@ namespace rCMI
 
       case Rarity::Common: {
 
-        newItem = Item( std::string("Potion de soin"),std::string("ItemSoin"), ItemType::Consumable, Rarity::Common,
-                game->resources.getTexture("ItemSoin.png"),std::string("Une potion de soin classique. \n Restaure 20 points de vie."),
-                Stat(20,0,0));
-                break;
+        int pick = rand() % 2;
+        switch (pick) {
+          case 0:
+            newItem = Item( std::string("Potion de soin"),std::string("ItemSoin"), ItemType::Consumable, Rarity::Common,
+                    game->resources.getTexture("ItemSoin.png"),std::string("Une potion de soin classique. \n Restaure 20 points de vie."),
+                    Stat(20,0,0));
+                    break;
+
+          case 1:
+            newItem = Item( std::string("Fleche"),std::string("Fleche"), ItemType::Misc, Rarity::Common,
+                    game->resources.getTexture("Fleche.png"),std::string("Une flèche de qualité médiocre, qui permettra sûrement d'atteindre vos ennemis à distance. \n (Une flèche sera consommée par tir)."),
+                    Stat(0,0,0));
+                    break;
+
+        }
+        break;
         
       } // Fin des Common
 
