@@ -22,6 +22,7 @@ namespace rCMI
 
 
     void ChestScene::doProcessEvent(gf::Event &event) {
+        if(!isActive()){return;}
         if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
             gf::Vector2f mouseCoords = event.mouseButton.coords;
 
@@ -37,11 +38,9 @@ namespace rCMI
                 }
             }
         }
+        if(m_currentChest->content.empty()){m_game->popScene();}
 
         if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Escape) {
-            if (m_game->m_WorldScene.m_isActivateInventory) {
-                return; 
-            }
             m_game->m_WorldScene.m_isActivateChest = false;
             m_game->popScene();
             event.type = gf::EventType::MouseMoved;

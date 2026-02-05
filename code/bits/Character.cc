@@ -302,7 +302,7 @@ namespace rCMI
   Character Character::hero(gf::Vector2i position, const gf::Texture &tex)
   {
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
-    Stat st(100, 0, 20);
+    Stat st(100, 0, 15);
     Character c(ex, st, tex);
     float duration = 0.5f;
     float nbTilesFLine = 4;

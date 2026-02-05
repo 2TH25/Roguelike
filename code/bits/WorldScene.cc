@@ -7,6 +7,7 @@
 #include "Actions.h"
 #include <gf/Text.h>
 #include "EndMenuScene.h"
+#include "Item.h"
 
 namespace rCMI
 {
@@ -35,15 +36,7 @@ namespace rCMI
     else
       m_world_entity.generate_dungeon(size);
 
-    Item starterPotion;
-    starterPotion.m_name = "Potion de départ";
-    starterPotion.m_id = "ItemSoin";
-    starterPotion.m_type = ItemType::Consumable;
-    starterPotion.m_description = "Une petite potion de soin offerte par la fée.";
-    starterPotion.m_stat.setHealth(20);
-    starterPotion.m_texture = &m_game->resources.getTexture("ItemSoin.png");
-    m_game->m_InventoryScene->m_inventory.addItemToBackpack(starterPotion, m_game);
-
+    
     gf::Vector2i TileVect({TileSize, TileSize});
     setWorldViewCenter(m_world_entity.hero().getExistence().getPosition() * TileSize + TileVect / 2);
 
@@ -176,6 +169,23 @@ namespace rCMI
                       "Bonne chance dans ton aventure ! \n Voici un petit cadeau pour t'aider.",
                       "Tu as reçu une potion de soin ! Utilise-la judicieusement."
                   };
+
+                  Item starterPotion;
+                  starterPotion.m_name = "Potion de départ";
+                  starterPotion.m_id = "ItemSoin";
+                  starterPotion.m_type = ItemType::Consumable;
+                  starterPotion.m_description = "Une petite potion de soin offerte par la fée.";
+                  starterPotion.m_stat.setHealth(20);
+                  starterPotion.m_texture = &m_game->resources.getTexture("ItemSoin.png");
+                  m_game->m_InventoryScene->m_inventory.addItemToBackpack(starterPotion, m_game);
+
+                  // Phase d'ajouts des items de base
+                  Item newItem;
+                  newItem = Item( std::string("Epee de base"),std::string("EpeeBase"), ItemType::Weapon, Item::Rarity::Common,
+                              m_game->resources.getTexture("EpeeBase.png"),std::string("Cette épée de mauvaise facture sera le point de départ de votre valeureuse aventure... ou non... \n Fait partie de l'ensemble Clinquant"),
+                              Stat(0, 0, 5));
+                  m_game->m_InventoryScene->m_inventory.setEquippedItem(newItem.m_type, &newItem, m_game);
+
                   m_game->m_FeeScene->setDialogue(discours);
                   m_world_entity.m_feeVisitee = true;
                 }else{

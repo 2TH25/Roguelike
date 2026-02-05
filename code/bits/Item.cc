@@ -122,7 +122,7 @@ namespace rCMI
 
               case 6:
                 newItem = Item( std::string("Découpe Éclatante"),std::string("ArmeOr"), ItemType::Weapon, Rarity::Epic,
-                game->resources.getTexture("ArmeOr.png"),std::string("Une épée qui semble infligée neaucoup de dégats...\n Fait partie de l'ensemble Clinquant"),
+                game->resources.getTexture("ArmeOr.png"),std::string("Une épée qui semble infligée beaucoup de dégats...\n Fait partie de l'ensemble Clinquant"),
                 Stat(0, 2, 10));
                 break;
 
@@ -166,7 +166,7 @@ namespace rCMI
 
               case 5:
                 newItem = Item( std::string("Bracelet Argenté"),std::string("BraceletBleu"), ItemType::Accessory, Rarity::Rare,
-                game->resources.getTexture("BraceletBleu.png"),std::string("Ce bracelet est magnifique, vous pourriez porté ça dans votre vie de tous les jours. \n Peu importe votre âge. \n Fait partie de l'ensemble Argenté"),
+                game->resources.getTexture("BraceletBleu.png"),std::string("Ce bracelet est magnifique, vous pourriez porter ça dans votre vie de tous les jours. \n Peu importe votre âge. \n Fait partie de l'ensemble Argenté"),
                 Stat(10, 2, 0));
                 break;
 
@@ -209,7 +209,7 @@ namespace rCMI
 
               case 4:
                 newItem = Item( std::string("Bottes Boisées"),std::string("BotteVert"), ItemType::Boots, Rarity::Uncommon,
-                game->resources.getTexture("BotteVert.png"),std::string("Ces bottes slégères vous donnent l'impression de courir plus vite, en pleine nature ! \n Fait partie de l'ensemble Boisé"),
+                game->resources.getTexture("BotteVert.png"),std::string("Ces bottes légères vous donnent l'impression de courir plus vite, en pleine nature ! \n Fait partie de l'ensemble Boisé"),
                 Stat(10, 2, 0));
                 break;
 

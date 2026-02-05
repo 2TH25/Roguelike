@@ -205,7 +205,7 @@ namespace rCMI
 		ItemType types[] = { ItemType::Head, ItemType::Torso, ItemType::Legs, 
 							ItemType::Hand, ItemType::Boots, ItemType::Accessory, ItemType::Weapon};
 
-		for (int i = 0; i < 6; ++i)
+		for (int i = 0; i < 7; ++i)
 		{
 			if (hasEquipment(types[i]))
 			{

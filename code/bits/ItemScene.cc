@@ -179,33 +179,26 @@ namespace rCMI {
 
 
     void ItemScene::onEquip() {
-    if (m_currentChestIndex != -1) { 
-        // Logique pour le coffre (inchangée)
-        m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
-        bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
-        if (isChestEmpty) {
-            m_game->popScene();
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
-            m_game->popScene();
-            return;
+        if (m_currentChestIndex != -1) { 
+            
+            m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
+            bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
+            if (isChestEmpty) {
+                m_game->popScene();
+                std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                m_game->popScene();
+                return;
+            }
+        } 
+        else { 
+            Item oldItem = m_game->m_InventoryScene->m_inventory.setEquippedItem(m_currentItem.m_type, &m_currentItem, m_game);
+            m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
+            if (!oldItem.m_name.empty()) {
+                m_game->m_InventoryScene->m_inventory.addItemToBackpack(oldItem, m_game);
+            }
         }
-    } 
-    else { 
-        // --- LOGIQUE DE SWAP ---
-        
-        // 1. On équipe le nouvel item et on récupère l'ancien
-        Item oldItem = m_game->m_InventoryScene->m_inventory.setEquippedItem(m_currentItem.m_type, &m_currentItem, m_game);
-        
-        // 2. On retire le nouvel item du sac à dos (puisqu'il est maintenant sur le personnage)
-        m_game->m_InventoryScene->m_inventory.removeItemFromBackpack(m_currentItem, m_game);
-        
-        // 3. Si l'ancien item n'est PAS vide, on le remet dans le sac à dos
-        if (!oldItem.m_name.empty()) { // Note le "!" pour vérifier que l'item existe
-            m_game->m_InventoryScene->m_inventory.addItemToBackpack(oldItem, m_game);
-        }
+        m_game->popScene();
     }
-    m_game->popScene();
-}
 
 
     void ItemScene::onUnequip() {
