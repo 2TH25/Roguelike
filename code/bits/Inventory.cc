@@ -10,9 +10,20 @@ namespace rCMI
 
 	Inventory::Inventory(RogueCMI *game)
 			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
-			m_skillpoints("Points de compétences\n", game->resources.getFont(PATH_FONT), 20),
-				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png")))
+			m_skillpoints("Points de compétences : 0\n", game->resources.getFont(PATH_FONT), 20),
+				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png"))),
+				m_equippedSlotTexture(&(game->resources.getTexture("SlotVideEquipement.png"))),
+				m_plusTexture(&(game->resources.getTexture("Fleche.png")))
 	{
+
+		m_stackTexts.clear(); // Sécurité
+		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
+			gf::Text text("", game->resources.getFont(PATH_FONT), 15);
+			text.setColor(gf::Color::White);
+			text.setOutlineColor(gf::Color::Black);
+			text.setOutlineThickness(1.0f);
+			m_stackTexts.push_back(std::move(text));
+		}
 		float scale = static_cast<float>(TileSize) / 640.0f;
 		
 
@@ -43,7 +54,7 @@ namespace rCMI
 		m_weaponSlot.setTexture(game->resources.getTexture("SlotArme.png"));
 		m_weaponSlot.setScale(scale);
 
-		m_bowSlot.setTexture(game->resources.getTexture("SlotVide.png"));
+		m_bowSlot.setTexture(game->resources.getTexture("SlotArc.png"));
 		m_bowSlot.setScale(scale);
 		
 
@@ -87,6 +98,22 @@ namespace rCMI
 			m_itemSprites[i].setPosition({x, y});
 			m_itemSprites[i].setColor(gf::Color::Transparent);
 		}
+
+		float btnScale = 0.05f;
+		float statsX = 1000.0f;
+		float statsY = 280.0f;
+		float lineHeight = 30.0f;
+		float xOffset = 250.0f;
+
+		auto setupBtn = [&](gf::Sprite& s, float yOffset) {
+			s.setTexture(*m_plusTexture);
+			s.setScale(btnScale);
+			s.setColor(gf::Color::Transparent);
+		};
+
+		setupBtn(m_plusPowerBtn, 0.0f);
+		setupBtn(m_plusHealthBtn, lineHeight);
+		setupBtn(m_plusDefBtn, lineHeight * 2);
 
 		updateStatsText();
 	}
@@ -151,32 +178,50 @@ namespace rCMI
 	m_stats = hero.getStat();
 
 	gf::Sprite *itemSprite = nullptr;
+	gf::Sprite *backgroundSlot = nullptr;
 	switch (type) {
-		case ItemType::Head:      itemSprite = &m_equippedHeadSprite; break;
-		case ItemType::Torso:     itemSprite = &m_equippedTorsoSprite; break;
-		case ItemType::Legs:      itemSprite = &m_equippedLegsSprite; break;
-		case ItemType::Hand:      itemSprite = &m_equippedHandSprite; break;
-		case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; break;
-		case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; break;
-		case ItemType::Weapon: itemSprite = &m_equippedWeaponSprite; break;
-		case ItemType::Bow: itemSprite = &m_equippedBowSprite; break;
-		default: break;
-	}
+        case ItemType::Head:      itemSprite = &m_equippedHeadSprite; backgroundSlot = &m_headSlot; break;
+        case ItemType::Torso:     itemSprite = &m_equippedTorsoSprite; backgroundSlot = &m_torsoSlot; break;
+        case ItemType::Legs:      itemSprite = &m_equippedLegsSprite;  backgroundSlot = &m_legSlot; break;
+        case ItemType::Hand:      itemSprite = &m_equippedHandSprite;  backgroundSlot = &m_handSlot; break;
+        case ItemType::Boots:     itemSprite = &m_equippedBootsSprite; backgroundSlot = &m_bootsSlot; break;
+        case ItemType::Accessory: itemSprite = &m_equippedAccessorySprite; backgroundSlot = &m_accessorySlot; break;
+        case ItemType::Weapon:    itemSprite = &m_equippedWeaponSprite;    backgroundSlot = &m_weaponSlot; break;
+        case ItemType::Bow:       itemSprite = &m_equippedBowSprite;       backgroundSlot = &m_bowSlot; break;
+        default: break;
+    }
 
-    if (itemSprite != nullptr) {
+    if (itemSprite && backgroundSlot) {
         if (Newitem != nullptr && Newitem->m_texture != nullptr) {
             itemSprite->setTexture(*Newitem->m_texture);
             itemSprite->setTextureRect(gf::RectF::fromSize(Newitem->m_texture->getSize()));
             itemSprite->setColor(gf::Color::White); // On le rend visible
+			backgroundSlot->setTexture(*m_equippedSlotTexture);
             float scale = static_cast<float>(TileSize) / 640.0f;
             itemSprite->setScale(scale);
         } else {
             itemSprite->setColor(gf::Color::Transparent); // On le cache
+			resetSlotBackground(type, backgroundSlot, game);
         }
     }
     updateStatsText();
 	return oldItem;
 }
+
+
+	void Inventory::resetSlotBackground(ItemType type, gf::Sprite* backgroundSlot, RogueCMI *game) {
+		switch (type) {
+			case ItemType::Head:      backgroundSlot->setTexture(game->resources.getTexture("SlotCasque.png")); break;
+			case ItemType::Torso:     backgroundSlot->setTexture(game->resources.getTexture("SlotArmure.png")); break;
+			case ItemType::Legs:      backgroundSlot->setTexture(game->resources.getTexture("SlotJambe.png")); break;
+			case ItemType::Hand:      backgroundSlot->setTexture(game->resources.getTexture("SlotGants.png")); break;
+			case ItemType::Boots:     backgroundSlot->setTexture(game->resources.getTexture("SlotBottes.png")); break;
+			case ItemType::Accessory: backgroundSlot->setTexture(game->resources.getTexture("SlotAccessoire.png")); break;
+			case ItemType::Weapon:    backgroundSlot->setTexture(game->resources.getTexture("SlotArme.png")); break;
+			case ItemType::Bow:       backgroundSlot->setTexture(game->resources.getTexture("SlotArc.png")); break;
+			default: break;
+		}
+	}
 
 	Item Inventory::getEquippedItem(ItemType type)
 	{
@@ -234,6 +279,19 @@ namespace rCMI
 						"Defense : " + std::to_string(total_def) + " (+" + std::to_string(bonus_defense) + ")";
 		
 		m_statsWidget.setString(str);
+
+		int pts = m_stats.getSkillPoints(); 
+    	m_skillpoints.setString("Points de compétences : " + std::to_string(pts));
+
+		if (pts > 0) {
+			m_plusPowerBtn.setColor(gf::Color::White);
+			m_plusHealthBtn.setColor(gf::Color::White);
+			m_plusDefBtn.setColor(gf::Color::White);
+		} else {
+			m_plusPowerBtn.setColor(gf::Color::Transparent);
+			m_plusHealthBtn.setColor(gf::Color::Transparent);
+			m_plusDefBtn.setColor(gf::Color::Transparent);
+		}
 	}
 
 	void Inventory::updateSkillPointsText() {
@@ -311,14 +369,29 @@ namespace rCMI
 
 			target.draw(m_backpackBackgrounds[i], states);
 			target.draw(m_itemSprites[i], states);
+    
+			if (!m_stackTexts[i].getString().empty()) {
+				float textX = x + slotSize - 25.0f;
+				float textY = y + slotSize - 20.0f;
+				m_stackTexts[i].setPosition({textX, textY});
+				target.draw(m_stackTexts[i], states);
+			}
 		}
 
 		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_skillpoints.setPosition({invPos.x + invSize.x * 0.50f, invPos.y + invSize.y * 0.25f});
+		m_skillpoints.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.25f});
 
 	
 		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
 		m_statsWidget.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.35f});
+
+		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.22f);
+		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.005f);
+		float spacingY = invSize.y * 0.038f;
+
+		m_plusPowerBtn.setPosition({buttonsX, firstButtonY});
+		m_plusHealthBtn.setPosition({buttonsX, firstButtonY + spacingY});
+		m_plusDefBtn.setPosition({buttonsX, firstButtonY + (spacingY * 2)});
 
 		
 		target.draw(m_heroSprite, states);
@@ -331,6 +404,10 @@ namespace rCMI
 		target.draw(m_weaponSlot, states); target.draw(m_equippedWeaponSprite, states);
 		target.draw(m_bowSlot, states); target.draw(m_equippedBowSprite, states);
 		target.draw(m_statsWidget, states);
+		target.draw(m_skillpoints, states);
+		target.draw(m_plusPowerBtn, states);
+		target.draw(m_plusHealthBtn, states);
+		target.draw(m_plusDefBtn, states);
 	}
 
 	void Inventory::updateInventory(RogueCMI *game)
@@ -341,18 +418,20 @@ namespace rCMI
 	}
 
 	void Inventory::updateBackpackDisplay(RogueCMI *game) {
-		std::cout << "Update fait" << std::endl;
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			if (i < m_backpack.size()) {
 				const gf::Texture& tex = *(m_backpack[i].m_texture);
 				m_itemSprites[i].setTexture(tex);
-				m_itemSprites[i].setTextureRect(gf::RectF::fromSize(tex.getSize()));
-				float scale = static_cast<float>(TileSize) / 640.0f;
-				m_itemSprites[i].setScale(scale);
-				m_itemSprites[i].setColor(gf::Color::White); // On le rend visible
+				m_itemSprites[i].setColor(gf::Color::White);
+				
+				if (m_backpack[i].m_count > 1) {
+					m_stackTexts[i].setString("x" + std::to_string(m_backpack[i].m_count));
+				} else {
+					m_stackTexts[i].setString("");
+				}
 			} else {
 				m_itemSprites[i].setColor(gf::Color::Transparent);
-				
+				m_stackTexts[i].setString("");
 			}
 		}
 	}
@@ -406,14 +485,23 @@ namespace rCMI
 	}
 
 	bool Inventory::addItemToBackpack(Item item, RogueCMI *game) {
-		if (item.m_name.empty() || item.m_texture == nullptr) {
-			return false; 
+		if (item.m_name.empty() || item.m_texture == nullptr) return false;
+
+		if (item.m_name == "Fleche" || item.m_type == ItemType::Misc) { 
+			for (auto &backpackItem : m_backpack) {
+				if (backpackItem.m_name == item.m_name && backpackItem.m_count < 10) {
+					backpackItem.m_count += 1;
+					updateBackpackDisplay(game);
+					return true;
+				}
+			}
 		}
 
 		if (m_backpack.size() >= MaxBackpackSize) {
 			return false;
 		}
 
+		item.m_count = 1;
 		m_backpack.push_back(item);
 		updateBackpackDisplay(game);
 		return true;
@@ -423,6 +511,10 @@ namespace rCMI
 
 	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
 		const gf::Vector2f slotSize = { 80.0f, 80.0f };
+
+		if (m_plusPowerBtn.getColor().a > 0) { 
+			handleStatUpgrade(coords, game);
+		}
 
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
 			gf::Vector2f pos = m_backpackBackgrounds[i].getPosition();
@@ -462,25 +554,17 @@ namespace rCMI
 
 	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {
 		std::vector<Item>& itemsInChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
-
 		if (itemsInChest.empty()) return true;
 
 		auto it = itemsInChest.begin();
 		while (it != itemsInChest.end()) {
-			if (m_backpack.size() < MaxBackpackSize) {
-				
-				std::cout << "Vous avez obtenu : " << it->m_name << std::endl;
-				m_backpack.push_back(*it);
-			
+			if (addItemToBackpack(*it, game)) {
 				it = itemsInChest.erase(it); 
 			} else {
-				std::cout << "Sac plein ! Certains objets sont restes dans le coffre." << std::endl;
-				updateBackpackDisplay(game);
+				std::cout << "Sac plein !" << std::endl;
 				return false;
 			}
 		}
-
-		updateBackpackDisplay(game);
 		return true;
 	}
 
@@ -510,5 +594,39 @@ namespace rCMI
 		}
 		removeItemFromBackpack(item, game);
 		updateStatsText();
+	}
+
+	void Inventory::handleStatUpgrade(gf::Vector2f coords, RogueCMI *game) {
+		Character &hero = game->m_WorldScene.m_world_entity.hero();
+		
+		if (hero.getStat().getSkillPoints() <= 0) return; 
+
+		gf::Vector2f textureSize = m_plusTexture->getSize();
+		gf::Vector2f btnSize = textureSize * m_plusPowerBtn.getScale(); 
+
+		gf::RectF powerBox = gf::RectF::fromPositionSize(m_plusPowerBtn.getPosition(), btnSize);
+		gf::RectF healthBox = gf::RectF::fromPositionSize(m_plusHealthBtn.getPosition(), btnSize);
+		gf::RectF defBox = gf::RectF::fromPositionSize(m_plusDefBtn.getPosition(), btnSize);
+
+		bool statChanged = false;
+
+		if (powerBox.contains(coords)) {
+			hero.getStat().setPower(hero.getStat().getPower() + 1);
+			statChanged = true;
+		}
+		else if (healthBox.contains(coords)) {
+			hero.addMaxHealth(10);
+			hero.heal(10);
+			statChanged = true;
+		}
+		else if (defBox.contains(coords)) {
+			hero.getStat().setDefense(hero.getStat().getDefense() + 1);
+			statChanged = true;
+		}
+
+		if (statChanged) {
+			hero.getStat().setSkillPoints(hero.getStat().getSkillPoints() - 1);
+			updateInventory(game); 
+		}
 	}
 }

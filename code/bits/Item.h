@@ -35,6 +35,7 @@ namespace rCMI
 		ItemType m_type;
 		const gf::Texture *m_texture = nullptr;
 		Stat m_stat;
+		int m_count = 1;
 
 		enum class Rarity { Common, Uncommon, Rare, Epic, Legendary };
 

@@ -16,6 +16,7 @@ namespace rCMI
             new_xp -= max_xp;
             max_xp *= 1.5;
             m_level += 1;
+            m_skillpoints+=2;
         }
         m_xp = new_xp;
     }

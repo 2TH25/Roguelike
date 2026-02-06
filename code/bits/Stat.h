@@ -24,6 +24,7 @@ namespace rCMI
     int getDefense() const { return defense; }
     int getPower() const { return power; }
     int getKills() const { return nb_kills; }
+    int getSkillPoints() const {return m_skillpoints;}
   
 
     void setHealth(int h) { health = h; }
@@ -34,6 +35,7 @@ namespace rCMI
     void retireStat(int h, int d, int p) { health -= h; max_health -= h; defense -= d; power -= p; }
     void addKill();
     void addXp(int xp);
+    void setSkillPoints(int s) { m_skillpoints = s;}
 
   private:
     int max_health = 0;
@@ -45,6 +47,7 @@ namespace rCMI
     int m_level = 0;
     int m_xp = 0;
     int max_xp = 200;
+    int m_skillpoints = 0;
   };
 
 }

@@ -9,6 +9,7 @@
 #include <vector>
 #include <iostream>
 #include <gf/Sprite.h>
+#include <gf/Text.h>
 #include <map>
 
 #include "Item.h"
@@ -27,6 +28,7 @@ namespace rCMI
     Stat m_stats;
     gf::TextWidget m_statsWidget;
     gf::TextWidget m_skillpoints;
+    std::vector<gf::Text> m_stackTexts;
 
     gf::Sprite m_heroSprite;
 
@@ -47,8 +49,13 @@ namespace rCMI
     gf::Sprite m_equippedAccessorySprite;
     gf::Sprite m_equippedWeaponSprite;
     gf::Sprite m_equippedBowSprite;
+    gf::Texture *m_equippedSlotTexture;
 
-  
+    gf::Texture *m_plusTexture;
+    gf::Sprite m_plusPowerBtn;
+    gf::Sprite m_plusHealthBtn;
+    gf::Sprite m_plusDefBtn;
+
     std::map<ItemType, Item> m_equippedItems;
     static constexpr std::size_t MaxBackpackSize = 10;
     gf::Sprite m_backpackBackgrounds[MaxBackpackSize]; // Le slot joli
@@ -95,6 +102,8 @@ namespace rCMI
     void removeItemFromBackpack(const Item& item, RogueCMI *game);
     void consumeItem(const Item& item, RogueCMI *game);
     void updateSkillPointsText();
+    void handleStatUpgrade(gf::Vector2f coords, RogueCMI *game);
+    void resetSlotBackground(ItemType type, gf::Sprite* backgroundSlot, RogueCMI *game);
   };
 }
 

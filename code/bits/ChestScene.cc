@@ -38,7 +38,6 @@ namespace rCMI
                 }
             }
         }
-        if(m_currentChest->content.empty()){m_game->popScene();}
 
         if (event.type == gf::EventType::KeyPressed && event.key.keycode == gf::Keycode::Escape) {
             m_game->m_WorldScene.m_isActivateChest = false;
@@ -59,7 +58,8 @@ namespace rCMI
             if (m_loots.empty()) {
                 m_currentChest->isOpen = true;
                 m_currentChest->sprite.setTexture(m_game->resources.getTexture("CoffreOuvert.png"));
-                m_game->m_WorldScene.m_isActivateChest = false;
+                
+                m_game->m_WorldScene.m_isActivateChest = false; 
                 return true;
             }
         }

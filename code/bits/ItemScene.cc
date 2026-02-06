@@ -100,13 +100,6 @@ namespace rCMI {
                 break;
         }
 
-        
-
-
-
-
-
-
 
         m_nameText.setString(item.m_name);
         centerText(m_nameText, 200.0f);
@@ -156,7 +149,7 @@ namespace rCMI {
                 m_buttonConsume.setSelected();
                 m_buttonThrow.setSelected();
                 
-                m_buttonConsume.setPosition({centerX - 80, btnY});
+                m_buttonConsume.setPosition({centerX - 120, btnY});
                 m_buttonThrow.setPosition({centerX + 80, btnY});
             } 
             else {
@@ -183,14 +176,12 @@ namespace rCMI {
 
     void ItemScene::onEquip() {
         if (m_currentChestIndex != -1) { 
-            
             m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
             bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
+            m_game->popScene();
+            
             if (isChestEmpty) {
                 m_game->popScene();
-                std::this_thread::sleep_for(std::chrono::milliseconds(200));
-                m_game->popScene();
-                return;
             }
         } 
         else { 
@@ -199,8 +190,8 @@ namespace rCMI {
             if (!oldItem.m_name.empty()) {
                 m_game->m_InventoryScene->m_inventory.addItemToBackpack(oldItem, m_game);
             }
+            m_game->popScene();
         }
-        m_game->popScene();
     }
 
 
