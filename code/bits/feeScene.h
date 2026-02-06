@@ -9,13 +9,14 @@
 
 namespace rCMI {
     class RogueCMI;
+    class WorldEntity;
 
     class FeeScene : public gf::Scene {
     public:
         FeeScene(RogueCMI *game);
 
         void setDialogue(const std::vector<std::string>& lines);
-
+        void startFairyInteraction(WorldEntity& world);
         virtual void doProcessEvent(gf::Event &event) override;
         virtual void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 

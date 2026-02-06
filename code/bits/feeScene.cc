@@ -1,6 +1,7 @@
 #include "feeScene.h"
 #include "RogueCMI.h"
 #include "GameData.h"
+#include "WorldEntity.h"
 
 namespace rCMI {
 
@@ -59,4 +60,50 @@ namespace rCMI {
         target.draw(m_text, states);
         target.draw(m_clickHint, states);
     }
+
+    void FeeScene::startFairyInteraction(WorldEntity& world) {
+        std::vector<std::string> discours;
+
+        if (!world.m_feeVisitee) {
+            discours = {
+                "Bonjour jeune voyageur !",
+                "Je suis la fée du plateau et je serais là pour te venir en aide. \n ",
+                "Fais attention aux monstres qui rodent...\n Ils sont puissants et surtout ils ne veulent pas que \ntu atteignes la fin du donjon.",
+                "Bonne chance dans ton aventure ! \n Voici un petit cadeau pour t'aider.",
+                "Tu as reçu une potion de soin ! Utilise-la judicieusement."
+            };
+
+            Item starterPotion;
+            starterPotion.m_name = "Potion de départ";
+            starterPotion.m_id = "ItemSoin";
+            starterPotion.m_type = ItemType::Consumable;
+            starterPotion.m_description = "Une petite potion de soin offerte par la fée.";
+            starterPotion.m_stat.setHealth(20);
+            starterPotion.m_texture = &m_game->resources.getTexture("ItemSoin.png");
+            m_game->m_InventoryScene->m_inventory.addItemToBackpack(starterPotion, m_game);
+
+            Item newItem("Epee de base", "EpeeBase", ItemType::Weapon, Item::Rarity::Common,
+                         m_game->resources.getTexture("EpeeBase.png"),
+                         "Cette épée de mauvaise facture sera le point de départ de votre valeureuse aventure...",
+                         Stat(0, 0, 5));
+            
+            m_game->m_InventoryScene->m_inventory.setEquippedItem(newItem.m_type, &newItem, m_game);
+            m_game->m_FeeScene->setDialogue(discours);
+
+            world.m_feeVisitee = true;
+        } else {
+            discours = {
+                "Tu vas avoir besoin de courage pour affronter tous ces dangers qui t'attendent.",
+                "Je suis de tout coeur avec toi  ! \n ",
+                "J'espère que ta quête se déroulera bien ! Courage !"
+            };
+            m_game->m_FeeScene->setDialogue(discours);
+        }
+
+        m_game->pushScene(*(m_game->m_FeeScene));
+        return;
+    }
+
+
+    
 }
