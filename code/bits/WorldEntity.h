@@ -76,13 +76,15 @@ namespace rCMI
     RogueCMI *m_game = nullptr;
     WorldEntity *m_world = nullptr;
 
-    gf::RectangleShape life_lost;
-    gf::RectangleShape life;
+    gf::RoundedRectangleShape life_lost;
+    gf::RoundedRectangleShape life;
     gf::Text text_life;
+    gf::Sprite life_image;
     
-    gf::RectangleShape xp_lost;
-    gf::RectangleShape xp;
+    gf::RoundedRectangleShape xp_lost;
+    gf::RoundedRectangleShape xp;
     gf::Text text_xp;
+    gf::Sprite xp_image;
 
     gf::Sprite player_kills_image;
     gf::Text text_kills;
