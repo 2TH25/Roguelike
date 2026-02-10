@@ -12,6 +12,7 @@ namespace rCMI {
         bool isOpen = false;
         std::vector<Item> content; 
         std::vector<int> itemSlotsPosition;
+        bool distributeScore = false;
     };
 
 }

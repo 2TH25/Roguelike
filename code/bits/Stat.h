@@ -16,6 +16,9 @@ namespace rCMI
     {
     }
 
+    int score = 0;
+    int highest_level = 1;
+
     int getHealth() const { return health; }
     int getMaxHealth() const { return max_health; }
     int getXp() const { return m_xp; }

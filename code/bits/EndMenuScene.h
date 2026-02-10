@@ -15,11 +15,12 @@ namespace rCMI
 	{
 	public:
 		EndMenuScene(RogueCMI *game);
+		void setFinalStats(int score, int kills, int highest_level);
 
 	private:
 		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 		void doProcessEvent(gf::Event &event) override;
-		void setFinalStats(int score, int kills, int highest_level);
+		
 
 		RogueCMI *m_game = nullptr;
 		gf::Font &font;
@@ -27,6 +28,7 @@ namespace rCMI
 		gf::TextButtonWidget m_quit;
 		gf::Text m_title;
     	gf::Text m_statsText;
+		gf::RectangleShape m_background;
 	};
 }
 

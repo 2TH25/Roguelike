@@ -77,6 +77,7 @@ namespace rCMI
   {
     m_chestManager.clear();
     highest_level++;
+    hero().getStat().score+=500;
     generate_dungeon(m_map.getSize() * 1.2);
     std::cout << "Niveau suivant atteint !" << std::endl;
   }

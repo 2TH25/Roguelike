@@ -18,6 +18,11 @@ namespace rCMI {
     void ChestManager::openChest(int chestIndex, RogueCMI *game) {
 
         Chest &chest = m_chests[chestIndex];
+        if(!chest.distributeScore) {
+            game->m_WorldScene.m_world_entity.hero().getStat().score+=20;
+            chest.distributeScore = true;
+        }
+        
         
         if (game->m_InventoryScene->m_inventory.addItemFromChest(chestIndex, game)) {
             chest.isOpen = true;

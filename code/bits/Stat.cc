@@ -6,6 +6,7 @@ namespace rCMI
     {
         nb_kills += 1;
         addXp(50);
+        score+=50;
     }
 
     void Stat::addXp(int xp)
@@ -17,6 +18,7 @@ namespace rCMI
             max_xp *= 1.5;
             m_level += 1;
             m_skillpoints+=2;
+            score+=200;
         }
         m_xp = new_xp;
     }
