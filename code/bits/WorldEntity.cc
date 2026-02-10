@@ -334,17 +334,27 @@ namespace rCMI
         m_world(m_world)
   {
     life_lost.setColor(gf::Color::Gray());
+    life_lost.setRadius(10);
+    life_lost.setOutlineColor(gf::Color::Gray(0.7));
+    life_lost.setOutlineThickness(3);
     life.setColor(gf::Color::Red);
-    text_life.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    life.setRadius(10);
+    text_life.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
     text_life.setColor(gf::Color::Black);
+    life_image.setTexture(m_game->resources.getTexture("life_img.png"));
 
     xp_lost.setColor(gf::Color::Gray());
+    xp_lost.setRadius(10);
+    xp_lost.setOutlineColor(gf::Color::Gray(0.7));
+    xp_lost.setOutlineThickness(3);
     xp.setColor(gf::Color::Green);
-    text_xp.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    xp.setRadius(10);
+    text_xp.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
     text_xp.setColor(gf::Color::Black);
+    xp_image.setTexture(m_game->resources.getTexture("XP_img.png"));
 
     player_kills_image.setTexture(m_game->resources.getTexture("squelette.png"));
-    text_kills.setFont(m_game->resources.getFont("DejaVuSans.ttf"));
+    text_kills.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
     text_kills.setColor(gf::Color::Red);
 
     sword_slot.setTexture(m_game->resources.getTexture("SlotArme.png"));
@@ -372,7 +382,11 @@ namespace rCMI
     text_life.setPosition({life_lost.getPosition().x + life_lost.getSize().x / 2, life_lost.getPosition().y});
     text_life.setAnchor(gf::Anchor::Center);
 
-    xp_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 8 / 100});
+    life_image.setPosition(life_lost.getPosition());
+    life_image.setScale(life_lost.getSize().y * 2 / life_image.getTexture().getSize());
+    life_image.setAnchor(gf::Anchor::Center);
+
+    xp_lost.setPosition({target_vue_size.y * 5 / 100, target_vue_size.y * 10 / 100});
     xp_lost.setSize({target_vue_size.x * 10 / 49, target_vue_size.y * 20 / 817});
     xp_lost.setAnchor(gf::Anchor::CenterLeft);
 
@@ -385,6 +399,10 @@ namespace rCMI
     text_xp.setCharacterSize(xp_lost.getSize().y * 15 / 20);
     text_xp.setPosition({xp_lost.getPosition().x + xp_lost.getSize().x / 2, xp_lost.getPosition().y});
     text_xp.setAnchor(gf::Anchor::Center);
+
+    xp_image.setPosition(xp_lost.getPosition());
+    xp_image.setScale(xp_lost.getSize().y * 2 / xp_image.getTexture().getSize());
+    xp_image.setAnchor(gf::Anchor::Center);
 
     player_kills_image.setPosition({target_vue_size.x * 94 / 100, target_vue_size.y * 5 / 100});
     player_kills_image.setScale(life.getSize().y * 3 / player_kills_image.getTexture().getSize());
@@ -408,10 +426,12 @@ namespace rCMI
     life_lost.draw(target, states);
     life.draw(target, states);
     text_life.draw(target, states);
+    life_image.draw(target, states);
 
     xp_lost.draw(target, states);
     xp.draw(target, states);
     text_xp.draw(target, states);
+    xp_image.draw(target, states);
 
     player_kills_image.draw(target, states);
     text_kills.draw(target, states);
