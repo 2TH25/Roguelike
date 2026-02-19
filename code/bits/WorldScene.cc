@@ -72,8 +72,11 @@ namespace rCMI
       {
         if (m_isActivateInventory)
         {
-          m_game->popScene();
-          m_isActivateInventory = false;
+          if(m_game->m_InventoryScene->closureInventory(m_game))
+          {
+            m_isActivateInventory = false;
+          }
+          
         }
         else
         {

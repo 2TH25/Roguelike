@@ -16,6 +16,7 @@ namespace rCMI
 	public:
 		InventoryScene(RogueCMI *game);
 		Inventory m_inventory;
+		bool closureInventory(RogueCMI *game);
 
 	private:
 		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;

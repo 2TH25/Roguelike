@@ -379,11 +379,11 @@ namespace rCMI
 		}
 
 		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_skillpoints.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.25f});
+		m_skillpoints.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.25f});
 
 	
 		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_statsWidget.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.35f});
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.35f});
 
 		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.22f);
 		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.005f);

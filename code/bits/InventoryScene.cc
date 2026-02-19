@@ -23,7 +23,22 @@ namespace rCMI
         gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseButton.coords, getHudView());
         m_inventory.handleItemClick(coords, m_game);
     }
-}
+  }
+
+  bool InventoryScene::closureInventory(RogueCMI *game)
+  {
+    if(!isActive()) 
+    { 
+      return false;
+    }
+    else
+    {
+      game->popScene();
+      return true;
+    }
+  }
+
+ 
 
   void InventoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states)
   {
