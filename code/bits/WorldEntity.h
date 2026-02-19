@@ -37,6 +37,7 @@ namespace rCMI
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
+    
 
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
@@ -71,6 +72,7 @@ namespace rCMI
   public:
     HudEntity(RogueCMI *m_game, WorldEntity *m_world);
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
+    void processEvent(gf::Event &event,RogueCMI *game);
 
   private:
     RogueCMI *m_game = nullptr;
@@ -91,6 +93,11 @@ namespace rCMI
 
     gf::Sprite sword_slot;
     gf::Sprite sword;
+
+    gf::Texture *m_buttonParametersTexture;
+    gf::Sprite buttonParameters;
+
+    bool parametersOpened = false;
   };
 };
 

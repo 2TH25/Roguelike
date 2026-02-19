@@ -51,6 +51,7 @@ namespace rCMI
 
   void WorldScene::doProcessEvent(gf::Event &event)
   {
+    m_hud.processEvent(event, m_game);
     switch (event.type)
     {
     case gf::EventType::MouseMoved:
@@ -63,6 +64,14 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
+
+    if (m_game->m_ParametersScene.isActive()) {
+        return;
+    }
+    if (m_game->m_FeeScene->isActive()) {
+        return; 
+    }
+
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
     

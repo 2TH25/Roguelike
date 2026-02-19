@@ -360,6 +360,32 @@ namespace rCMI
     sword_slot.setTexture(m_game->resources.getTexture("SlotArme.png"));
   }
 
+  void HudEntity::processEvent(gf::Event &event, RogueCMI *game)
+{
+    if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
+        
+        gf::Vector2f mouseCoords = game->getRenderer().mapPixelToCoords(event.mouseButton.coords);
+
+        gf::Vector2f pos = buttonParameters.getPosition();
+        gf::RectF localBounds = buttonParameters.getLocalBounds();
+        
+        float width = (localBounds.max.x - localBounds.min.x) * buttonParameters.getScale().x;
+        float height = (localBounds.max.y - localBounds.min.y) * buttonParameters.getScale().y;
+
+        gf::RectF buttonRect;
+        buttonRect.min = { pos.x - width, pos.y - height };
+        buttonRect.max = pos;
+
+        if (buttonRect.contains(mouseCoords)) {
+            if (game->m_ParametersScene.isActive()) {
+                game->popScene();
+            } else {
+                game->pushScene(game->m_ParametersScene);
+            }
+        }
+    }
+}
+
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
 
@@ -423,6 +449,12 @@ namespace rCMI
     sword.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
     sword.setAnchor(gf::Anchor::BottomLeft);
 
+    m_buttonParametersTexture = &(m_game->resources.getTexture("BraceletOr.png"));
+    buttonParameters.setTexture(*m_buttonParametersTexture);
+    buttonParameters.setPosition({target_vue_size.x - 20.0f, target_vue_size.y - 20.0f});
+    buttonParameters.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
+    buttonParameters.setAnchor(gf::Anchor::BottomRight);
+
     life_lost.draw(target, states);
     life.draw(target, states);
     text_life.draw(target, states);
@@ -438,6 +470,8 @@ namespace rCMI
 
     sword_slot.draw(target, states);
     sword.draw(target, states);
+
+    buttonParameters.draw(target,states);
   }
 
   void WorldEntity::reset()
