@@ -98,7 +98,7 @@ namespace rCMI
     EquippedSlot *getSlotByType(ItemType type);
     bool addItemToBackpack(Item item, RogueCMI *game);
     void handleItemClick(gf::Vector2f coords, RogueCMI *game);
-    bool addItemFromChest(int chestIndex, RogueCMI *game);
+    bool addItemFromChest(int chestIndex, int itemIndex, RogueCMI *game);
     void removeItemFromBackpack(const Item& item, RogueCMI *game);
     void consumeItem(const Item& item, RogueCMI *game);
     void updateSkillPointsText();

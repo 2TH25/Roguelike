@@ -187,7 +187,13 @@ namespace rCMI
       if (leaf->type == RoomType::Chest)
       {
         std::cout << "Génération d'une salle aux trésors en " << room.min.x << "," << room.min.y << std::endl;
-        int chestCount = 4;
+        int roll = rand() % 100;
+        int chestCount = 0;
+        if(roll<40) {chestCount=1;}
+        else if(roll<70) {chestCount=2;}
+        else if(roll<90) {chestCount=3;}
+        else {chestCount=4;}
+        
         for (int i = 0; i < chestCount && i < floorPositions.size(); ++i)
         {
           m_chestManager.spawnChest(floorPositions[i], m_game);

@@ -16,28 +16,32 @@ namespace rCMI {
     }
 
     void ChestManager::openChest(int chestIndex, RogueCMI *game) {
-
         Chest &chest = m_chests[chestIndex];
+
         if(!chest.distributeScore) {
-            game->m_WorldScene.m_world_entity.hero().getStat().score+=20;
+            game->m_WorldScene.m_world_entity.hero().getStat().score += 20;
             chest.distributeScore = true;
         }
         
-        
-        if (game->m_InventoryScene->m_inventory.addItemFromChest(chestIndex, game)) {
-            chest.isOpen = true;
-            chest.sprite.setTexture(game->resources.getTexture("CoffreOuvert.png"));
-            
-            std::cout << "SUCCES : Item ajouté à l'inventaire !" << std::endl;
-        } else {
-            std::cout << "ECHEC : Inventaire plein." << std::endl;
-        }
+        game->m_ChestScene.setLoots(chest, chestIndex);
+        game->m_WorldScene.m_isActivateChest = true;
+        game->pushScene(game->m_ChestScene);
+        std::cout << "Ouverture du coffre index : " << chestIndex << std::endl;
     }
 
     void ChestManager::spawnChest(gf::Vector2i pos, RogueCMI *game) {
         Chest c;
         c.gridPos = pos;
-        c.content.push_back(Item::generateRandomItem(game));
+        int roll = rand() % 100;
+        int itemInChestCount = 0;
+        if(roll<40) {itemInChestCount=1;}
+        else if(roll<70) {itemInChestCount=2;}
+        else if(roll<90) {itemInChestCount=3;}
+        else {itemInChestCount=4;}
+        for(int i=0;i<itemInChestCount;i++){
+            c.content.push_back(Item::generateRandomItem(game));
+        }
+        
         c.isOpen = false;
         
         c.sprite.setTexture(game->resources.getTexture("Coffre.png"));

@@ -132,14 +132,14 @@ namespace rCMI {
 
         m_descText.setString(item.m_description.empty() ? "Aucune description." : item.m_description);
         m_descText.setAnchor(gf::Anchor::Center);
-        m_descText.setPosition({600.0f, 400.0f});
+        m_descText.setPosition({600.0f, 420.0f});
 
         std::string statsStr = "";
         if (item.m_stat.getPower() > 0) statsStr += "Atk: +" + std::to_string(item.m_stat.getPower()) + " ";
         if (item.m_stat.getHealth() > 0) statsStr += "Hp: +" + std::to_string(item.m_stat.getHealth()) + " ";
         if (item.m_stat.getDefense() > 0) statsStr += "Def: +" + std::to_string(item.m_stat.getDefense()) + " ";
         m_statsText.setString(statsStr);
-        centerText(m_statsText, 500.0f);
+        centerText(m_statsText, 520.0f);
 
         std::string textureKey = item.m_id + ".png"; 
         const gf::Texture& tex = m_game->resources.getTexture(textureKey);
@@ -199,12 +199,15 @@ namespace rCMI {
 
     void ItemScene::onEquip() {
         if (m_currentChestIndex != -1) { 
-            m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
-            bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
-            m_game->popScene();
+            bool success = m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_itemIndexInChest, m_game);
             
-            if (isChestEmpty) {
+            if (success) {
+                bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
                 m_game->popScene();
+                
+                if (isChestEmpty) {
+                    m_game->popScene();
+                }
             }
         } 
         else { 

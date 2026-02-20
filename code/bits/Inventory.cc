@@ -552,20 +552,23 @@ namespace rCMI
 		if (checkSlot(m_bowSlot, ItemType::Bow)) return;
 	}
 
-	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {
-		std::vector<Item>& itemsInChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
-		if (itemsInChest.empty()) return true;
+	bool Inventory::addItemFromChest(int chestIndex, int itemIndex, RogueCMI *game) {
+		auto& chest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex);
+		
+		if (itemIndex < 0 || (size_t)itemIndex >= chest.content.size()) return false;
 
-		auto it = itemsInChest.begin();
-		while (it != itemsInChest.end()) {
-			if (addItemToBackpack(*it, game)) {
-				it = itemsInChest.erase(it); 
-			} else {
-				std::cout << "Sac plein !" << std::endl;
-				return false;
+		Item& item = chest.content[itemIndex];
+
+		if (addItemToBackpack(item, game)) {
+			chest.content.erase(chest.content.begin() + itemIndex);
+			
+			if (itemIndex < (int)chest.itemSlotsPosition.size()) {
+				chest.itemSlotsPosition.erase(chest.itemSlotsPosition.begin() + itemIndex);
 			}
+			
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 
