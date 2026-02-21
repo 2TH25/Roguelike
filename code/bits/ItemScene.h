@@ -28,6 +28,7 @@ namespace rCMI {
         gf::RectangleShape m_background;
         gf::Text m_nameText;
         gf::Text m_typeText;
+        gf::Text m_rarityText;
         gf::Text m_descText;
         gf::Text m_statsText;
         gf::Sprite m_itemSprite;

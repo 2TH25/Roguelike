@@ -379,11 +379,11 @@ namespace rCMI
 		}
 
 		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_skillpoints.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.25f});
+		m_skillpoints.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.25f});
 
 	
 		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_statsWidget.setPosition({invPos.x + invSize.x * 0.70f, invPos.y + invSize.y * 0.35f});
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.35f});
 
 		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.22f);
 		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.005f);
@@ -552,20 +552,23 @@ namespace rCMI
 		if (checkSlot(m_bowSlot, ItemType::Bow)) return;
 	}
 
-	bool Inventory::addItemFromChest(int chestIndex, RogueCMI *game) {
-		std::vector<Item>& itemsInChest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex).content;
-		if (itemsInChest.empty()) return true;
+	bool Inventory::addItemFromChest(int chestIndex, int itemIndex, RogueCMI *game) {
+		auto& chest = game->m_WorldScene.m_world_entity.m_chestManager.getChest(chestIndex);
+		
+		if (itemIndex < 0 || (size_t)itemIndex >= chest.content.size()) return false;
 
-		auto it = itemsInChest.begin();
-		while (it != itemsInChest.end()) {
-			if (addItemToBackpack(*it, game)) {
-				it = itemsInChest.erase(it); 
-			} else {
-				std::cout << "Sac plein !" << std::endl;
-				return false;
+		Item& item = chest.content[itemIndex];
+
+		if (addItemToBackpack(item, game)) {
+			chest.content.erase(chest.content.begin() + itemIndex);
+			
+			if (itemIndex < (int)chest.itemSlotsPosition.size()) {
+				chest.itemSlotsPosition.erase(chest.itemSlotsPosition.begin() + itemIndex);
 			}
+			
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 
@@ -627,6 +630,34 @@ namespace rCMI
 		if (statChanged) {
 			hero.getStat().setSkillPoints(hero.getStat().getSkillPoints() - 1);
 			updateInventory(game); 
+		}
+	}
+
+
+	// pour le tir à distance 
+
+
+	bool Inventory::hasArrows() {
+		for (auto& item : m_backpack) {
+			if (item.m_name == "Fleche" && item.m_count > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Inventory::consumeArrow(RogueCMI *game) {
+		for (auto it = m_backpack.begin(); it != m_backpack.end(); ++it) {
+			if (it->m_type == ItemType::Arrow) { 
+				it->m_count--;
+				
+				if (it->m_count <= 0) {
+					m_backpack.erase(it);
+				}
+				
+				updateBackpackDisplay(game);
+				return;
+			}
 		}
 	}
 }

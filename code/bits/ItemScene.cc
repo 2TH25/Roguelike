@@ -21,6 +21,20 @@ namespace rCMI {
             case ItemType::Accessory:     return "Bracelet";
             case ItemType::Misc:     return "Divers";
             case ItemType::Bow:     return "Arc";
+            case ItemType::Arrow:     return "Flèche";
+
+            default: break;
+        }
+        return "Inconnu";
+    }
+
+    std::string itemRarityToString(Item::Rarity rarity) {
+        switch(rarity) {
+            case Item::Rarity::Legendary: return "Légendaire";
+            case Item::Rarity::Epic: return "Épique";
+            case Item::Rarity::Rare: return "Rare";
+            case Item::Rarity::Uncommon: return "Peu Commun";
+            case Item::Rarity::Common: return "Commun";
 
             default: break;
         }
@@ -34,6 +48,7 @@ namespace rCMI {
       , m_game(game)
       , m_nameText("", game->resources.getFont(PATH_FONT), 30)
       , m_typeText("", game->resources.getFont(PATH_FONT), 20)
+      , m_rarityText("", game->resources.getFont(PATH_FONT), 20)
       , m_descText("", game->resources.getFont(PATH_FONT), 18)
       , m_statsText("", game->resources.getFont(PATH_FONT), 18)
       , m_buttonEquip("Equiper", game->resources.getFont(PATH_FONT))
@@ -52,7 +67,7 @@ namespace rCMI {
         m_background.setOutlineThickness(2.0f);
 		
 
-        m_typeText.setColor(gf::Color::Azure);
+        m_typeText.setColor(gf::Color::Black);
         m_descText.setParagraphWidth(350.0f);
         m_descText.setAlignment(gf::Alignment::Center);
         
@@ -81,22 +96,28 @@ namespace rCMI {
 
         switch (item.m_rarity) {
             case Item::Rarity::Common:
-                m_nameText.setColor(gf::Color::White); // Blanc pour le commun
+                m_nameText.setColor(gf::Color::White);
+                m_rarityText.setColor(gf::Color::White);  // Blanc pour le commun
                 break;
             case Item::Rarity::Uncommon:
-                m_nameText.setColor(gf::Color::Green); // Vert pour l'insolite
+                m_nameText.setColor(gf::Color::Green);
+                m_rarityText.setColor(gf::Color::Green); // Vert pour l'insolite
                 break;
             case Item::Rarity::Rare:
-                m_nameText.setColor(gf::Color::Azure); // Bleu/Azure pour le rare
+                m_nameText.setColor(gf::Color::Azure);
+                m_rarityText.setColor(gf::Color::Azure); // Bleu/Azure pour le rare
                 break;
             case Item::Rarity::Epic:
-                m_nameText.setColor(gf::Color::fromRgba32(0xA335EEFF)); // Violet épique
+                m_nameText.setColor(gf::Color::fromRgba32(0xA335EEFF));
+                m_rarityText.setColor(gf::Color::fromRgba32(0xA335EEFF)); // Violet épique
                 break;
             case Item::Rarity::Legendary:
-                m_nameText.setColor(gf::Color::Orange); // Orange pour le légendaire
+                m_nameText.setColor(gf::Color::Red);
+                m_rarityText.setColor(gf::Color::Red); // Rouge pour le légendaire
                 break;
             default:
                 m_nameText.setColor(gf::Color::White);
+                m_rarityText.setColor(gf::Color::White);
                 break;
         }
 
@@ -104,19 +125,22 @@ namespace rCMI {
         m_nameText.setString(item.m_name);
         centerText(m_nameText, 200.0f);
 
-        m_typeText.setString("Type: " + itemTypeToString(item.m_type)); 
-        centerText(m_typeText, 240.0f);
+        m_typeText.setString("Type : " + itemTypeToString(item.m_type)); 
+        centerText(m_typeText, 270.0f);
+
+        m_rarityText.setString("Rareté : " + itemRarityToString(item.m_rarity)); 
+        centerText(m_rarityText, 240.0f);
 
         m_descText.setString(item.m_description.empty() ? "Aucune description." : item.m_description);
         m_descText.setAnchor(gf::Anchor::Center);
-        m_descText.setPosition({600.0f, 400.0f});
+        m_descText.setPosition({600.0f, 420.0f});
 
         std::string statsStr = "";
         if (item.m_stat.getPower() > 0) statsStr += "Atk: +" + std::to_string(item.m_stat.getPower()) + " ";
         if (item.m_stat.getHealth() > 0) statsStr += "Hp: +" + std::to_string(item.m_stat.getHealth()) + " ";
         if (item.m_stat.getDefense() > 0) statsStr += "Def: +" + std::to_string(item.m_stat.getDefense()) + " ";
         m_statsText.setString(statsStr);
-        centerText(m_statsText, 500.0f);
+        centerText(m_statsText, 520.0f);
 
         std::string textureKey = item.m_id + ".png"; 
         const gf::Texture& tex = m_game->resources.getTexture(textureKey);
@@ -125,7 +149,7 @@ namespace rCMI {
             m_itemSprite.setTexture(*m_currentItem.m_texture); 
             
             m_itemSprite.setAnchor(gf::Anchor::Center);
-            m_itemSprite.setPosition({600.0f, 300.0f});
+            m_itemSprite.setPosition({600.0f, 330.0f});
             m_itemSprite.setScale(static_cast<float>(TileSize) / 640.0f); 
             m_itemSprite.setColor(gf::Color::White);
         }
@@ -145,7 +169,12 @@ namespace rCMI {
             m_buttonPickup.setPosition({600.0f, btnY});
         } else { // pas dans un coffre
 
-            if (m_currentItem.m_type == ItemType::Consumable) {
+            if (m_currentItem.m_type == ItemType::Arrow) {
+                m_buttonThrow.setSelected();
+                m_buttonThrow.setPosition({centerX, btnY}); 
+            }
+
+            else if (m_currentItem.m_type == ItemType::Consumable) {
                 m_buttonConsume.setSelected();
                 m_buttonThrow.setSelected();
                 
@@ -176,12 +205,15 @@ namespace rCMI {
 
     void ItemScene::onEquip() {
         if (m_currentChestIndex != -1) { 
-            m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_game);
-            bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
-            m_game->popScene();
+            bool success = m_game->m_InventoryScene->m_inventory.addItemFromChest(m_currentChestIndex, m_itemIndexInChest, m_game);
             
-            if (isChestEmpty) {
+            if (success) {
+                bool isChestEmpty = m_game->m_ChestScene.updateChestAfterPickup();
                 m_game->popScene();
+                
+                if (isChestEmpty) {
+                    m_game->popScene();
+                }
             }
         } 
         else { 
@@ -273,6 +305,7 @@ namespace rCMI {
 
         target.draw(m_nameText, states);
         target.draw(m_typeText, states);
+        target.draw(m_rarityText, states);
         target.draw(m_descText, states);
         target.draw(m_statsText, states);
         

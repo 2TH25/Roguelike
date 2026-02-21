@@ -12,6 +12,7 @@
 #include "ItemScene.h"
 #include "EndMenuScene.h"
 #include "feeScene.h"
+#include "ParametersScene.h"
 
 namespace rCMI
 {
@@ -32,6 +33,7 @@ namespace rCMI
     ItemScene m_ItemScene;
     EndMenuScene m_EndMenuScene;
     std::unique_ptr<FeeScene> m_FeeScene;
+    ParametersScene m_ParametersScene;
   };
 }
 

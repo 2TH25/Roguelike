@@ -22,6 +22,7 @@ namespace rCMI {
         Chest* m_currentChest = nullptr;
         int m_currentChestIndex;
         bool updateChestAfterPickup();
+        void updateItemsPositions(gf::Vector2f vSize);
 
         std::vector<int> m_itemSlotIndices;
 

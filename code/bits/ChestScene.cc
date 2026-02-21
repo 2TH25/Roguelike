@@ -14,24 +14,60 @@ namespace rCMI
     , m_game(game)
     , m_background({600.0f, 400.0f})
     , m_text("", game->resources.getFont(PATH_FONT), 20)
-{
-    setClearColor(gf::Color::Transparent);
-    m_background.setTexture(game->resources.getTexture("backgroundChest.png"));
-    m_background.setPosition(gf::Vector2f(600, 400)); 
-}
+    {
+        setClearColor(gf::Color::Transparent);
+        m_background.setTexture(game->resources.getTexture("backgroundChest.png"));
+        m_background.setPosition(gf::Vector2f(600, 400)); 
+    }
+
+
+
+    void ChestScene::updateItemsPositions(gf::Vector2f vSize) {
+        float scaleBG = (vSize.x * 0.40f) / 600.0f;
+        gf::Vector2f bgPos = { vSize.x * 0.15f, vSize.y * 0.15f };
+        
+        float slotW = 78.0f * scaleBG; 
+        float slotH = 76.0f * scaleBG;
+        float padX = 10.0f * scaleBG; 
+        float padY = 10.0f * scaleBG;
+        
+        float firstCenterX = bgPos.x + (76.0f * scaleBG);
+        float firstCenterY = bgPos.y + (76.0f * scaleBG);
+        
+        float scaleItem = (64.0f * scaleBG) / 640.0f; 
+
+        for (size_t i = 0; i < m_contentSprites.size(); ++i) {
+            int slotIndex = m_itemSlotIndices[i]; 
+            int col = slotIndex % 6;
+            int row = slotIndex / 6;
+
+            float centerX = firstCenterX + col * (slotW + padX);
+            float centerY = firstCenterY + row * (slotH + padY);
+
+            m_contentSprites[i].setScale(scaleItem);
+            m_contentSprites[i].setPosition({centerX, centerY});
+        }
+    }
 
 
     void ChestScene::doProcessEvent(gf::Event &event) {
-        if(!isActive()){return;}
+        if (!isActive()) { return; }
+
         if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
-            gf::Vector2f mouseCoords = event.mouseButton.coords;
+            
+            gf::Vector2f mouseCoords = m_game->getRenderer().mapPixelToCoords(event.mouseButton.coords);
+            
+            updateItemsPositions(m_game->getRenderer().getSize());
+
+            float scaleBG = (m_game->getRenderer().getSize().x * 0.40f) / 600.0f;
+            float halfSize = (64.0f * scaleBG) / 2.0f;
 
             for (size_t i = 0; i < m_contentSprites.size(); ++i) {
-                gf::Matrix3f inverseMatrix = m_contentSprites[i].getInverseTransform();
-                gf::Vector2f localMousePos = gf::transform(inverseMatrix, mouseCoords);
+                gf::Vector2f pos = m_contentSprites[i].getPosition();
 
-                if (m_contentSprites[i].getLocalBounds().contains(localMousePos)) {
+                if (std::abs(mouseCoords.x - pos.x) <= halfSize && std::abs(mouseCoords.y - pos.y) <= halfSize) {
                     m_isItemSceneOpen = true;
+                    
                     m_game->m_ItemScene.setItem(m_loots[i], false, m_currentChestIndex, i);
                     m_game->pushScene(m_game->m_ItemScene);
                     return;
@@ -68,38 +104,16 @@ namespace rCMI
 
     void ChestScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states) {
         const gf::Vector2f vSize = target.getView().getSize();
-        float chestWidth = vSize.x * 0.40f; 
-        float scaleBG = chestWidth / 600.0f;
         
-        gf::Vector2f bgPos = { vSize.x * 0.15f, vSize.y * 0.15f };
-        m_background.setPosition(bgPos);
+        updateItemsPositions(vSize);
+
+        float scaleBG = (vSize.x * 0.40f) / 600.0f;
         m_background.setScale(scaleBG);
+        m_background.setPosition({ vSize.x * 0.15f, vSize.y * 0.15f });
         target.draw(m_background, states);
 
-    
-        float slotW = 78.0f * scaleBG; 
-        float slotH = 76.0f * scaleBG;
-        float padX = 10.0f * scaleBG; 
-        float padY = 10.0f * scaleBG;
-
-        float firstCenterX = bgPos.x + (76.0f * scaleBG);
-        float firstCenterY = bgPos.y + (76.0f * scaleBG);
-
-
-        float scaleItem = (64.0f * scaleBG) / 640.0f; 
-
-        for (size_t i = 0; i < m_contentSprites.size(); ++i) {
-            int slotIndex = m_itemSlotIndices[i]; 
-            int col = slotIndex % 6;
-            int row = slotIndex / 6;
-
-            float centerX = firstCenterX + col * (slotW + padX);
-            float centerY = firstCenterY + row * (slotH + padY);
-
-            m_contentSprites[i].setScale(scaleItem);
-            m_contentSprites[i].setPosition({centerX, centerY});
-            
-            target.draw(m_contentSprites[i], states);
+        for (auto& sprite : m_contentSprites) {
+            target.draw(sprite, states);
         }
     }
 

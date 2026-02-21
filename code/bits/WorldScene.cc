@@ -51,6 +51,7 @@ namespace rCMI
 
   void WorldScene::doProcessEvent(gf::Event &event)
   {
+    m_hud.processEvent(event, m_game);
     switch (event.type)
     {
     case gf::EventType::MouseMoved:
@@ -63,6 +64,14 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
+
+    if (m_game->m_ParametersScene.isActive()) {
+        return;
+    }
+    if (m_game->m_FeeScene->isActive()) {
+        return; 
+    }
+
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
     
@@ -72,8 +81,11 @@ namespace rCMI
       {
         if (m_isActivateInventory)
         {
-          m_game->popScene();
-          m_isActivateInventory = false;
+          if(m_game->m_InventoryScene->closureInventory(m_game))
+          {
+            m_isActivateInventory = false;
+          }
+          
         }
         else
         {
@@ -195,7 +207,7 @@ namespace rCMI
 
     if (Controls::isActiveAction("fire", m_actions))
     {
-      if (heroInEntity.alive())
+      if (heroInEntity.alive() && !m_isActivateInventory && !m_isActivateChest)
       {
         const gf::View &view = getWorldView();
         gf::RenderTarget &renderer = m_game->getRenderer();
@@ -205,8 +217,27 @@ namespace rCMI
         targetTile.x = static_cast<int>(worldPos.x / TileSize);
         targetTile.y = static_cast<int>(worldPos.y / TileSize);
 
-        if (shoot(m_world_entity, heroInEntity, targetTile))
-          playerMoved = true;
+        bool isTargetingMonster = m_world_entity.target_character_at(targetTile).has_value();
+
+        if (m_game->m_InventoryScene->m_inventory.hasEquipment(ItemType::Bow))
+        {
+          if (m_game->m_InventoryScene->m_inventory.hasArrows())
+          {
+            if (shoot(m_world_entity, heroInEntity, targetTile))
+            {
+              m_game->m_InventoryScene->m_inventory.consumeArrow(m_game);
+              playerMoved = true;
+            }
+          }
+          else if (isTargetingMonster)
+          {
+            std::cout << "Action impossible : Vous n'avez plus de fleches !" << std::endl;
+          }
+        }
+        else if (isTargetingMonster)
+        {
+          std::cout << "Action impossible : Vous devez equiper un arc !" << std::endl;
+        }
       }
     }
 
