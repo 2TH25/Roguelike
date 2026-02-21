@@ -59,7 +59,7 @@ namespace rCMI {
     {
         setClearColor(gf::Color::Transparent);
 
-        m_background.setSize({400.0f, 500.0f});
+        m_background.setSize({450.0f, 500.0f});
         m_background.setTexture(game->resources.getTexture("backgroundItem.png"));
         m_background.setAnchor(gf::Anchor::Center);
         m_background.setPosition({600.0f, 400.0f});
