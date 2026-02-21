@@ -5,6 +5,8 @@
 #include <gf/Text.h>
 #include <gf/Widgets.h>
 #include <gf/Shapes.h>
+#include <gf/Coordinates.h> 
+#include <gf/WidgetContainer.h>
 
 namespace rCMI {
     class RogueCMI;
