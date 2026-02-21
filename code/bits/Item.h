@@ -23,6 +23,7 @@ namespace rCMI
 		Weapon,
 		Misc,
 		Bow,
+		Arrow,
 		None
 	};
 

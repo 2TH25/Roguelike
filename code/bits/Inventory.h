@@ -104,6 +104,8 @@ namespace rCMI
     void updateSkillPointsText();
     void handleStatUpgrade(gf::Vector2f coords, RogueCMI *game);
     void resetSlotBackground(ItemType type, gf::Sprite* backgroundSlot, RogueCMI *game);
+    bool hasArrows();
+    void consumeArrow(RogueCMI *game);
   };
 }
 

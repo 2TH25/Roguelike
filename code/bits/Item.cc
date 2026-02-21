@@ -246,7 +246,7 @@ namespace rCMI
                     break;
 
           case 1:
-            newItem = Item( std::string("Fleche"),std::string("Fleche"), ItemType::Misc, Rarity::Common,
+            newItem = Item( std::string("Fleche"),std::string("Fleche"), ItemType::Arrow, Rarity::Common,
                     game->resources.getTexture("Fleche.png"),std::string("Une flèche de qualité médiocre, qui permettra sûrement d'atteindre vos ennemis à distance. \n (Une flèche sera consommée par tir)."),
                     Stat(0,0,0));
                     break;

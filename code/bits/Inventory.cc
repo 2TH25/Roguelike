@@ -632,4 +632,32 @@ namespace rCMI
 			updateInventory(game); 
 		}
 	}
+
+
+	// pour le tir à distance 
+
+
+	bool Inventory::hasArrows() {
+		for (auto& item : m_backpack) {
+			if (item.m_name == "Fleche" && item.m_count > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	void Inventory::consumeArrow(RogueCMI *game) {
+		for (auto it = m_backpack.begin(); it != m_backpack.end(); ++it) {
+			if (it->m_type == ItemType::Arrow) { 
+				it->m_count--;
+				
+				if (it->m_count <= 0) {
+					m_backpack.erase(it);
+				}
+				
+				updateBackpackDisplay(game);
+				return;
+			}
+		}
+	}
 }
