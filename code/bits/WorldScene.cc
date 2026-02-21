@@ -64,7 +64,9 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
-
+    if (m_game->m_DebutScene.isActive()) {
+        return;
+    }
     if (m_game->m_ParametersScene.isActive()) {
         return;
     }

@@ -14,6 +14,7 @@
 #include "FeeScene.h"
 #include "VictoryScene.h"
 #include "ParametersScene.h"
+#include "DebutScene.h"
 
 namespace rCMI
 {
@@ -36,6 +37,7 @@ namespace rCMI
     std::unique_ptr<FeeScene> m_FeeScene;
     VictoryScene m_VictoryScene;
     ParametersScene m_ParametersScene;
+    DebutScene m_DebutScene;
   };
 }
 
