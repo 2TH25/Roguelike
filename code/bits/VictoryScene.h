@@ -2,34 +2,31 @@
 #define RL_VICTORY_SCENE_H
 
 #include <gf/Scene.h>
-#include <gf/Font.h>
-#include <gf/WidgetContainer.h>
-#include <gf/Widgets.h>
 #include <gf/Text.h>
+#include <gf/Widgets.h>
+#include <gf/Shapes.h>
 
-namespace rCMI
-{
-	class RogueCMI;
+namespace rCMI {
+    class RogueCMI;
 
-	class VictoryScene : public gf::Scene
-	{
-	public:
-		VictoryScene(RogueCMI *game);
-		void setFinalScore(int score);
+    class VictoryScene : public gf::Scene {
+    public:
+        VictoryScene(RogueCMI *game);
+        void setFinalScore(int score);
 
-	private:
-		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
-		void doProcessEvent(gf::Event &event) override;
+        virtual void doProcessEvent(gf::Event &event) override;
+        virtual void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 
-		RogueCMI *m_game = nullptr;
-		gf::Font &font;
-		gf::WidgetContainer widgets;
-		gf::TextButtonWidget m_quit;
-		gf::Text m_title;
-    	gf::Text m_messageText;
+    private:
+        RogueCMI *m_game;
+        gf::RectangleShape m_background;
+        gf::Text m_title;
+        gf::Text m_messageText;
         gf::Text m_scoreText;
-		gf::RectangleShape m_background;
-	};
+        
+        gf::TextWidget m_boutonQuit;
+        gf::RectangleShape m_boutonBackground;
+    };
 }
 
-#endif // RL_VICTORY_SCENE_H
+#endif

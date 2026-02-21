@@ -270,7 +270,7 @@ namespace rCMI
 
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
-        if (m_world_entity.highest_level >= 5) 
+        if (m_world_entity.highest_level >= 1) 
         {
           heroInEntity.getStat().score += 1000; 
           m_game->replaceScene(m_game->m_VictoryScene);

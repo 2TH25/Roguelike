@@ -1,112 +1,105 @@
 #include "VictoryScene.h"
 #include "RogueCMI.h"
-#include <gf/Coordinates.h>
 
-namespace rCMI
-{
-  VictoryScene::VictoryScene(RogueCMI *game)
-      : gf::Scene(view_size),
-        m_game(game),
-        font(m_game->resources.getFont(PATH_FONT)),
-        m_title("FÉLICITATIONS !", font),
-        m_messageText("Bravo ! Tu as atteint la fin du donjon !\nTu as reussi a finir ces 6 semestres\net a obtenir ton diplome de licence !\n\nGrand bravo a toi ! Voici ton score :", font),
-        m_scoreText("", font),
-        m_quit("Retourner au menu", font)
-  {
-    setClearColor(gf::Color::Black);
-    
-    // Titre
-    m_title.setColor(gf::Color::Yellow);
-    m_title.setAnchor(gf::Anchor::Center);
+namespace rCMI {
 
-    // Message principal
-    m_messageText.setColor(gf::Color::Black);
-    m_messageText.setAnchor(gf::Anchor::Center);
-    m_messageText.setAlignment(gf::Alignment::Center); 
-
-
-    m_scoreText.setColor(gf::Color::Green);
-    m_scoreText.setAnchor(gf::Anchor::Center);
-
-    m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
-
-    auto createButtons = [&](gf::TextButtonWidget &button, auto callback)
+    VictoryScene::VictoryScene(RogueCMI *game)
+    : gf::Scene(gf::Vector2f(1200, 800))
+    , m_game(game)
+    , m_title("FÉLICITATIONS !", game->resources.getFont(PATH_FONT), 60)
+    , m_messageText("Bravo ! Tu as atteint la fin du donjon !\nTu as réussi à finir ces 6 semestres\net à obtenir ton diplôme de licence !\n\nGrand bravo à toi !", game->resources.getFont(PATH_FONT), 25)
+    , m_scoreText("0 POINTS", game->resources.getFont(PATH_FONT), 40)
+    , m_boutonQuit("RETOUR AU MENU", game->resources.getFont(PATH_FONT))
     {
-      button.setDefaultTextColor(gf::Color::Black);
-      button.setDefaultBackgroundColor(gf::Color::Gray(0.7f));
-      button.setSelectedTextColor(gf::Color::Black);
-      button.setSelectedBackgroundColor(gf::Color::Green);
-      button.setDisabledTextColor(gf::Color::Black);
-      button.setDisabledBackgroundColor(gf::Color::Red);
-      button.setAnchor(gf::Anchor::TopLeft);
-      button.setAlignment(gf::Alignment::Center);
-      button.setCallback(callback);
-      widgets.addWidget(button);
-    };
+        setClearColor(gf::Color::Transparent);
 
-    createButtons(m_quit, [&]()
-    { 
-      m_game->popAllScenes(); 
-      m_game->pushScene(m_game->m_MenuScene);
-    });
-  }
+        // Configuration du fond (Texture identique à DebutScene ou spécifique)
+        m_background.setOutlineColor(gf::Color::White);
+        m_background.setOutlineThickness(2.0f);
+        m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
 
-  void VictoryScene::setFinalScore(int score) 
-  {
-    m_scoreText.setString(std::to_string(score) + " POINTS");
-  }
+        m_title.setColor(gf::Color::Yellow);
+        m_title.setAnchor(gf::Anchor::Center);
 
-  void VictoryScene::doProcessEvent(gf::Event &event)
-  {
-    if (event.type == gf::EventType::MouseMoved)
-      widgets.pointTo(m_game->computeWindowToGameCoordinates(event.mouseCursor.coords, getHudView()));
+        m_messageText.setAnchor(gf::Anchor::Center);
+        m_messageText.setAlignment(gf::Alignment::Center);
 
-    if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
-      widgets.triggerAction();
+        m_scoreText.setColor(gf::Color::Green);
+        m_scoreText.setAnchor(gf::Anchor::Center);
+
+        m_boutonQuit.setSelected(); 
+        m_boutonQuit.setAnchor(gf::Anchor::Center);
     }
-  }
 
-  void VictoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states)
-  {
-    target.setView(getHudView());
-    const gf::Vector2f vSize = target.getView().getSize();
-    gf::Coordinates coords(target);
+    void VictoryScene::setFinalScore(int score) {
+        m_scoreText.setString(std::to_string(score) + " POINTS");
+    }
 
-    gf::Vector2f invSize = { vSize.x * 0.45f, vSize.y * 0.90f };
-    gf::Vector2f invPos = (vSize - invSize) / 2.0f;
+    void VictoryScene::doProcessEvent(gf::Event &event) {
+        if (!isActive()) return;
 
-    float size = 0.04f; 
-    int r_size = coords.getRelativeCharacterSize(size);
-    float buttonWidth = invSize.x * 0.8f; 
-    float padding = coords.getRelativeSize({0.01f, 0.f}).x;
+        if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
+            gf::Vector2f mouseCoords = event.mouseButton.coords;
+            if (m_boutonQuit.contains(mouseCoords)) {
+                m_game->popAllScenes();
+                m_game->pushScene(m_game->m_MenuScene);
+            }
+        }
+        
+        if (event.type == gf::EventType::KeyPressed && 
+           (event.key.keycode == gf::Keycode::Return || event.key.keycode == gf::Keycode::Escape)) {
+            m_game->popAllScenes();
+            m_game->pushScene(m_game->m_MenuScene);
+        }
+    }
 
-    float buttonY = invPos.y + invSize.y - (invSize.y * 0.25f);
-    
-    // Bouton 
-    m_quit.setCharacterSize(r_size);
-    m_quit.setAnchor(gf::Anchor::Center);
-    m_quit.setPosition({ vSize.x / 2.0f, buttonY });
-    m_quit.setParagraphWidth(buttonWidth);
-    m_quit.setPadding(padding);
+    void VictoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states) {
+        const gf::Vector2f vSize = target.getView().getSize();
+        
+        // On reprend les mêmes proportions que DebutScene
+        gf::Vector2f panelSize = { vSize.x * 0.60f, vSize.y * 0.85f };
+        gf::Vector2f panelPos = (vSize - panelSize) / 2.0f;
 
-    // Textes
-    m_title.setCharacterSize(r_size * 1.5f);
-    m_title.setPosition(coords.getRelativePoint({0.5f, 0.15f}));
+        m_background.setSize(panelSize);
+        m_background.setPosition(panelPos);
+        m_background.setAnchor(gf::Anchor::TopLeft); 
+        target.draw(m_background, states);
 
-    m_messageText.setCharacterSize(r_size * 0.8f);
-    m_messageText.setPosition(coords.getRelativePoint({0.5f, 0.40f}));
+        float centerX = panelPos.x + (panelSize.x / 2.0f);    
+        float textMaxWidth = panelSize.x * 0.90f;
 
-    m_scoreText.setCharacterSize(r_size * 1.5f);
-    m_scoreText.setPosition(coords.getRelativePoint({0.5f, 0.60f}));
+        // --- Titre ---
+        m_title.setPosition({centerX, panelPos.y + (panelSize.y * 0.15f)});
+        
+        // --- Message ---
+        m_messageText.setParagraphWidth(textMaxWidth); 
+        m_messageText.setPosition({centerX, panelPos.y + (panelSize.y * 0.40f)});
+        
+        // --- Score ---
+        m_scoreText.setPosition({centerX, panelPos.y + (panelSize.y * 0.65f)});
 
-    // Dessin
-    m_background.setSize(invSize);
-    m_background.setPosition(invPos);
-    m_background.draw(target, states);
-    
-    target.draw(m_title, states);
-    target.draw(m_messageText, states);
-    target.draw(m_scoreText, states);
-    widgets.render(target, states);
-  }
+        // --- Bouton (Placé en bas comme dans DebutScene) ---
+        float margin = 80.0f;
+        gf::Vector2f boutonPos = { centerX, panelPos.y + panelSize.y - margin };
+
+        gf::RectF textBounds = m_boutonQuit.getLocalBounds();
+        float textWidth = textBounds.max.x - textBounds.min.x;
+        float textHeight = textBounds.max.y - textBounds.min.y;
+
+        gf::Vector2f bgSize = { textWidth + 60.0f, textHeight + 20.0f };
+        m_boutonBackground.setSize(bgSize);
+        m_boutonBackground.setAnchor(gf::Anchor::Center);
+        m_boutonBackground.setPosition(boutonPos);
+        m_boutonBackground.setColor(gf::Color::White); 
+
+        m_boutonQuit.setPosition(boutonPos);
+        m_boutonQuit.setDefaultTextColor(gf::Color::Black);
+
+        // Dessin final
+        target.draw(m_boutonBackground, states);
+        m_boutonQuit.draw(target, states);
+        target.draw(m_title, states);
+        target.draw(m_messageText, states);
+        target.draw(m_scoreText, states);
+    }
 }
