@@ -38,6 +38,7 @@ add_executable(RogueCMI
   code/bits/EndMenuScene.cc
   code/bits/Stat.cc
   code/bits/ParametersScene.cc
+  code/bits/DebutScene.cc
 )
 
 target_include_directories(RogueCMI

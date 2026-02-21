@@ -13,7 +13,8 @@ namespace rCMI
         m_ItemScene(this), 
         m_EndMenuScene(this),
         m_FeeScene(std::make_unique<FeeScene>(this)),
-        m_ParametersScene(this)
+        m_ParametersScene(this),
+        m_DebutScene(this)
   {
     pushScene(m_BaseScene);
     pushScene(m_MenuScene);
