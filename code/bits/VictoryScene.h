@@ -25,6 +25,7 @@ namespace rCMI
 		gf::Font &font;
 		gf::WidgetContainer widgets;
 		gf::TextButtonWidget m_quit;
+		gf::TextButtonWidget m_continue;
 		gf::Text m_title;
     	gf::Text m_messageText;
         gf::Text m_scoreText;
