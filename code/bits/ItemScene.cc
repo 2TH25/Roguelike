@@ -21,6 +21,7 @@ namespace rCMI {
             case ItemType::Accessory:     return "Bracelet";
             case ItemType::Misc:     return "Divers";
             case ItemType::Bow:     return "Arc";
+            case ItemType::Arrow:     return "Flèche";
 
             default: break;
         }
@@ -111,8 +112,8 @@ namespace rCMI {
                 m_rarityText.setColor(gf::Color::fromRgba32(0xA335EEFF)); // Violet épique
                 break;
             case Item::Rarity::Legendary:
-                m_nameText.setColor(gf::Color::Orange);
-                m_rarityText.setColor(gf::Color::Orange); // Orange pour le légendaire
+                m_nameText.setColor(gf::Color::Red);
+                m_rarityText.setColor(gf::Color::Red); // Rouge pour le légendaire
                 break;
             default:
                 m_nameText.setColor(gf::Color::White);
@@ -168,7 +169,12 @@ namespace rCMI {
             m_buttonPickup.setPosition({600.0f, btnY});
         } else { // pas dans un coffre
 
-            if (m_currentItem.m_type == ItemType::Consumable) {
+            if (m_currentItem.m_type == ItemType::Arrow) {
+                m_buttonThrow.setSelected();
+                m_buttonThrow.setPosition({centerX, btnY}); 
+            }
+
+            else if (m_currentItem.m_type == ItemType::Consumable) {
                 m_buttonConsume.setSelected();
                 m_buttonThrow.setSelected();
                 
