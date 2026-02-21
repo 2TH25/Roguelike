@@ -33,6 +33,7 @@ add_executable(RogueCMI
   code/bits/Chest.cc
   code/bits/ChestManager.cc
   code/bits/FeeScene.cc
+  code/bits/VictoryScene.cc
   code/bits/ChestScene.cc
   code/bits/ItemScene.cc
   code/bits/EndMenuScene.cc

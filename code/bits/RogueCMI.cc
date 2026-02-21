@@ -13,6 +13,7 @@ namespace rCMI
         m_ItemScene(this), 
         m_EndMenuScene(this),
         m_FeeScene(std::make_unique<FeeScene>(this)),
+        m_VictoryScene(this),
         m_ParametersScene(this),
         m_DebutScene(this)
   {
