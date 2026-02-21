@@ -140,7 +140,11 @@ namespace rCMI {
         if (item.m_stat.getHealth() > 0) statsStr += "Hp: +" + std::to_string(item.m_stat.getHealth()) + " ";
         if (item.m_stat.getDefense() > 0) statsStr += "Def: +" + std::to_string(item.m_stat.getDefense()) + " ";
         m_statsText.setString(statsStr);
-        centerText(m_statsText, 520.0f);
+        if (statsStr.empty()) {
+            m_statsText.setPosition({-1000.0f, -1000.0f}); 
+        } else {
+            centerText(m_statsText, 520.0f);
+        }
 
         std::string textureKey = item.m_id + ".png"; 
         const gf::Texture& tex = m_game->resources.getTexture(textureKey);

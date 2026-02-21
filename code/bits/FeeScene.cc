@@ -85,7 +85,7 @@ namespace rCMI {
             Item newItem("Epee de base", "EpeeBase", ItemType::Weapon, Item::Rarity::Common,
                          m_game->resources.getTexture("EpeeBase.png"),
                          "Cette épée de mauvaise facture sera le point de départ de votre valeureuse aventure...",
-                         Stat(0, 0, 5));
+                         Stat(0, 0, 2));
             
             m_game->m_InventoryScene->m_inventory.setEquippedItem(newItem.m_type, &newItem, m_game);
             m_game->m_FeeScene->setDialogue(discours);
