@@ -37,8 +37,7 @@ namespace rCMI
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
-    
-
+    bool isAnyMonsterVisible();
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
     bool isStairs(gf::Vector2i position) const;
@@ -60,6 +59,7 @@ namespace rCMI
     int kills = 12;
     int score = 200;
     bool m_feeVisitee = false;
+    int m_turnCount = 0;
   private:
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;

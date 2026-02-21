@@ -145,21 +145,16 @@ namespace rCMI
   {
     if (!alive() || m_isMoving || !m_autoMove) return; 
 
-    // 1. Sauvegarder l'ancienne position avant que l'IA ne joue
     gf::Vector2i oldPos = existence.getPosition();
 
-    // L'IA joue (pathfinding, etc.)
     if (comportment.perform(*this, m_world))
     {
-      // 2. Si l'IA a bougé le perso et que l'animation n'est pas lancée
       gf::Vector2i newPos = existence.getPosition();
       
       if (oldPos != newPos && !m_isMoving)
       {
-        // On lance le mouvement visuel fluide
         startVisualMovement(oldPos, newPos);
 
-        // On détermine la direction pour jouer la bonne animation
         gf::Vector2i diff = newPos - oldPos;
         if (diff.x > 0) playAnimation("Right");
         else if (diff.x < 0) playAnimation("Left");
@@ -182,7 +177,7 @@ namespace rCMI
     case 3: target.x += 1; animName = "Right"; break;
     }
 
-    if (m_world.isWalkable(target))
+    if (m_world.isWalkable(target) && canWalkTo(target))
     {
       m_pixelsStart = existence.getPosition() * TileSize;
       

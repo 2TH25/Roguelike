@@ -42,12 +42,14 @@ namespace rCMI
     void startVisualMovement(gf::Vector2i oldGridPos, gf::Vector2i newGridPos);
     void setupMonsterAnimations(Character &c, const gf::Texture &tex, int lineIndex);
 
-
+    bool isMoving() const { return m_isMoving; } // Pour savoir si le perso bouge
+    gf::Vector2f getVisualPosition() const { return m_animatedSprite.getPosition(); }
     Existence &getExistence() { return existence; }
     Stat &getStat() { return stat; }
     Comportment &getComportment() { return comportment; }
     gf::Vector2f getPixelPosition() const { return m_animatedSprite.getPosition(); }
-
+    void setAggressive(bool aggressive) { m_isAggressive = aggressive; }
+    bool isAggressive() const { return m_isAggressive; }
     void setAppearance(const gf::Texture &tex) { texture = &tex; }
     void setDeadTexture(const gf::Texture &tex) { deadTexture = &tex; }
     void setExistence(const Existence &ex) { existence = ex; }
@@ -66,7 +68,7 @@ namespace rCMI
 
     bool canWalkTo(gf::Vector2i target) const
     {
-      if (!m_hasHome)
+      if (!m_hasHome || m_isAggressive)
         return true;
 
       return (target.x > m_homeRoom.min.x &&
@@ -94,6 +96,7 @@ namespace rCMI
     gf::RectI m_homeRoom;
     bool m_hasHome = false;
     bool m_autoMove = true;
+    bool m_isAggressive = false;
 
     bool m_isMoving = false;          
     float m_moveTime = 0.0f;    

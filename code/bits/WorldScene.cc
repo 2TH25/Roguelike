@@ -146,26 +146,40 @@ namespace rCMI
     bool attemptMove = false;
     std::string direction = "";
 
-    if (Controls::isActiveAction("move_up", m_actions)){
-      targetPos.y -= 1;
-      direction = "Up";
-      attemptMove = true;
+    bool isMovementActiveThisFrame = Controls::isActiveAction("move_up", m_actions) ||
+                                     Controls::isActiveAction("move_down", m_actions) ||
+                                     Controls::isActiveAction("move_right", m_actions) ||
+                                     Controls::isActiveAction("move_left", m_actions);
+
+    bool canProcessMovement = true;
+    
+    if (m_world_entity.isAnyMonsterVisible() && m_wasMovementActiveLastFrame) {
+        canProcessMovement = false;
     }
-    else if (Controls::isActiveAction("move_down", m_actions)){
-      targetPos.y += 1;
-      direction = "Down";
-      attemptMove = true;
+
+   if (canProcessMovement) {
+        if (Controls::isActiveAction("move_up", m_actions)){
+          targetPos.y -= 1;
+          direction = "Up";
+          attemptMove = true;
+        }
+        else if (Controls::isActiveAction("move_down", m_actions)){
+          targetPos.y += 1;
+          direction = "Down";
+          attemptMove = true;
+        }
+        else if (Controls::isActiveAction("move_right", m_actions)){
+          targetPos.x += 1;
+          direction = "Right";
+          attemptMove = true;
+        }
+        else if (Controls::isActiveAction("move_left", m_actions)){
+          targetPos.x -= 1;
+          direction = "Left";
+          attemptMove = true;
+        }
     }
-    else if (Controls::isActiveAction("move_right", m_actions)){
-      targetPos.x += 1;
-      direction = "Right";
-      attemptMove = true;
-    }
-    else if (Controls::isActiveAction("move_left", m_actions)){
-      targetPos.x -= 1;
-      direction = "Left";
-      attemptMove = true;
-    }
+    m_wasMovementActiveLastFrame = isMovementActiveThisFrame;
 
     if (attemptMove) {
         auto charIndex = m_world_entity.target_character_at(targetPos);
@@ -335,6 +349,7 @@ namespace rCMI
     m_timeSinceDeath = gf::Time::Zero;
     m_isActivateInventory = false;
     m_isActivateMap = false;
+    m_wasMovementActiveLastFrame = false;
     
     m_world_entity.reset(); 
     

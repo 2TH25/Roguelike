@@ -21,7 +21,9 @@ namespace rCMI
   WorldEntity::WorldEntity(RogueCMI *game)
       : gf::Entity(0),
         m_game(game),
-        m_map(game)
+        m_map(game),
+        m_feeVisitee(false)
+        
   {
   }
 
@@ -55,8 +57,13 @@ namespace rCMI
   std::optional<std::size_t> WorldEntity::target_character_at(gf::Vector2i target)
   {
     for (std::size_t i = 0; i < characters.size(); ++i)
-      if (characters[i].getExistence().getPosition() == target && characters[i].alive())
+      if (characters[i].getExistence().getPosition() == target && characters[i].alive()){
+        if (characters[i].getExistence().getName() == "PNJ" && m_feeVisitee) {
+            continue; 
+        }
         return i;
+      }
+        
 
     return std::nullopt;
   }
@@ -90,8 +97,17 @@ namespace rCMI
 
   void WorldEntity::EnemyTurns()
   {
-    for (std::size_t i = 1; i < characters.size(); ++i)
+    for (std::size_t i = 1; i < characters.size(); ++i){
       characters[i].doMove(*this);
+    }
+    m_turnCount++;
+    if (m_turnCount >= 30) {
+      if (hero().getStat().getHealth() < hero().getStat().getMaxHealth()) {
+        hero().heal(5);
+        std::cout << "Le heros s'est repose : +5 PV !" << std::endl;
+      }
+      m_turnCount = 0;
+    }
   }
 
   void WorldEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
@@ -111,6 +127,23 @@ namespace rCMI
       player_chape.setColor(gf::Color::fromRgba32(234, 51, 35));
       player_chape.draw(target, states);
     }
+  }
+
+  bool WorldEntity::isAnyMonsterVisible() {
+    auto heroPos = hero().getExistence().getPosition(); 
+    for (auto &monster : characters) { 
+        if (monster.getExistence().getName() == "Hero" || monster.getExistence().getName() == "PNJ") {
+          continue;
+        } 
+        if (!monster.alive()) {
+          continue; 
+        }
+       
+        if (m_map.isInFieldOfVision(monster.getExistence().getPosition())) { 
+            return true;
+        }
+    }
+    return false; 
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -497,4 +530,5 @@ namespace rCMI
   {
     m_map.activateMiniMap();
   }
+
 }

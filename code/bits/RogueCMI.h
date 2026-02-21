@@ -11,7 +11,7 @@
 #include "GameData.h"
 #include "ItemScene.h"
 #include "EndMenuScene.h"
-#include "feeScene.h"
+#include "FeeScene.h"
 #include "ParametersScene.h"
 #include "DebutScene.h"
 
