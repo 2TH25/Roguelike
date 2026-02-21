@@ -13,7 +13,6 @@ namespace rCMI {
     {
         setClearColor(gf::Color::Transparent);
 
-        // Configuration du fond (Texture identique à DebutScene ou spécifique)
         m_background.setOutlineColor(gf::Color::White);
         m_background.setOutlineThickness(2.0f);
         m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
@@ -56,7 +55,6 @@ namespace rCMI {
     void VictoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states) {
         const gf::Vector2f vSize = target.getView().getSize();
         
-        // On reprend les mêmes proportions que DebutScene
         gf::Vector2f panelSize = { vSize.x * 0.60f, vSize.y * 0.85f };
         gf::Vector2f panelPos = (vSize - panelSize) / 2.0f;
 
@@ -68,17 +66,13 @@ namespace rCMI {
         float centerX = panelPos.x + (panelSize.x / 2.0f);    
         float textMaxWidth = panelSize.x * 0.90f;
 
-        // --- Titre ---
         m_title.setPosition({centerX, panelPos.y + (panelSize.y * 0.15f)});
         
-        // --- Message ---
         m_messageText.setParagraphWidth(textMaxWidth); 
         m_messageText.setPosition({centerX, panelPos.y + (panelSize.y * 0.40f)});
         
-        // --- Score ---
         m_scoreText.setPosition({centerX, panelPos.y + (panelSize.y * 0.65f)});
 
-        // --- Bouton (Placé en bas comme dans DebutScene) ---
         float margin = 80.0f;
         gf::Vector2f boutonPos = { centerX, panelPos.y + panelSize.y - margin };
 
@@ -95,7 +89,6 @@ namespace rCMI {
         m_boutonQuit.setPosition(boutonPos);
         m_boutonQuit.setDefaultTextColor(gf::Color::Black);
 
-        // Dessin final
         target.draw(m_boutonBackground, states);
         m_boutonQuit.draw(target, states);
         target.draw(m_title, states);
