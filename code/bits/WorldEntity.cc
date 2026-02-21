@@ -21,7 +21,9 @@ namespace rCMI
   WorldEntity::WorldEntity(RogueCMI *game)
       : gf::Entity(0),
         m_game(game),
-        m_map(game)
+        m_map(game),
+        m_feeVisitee(false)
+        
   {
   }
 
@@ -111,6 +113,23 @@ namespace rCMI
       player_chape.setColor(gf::Color::fromRgba32(234, 51, 35));
       player_chape.draw(target, states);
     }
+  }
+
+  bool WorldEntity::isAnyMonsterVisible() {
+    auto heroPos = hero().getExistence().getPosition(); 
+    for (auto &monster : characters) { 
+        if (monster.getExistence().getName() == "Hero") {
+          continue;
+        } 
+        if (!monster.alive()) {
+          continue; 
+        }
+       
+        if (m_map.isInFieldOfVision(monster.getExistence().getPosition())) { 
+            return true;
+        }
+    }
+    return false; 
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -360,6 +379,7 @@ namespace rCMI
     sword_slot.setTexture(m_game->resources.getTexture("SlotArme.png"));
   }
 
+
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
 
@@ -457,4 +477,5 @@ namespace rCMI
   {
     m_map.activateMiniMap();
   }
+
 }

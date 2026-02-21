@@ -37,6 +37,7 @@ namespace rCMI
     void EnemyTurns();
 
     void render(gf::RenderTarget &target, const gf::RenderStates &states) override;
+    bool isAnyMonsterVisible();
 
     bool isVisible(gf::Vector2i position) const { return true; }
     bool isWalkable(gf::Vector2i position) const;
