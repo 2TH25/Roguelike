@@ -1,4 +1,4 @@
-#include "feeScene.h"
+#include "FeeScene.h"
 #include "RogueCMI.h"
 #include "GameData.h"
 #include "WorldEntity.h"
@@ -93,7 +93,7 @@ namespace rCMI {
             world.m_feeVisitee = true;
         } else {
             discours = {
-                "Tu vas avoir besoin de courage pour affronter tous ces dangers qui t'attendent.",
+                "Tu vas avoir besoin de courage pour \naffronter tous ces dangers qui t'attendent.",
                 "Je suis de tout coeur avec toi  ! \n ",
                 "J'espère que ta quête se déroulera bien ! Courage !"
             };

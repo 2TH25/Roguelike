@@ -59,6 +59,7 @@ namespace rCMI
     int kills = 12;
     int score = 200;
     bool m_feeVisitee = false;
+    int m_turnCount = 0;
   private:
     RogueCMI *m_game = nullptr;
     std::vector<Character> characters;
