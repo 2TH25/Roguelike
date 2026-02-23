@@ -19,7 +19,8 @@ namespace rCMI
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventory(false),
-        m_isActivateMap(false)
+        m_isActivateMap(false),
+        m_isActivateItem(false)
   // m_isActivateMenu(false)
   {
     setClearColor(gf::Color::Black);
@@ -113,6 +114,11 @@ namespace rCMI
           if (m_isActivateInventory) {
             m_game->popScene();
             m_isActivateInventory = false;
+          }
+          if(m_isActivateItem||m_isActivateInventory)
+          {
+            m_game->popScene();
+            m_isActivateItem = false;
           }
           setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
           m_isActivateMap = true;
@@ -356,7 +362,6 @@ namespace rCMI
     m_isActivateInventory = false;
     m_isActivateMap = false;
     m_wasMovementActiveLastFrame = false;
-    
     m_world_entity.reset(); 
     
     generateMap(MapSize); 

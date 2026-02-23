@@ -106,6 +106,7 @@ namespace rCMI
     void resetSlotBackground(ItemType type, gf::Sprite* backgroundSlot, RogueCMI *game);
     bool hasArrows();
     void consumeArrow(RogueCMI *game);
+    void reset(RogueCMI *game);
   };
 }
 

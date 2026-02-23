@@ -132,7 +132,7 @@ namespace rCMI
 
       case Rarity::Rare: {
 
-        int pick = rand() % 8;
+        int pick = rand() % 7;
         switch (pick) {
               case 0:
                 newItem = Item( std::string("Heaume Argenté"),std::string("CasqueBleu"), ItemType::Head, Rarity::Rare,
@@ -177,18 +177,14 @@ namespace rCMI
                 break;
 
 
-              case 7:
-                newItem = Item( std::string("Arc"),std::string("Arc"), ItemType::Bow, Rarity::Rare,
-                  game->resources.getTexture("Arc.png"),std::string("Un arc tout ce qu'il y a de plus banal, mais qui a le mérite de pouvoir blesser à distance. \n (Cliquez sur l'ennemi pour tirer) \n (Nécessite des flèches pour son utilisation)."),
-                  Stat(0,0,0));
-                  break;
+              
         } 
         break;
       } // Fin des Rare
 
       case Rarity::Uncommon: {
 
-        int pick = rand() % 7;
+        int pick = rand() % 9;
         switch (pick) {
               case 0:
                 newItem = Item( std::string("Heaume Boisé"),std::string("CasqueVert"), ItemType::Head, Rarity::Uncommon,
@@ -231,6 +227,16 @@ namespace rCMI
                 game->resources.getTexture("ArmeVert.png"),std::string("Une épée en bois mais plus robuste qu'une branche ! \n Fait partie de l'ensemble Boisé"),
                 Stat(0, 0, 4));
                 break;
+              case 7:
+                newItem = Item( std::string("Arc"),std::string("Arc"), ItemType::Bow, Rarity::Uncommon,
+                  game->resources.getTexture("Arc.png"),std::string("Un arc tout ce qu'il y a de plus banal, mais qui a le mérite de pouvoir blesser à distance. \n (Cliquez sur l'ennemi pour tirer) \n (Nécessite des flèches pour son utilisation)."),
+                  Stat(0,0,0));
+                  break;
+              case 8:
+                newItem = Item( std::string("Arc"),std::string("Arc"), ItemType::Bow, Rarity::Uncommon,
+                  game->resources.getTexture("Arc.png"),std::string("Un arc tout ce qu'il y a de plus banal, mais qui a le mérite de pouvoir blesser à distance. \n (Cliquez sur l'ennemi pour tirer) \n (Nécessite des flèches pour son utilisation)."),
+                  Stat(0,0,0));
+                  break;
         } 
         break;
       } // Fin des Uncommon

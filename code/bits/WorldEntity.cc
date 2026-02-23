@@ -479,10 +479,10 @@ namespace rCMI
     sword.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
     sword.setAnchor(gf::Anchor::BottomLeft);
 
-    m_buttonParametersTexture = &(m_game->resources.getTexture("BraceletOr.png"));
+    m_buttonParametersTexture = &(m_game->resources.getTexture("Param_Fond.png"));
     buttonParameters.setTexture(*m_buttonParametersTexture);
-    buttonParameters.setPosition({target_vue_size.x - 20.0f, target_vue_size.y - 20.0f});
-    buttonParameters.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
+    buttonParameters.setPosition({target_vue_size.x - 50.0f, target_vue_size.y - 50.0f});
+    buttonParameters.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonParameters.setAnchor(gf::Anchor::BottomRight);
 
     life_lost.draw(target, states);

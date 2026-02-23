@@ -13,7 +13,7 @@ namespace rCMI
 			m_skillpoints("Points de compétences : 0\n", game->resources.getFont(PATH_FONT), 20),
 				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png"))),
 				m_equippedSlotTexture(&(game->resources.getTexture("SlotVideEquipement.png"))),
-				m_plusTexture(&(game->resources.getTexture("Fleche.png")))
+				m_plusTexture(&(game->resources.getTexture("AjoutCompetence.png")))
 	{
 
 		m_stackTexts.clear(); // Sécurité
@@ -99,7 +99,7 @@ namespace rCMI
 			m_itemSprites[i].setColor(gf::Color::Transparent);
 		}
 
-		float btnScale = 0.05f;
+		float btnScale = 0.1f;
 		float statsX = 1000.0f;
 		float statsY = 280.0f;
 		float lineHeight = 30.0f;
@@ -371,7 +371,7 @@ namespace rCMI
 			target.draw(m_itemSprites[i], states);
     
 			if (!m_stackTexts[i].getString().empty()) {
-				float textX = x + slotSize - 25.0f;
+				float textX = x + slotSize - 30.0f;
 				float textY = y + slotSize - 20.0f;
 				m_stackTexts[i].setPosition({textX, textY});
 				target.draw(m_stackTexts[i], states);
@@ -386,8 +386,8 @@ namespace rCMI
 		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.35f});
 
 		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.22f);
-		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.005f);
-		float spacingY = invSize.y * 0.038f;
+		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.00000005f) - 20.0f;
+		float spacingY = invSize.y * 0.048f;
 
 		m_plusPowerBtn.setPosition({buttonsX, firstButtonY});
 		m_plusHealthBtn.setPosition({buttonsX, firstButtonY + spacingY});
@@ -525,6 +525,7 @@ namespace rCMI
 				if (i < m_backpack.size()) {
 					game->m_ItemScene.setItem(m_backpack[i], false);
                 	game->pushScene(game->m_ItemScene);
+					game->m_WorldScene.m_isActivateItem = true;
 				}
 				return;
 			}
@@ -537,6 +538,7 @@ namespace rCMI
 					Item equippedItem = getEquippedItem(type);
 					game->m_ItemScene.setItem(equippedItem, true);
 					game->pushScene(game->m_ItemScene);
+					game->m_WorldScene.m_isActivateItem = true;
 				}
 			}
 			return false;
@@ -658,6 +660,25 @@ namespace rCMI
 				updateBackpackDisplay(game);
 				return;
 			}
+		}
+	}
+
+	void Inventory::reset(RogueCMI *game)
+	{
+		if (!game) {
+			return; 
+		}
+
+		m_backpack.clear();
+		updateBackpackDisplay(game);
+
+		const ItemType types[] = {
+			ItemType::Head, ItemType::Legs, ItemType::Hand, ItemType::Boots,
+			ItemType::Torso, ItemType::Accessory, ItemType::Weapon, ItemType::Bow
+		};
+
+		for (ItemType type : types) {
+			setEquippedItem(type, nullptr, game);
 		}
 	}
 }
