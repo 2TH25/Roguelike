@@ -21,6 +21,7 @@ namespace rCMI
     void reset();
 
     bool m_isActivateInventory;
+    bool m_isActivateItem;
 
   private:
     void doHandleActions(gf::Window &window) override;
