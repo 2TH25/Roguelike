@@ -236,15 +236,6 @@ namespace rCMI
       {
         update_tile_at(center, TileType::Stairs);
       }
-
-      else if (leaf->type == RoomType::Healing)
-      {
-        int healCount = 3;
-        for (int i = 0; i < healCount && i < floorPositions.size(); ++i)
-        {
-          update_tile_at(floorPositions[i], TileType::HealingFloor);
-        }
-      }
       else if (leaf->type == RoomType::Start)
       {
         continue;
