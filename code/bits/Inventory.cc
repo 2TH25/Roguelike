@@ -509,7 +509,7 @@ namespace rCMI
 
 
 
-	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game) {
+	void Inventory::handleItemClick(gf::Vector2f coords, RogueCMI *game, gf::Scene *belowScene) {
 		const gf::Vector2f slotSize = { 80.0f, 80.0f };
 
 		if (m_plusPowerBtn.getColor().a > 0) { 
@@ -524,6 +524,7 @@ namespace rCMI
 			if (box.contains(coords)) {
 				if (i < m_backpack.size()) {
 					game->m_ItemScene.setItem(m_backpack[i], false);
+					belowScene->pause();
                 	game->pushScene(game->m_ItemScene);
 					game->m_WorldScene.m_isActivateItem = true;
 				}
@@ -537,6 +538,7 @@ namespace rCMI
 				if (hasEquipment(type)) {
 					Item equippedItem = getEquippedItem(type);
 					game->m_ItemScene.setItem(equippedItem, true);
+					belowScene->pause();
 					game->pushScene(game->m_ItemScene);
 					game->m_WorldScene.m_isActivateItem = true;
 				}

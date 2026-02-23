@@ -46,7 +46,6 @@ namespace rCMI {
         gf::TextButtonWidget m_buttonConsume;
         gf::TextButtonWidget m_buttonPickup;
 
-
         void onEquip();
         void onUnequip();
         void onConsume();

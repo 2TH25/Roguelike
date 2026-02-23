@@ -8,37 +8,34 @@ namespace rCMI
       : gf::Scene(view_size),
         m_game(game),
         font(m_game->resources.getFont(PATH_FONT)),
-        m_inventory(game)
+        m_inventory(game),
+        esc("escape"),
+        escActive(false)
   {
     setClearColor(gf::Color::Black);
+    esc.addKeycodeKeyControl(gf::Keycode::Tab);
+    esc.addKeycodeKeyControl(gf::Keycode::Escape);
+    addAction(esc);
+  }
+
+  void InventoryScene::doHandleActions([[maybe_unused]] gf::Window &window)
+  {
+    escActive = esc.isActive();
+  }
+
+  void InventoryScene::doUpdate([[maybe_unused]] gf::Time time)
+  {
+    if (escActive && isActive()) m_game->popScene();
   }
 
   void InventoryScene::doProcessEvent(gf::Event &event)
   {
-    if(!isActive()) {
-      return;
-    }
-    if (event.type == gf::EventType::MouseButtonPressed)
+    if (event.type == gf::EventType::MouseButtonPressed && isActive())
     {
-        gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseButton.coords, getHudView());
-        m_inventory.handleItemClick(coords, m_game);
+      gf::Vector2f coords = m_game->computeWindowToGameCoordinates(event.mouseButton.coords, getHudView());
+      m_inventory.handleItemClick(coords, m_game, this);
     }
   }
-
-  bool InventoryScene::closureInventory(RogueCMI *game)
-  {
-    if(!isActive()) 
-    { 
-      return false;
-    }
-    else
-    {
-      game->popScene();
-      return true;
-    }
-  }
-
- 
 
   void InventoryScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states)
   {

@@ -16,14 +16,17 @@ namespace rCMI
 	public:
 		InventoryScene(RogueCMI *game);
 		Inventory m_inventory;
-		bool closureInventory(RogueCMI *game);
 
 	private:
 		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 		void doProcessEvent(gf::Event &event) override;
+		void doHandleActions(gf::Window &window) override;
+		void doUpdate(gf::Time time) override;
 
 		RogueCMI *m_game = nullptr;
 		gf::Font &font;
+		gf::Action esc;
+		bool escActive;
 	};
 }
 

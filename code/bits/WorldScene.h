@@ -40,7 +40,8 @@ namespace rCMI
 
     gf::Time m_timeSinceDeath;
     
-    bool m_isActivateMap;
+    int m_isActivateMap;
+    bool playerMoved = false;
     bool m_wasMovementActiveLastFrame = false;
     
     // bool m_isActivateMenu;

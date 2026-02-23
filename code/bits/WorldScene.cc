@@ -19,8 +19,7 @@ namespace rCMI
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventory(false),
-        m_isActivateMap(false),
-        m_isActivateItem(false)
+        m_isActivateMap(0)
   // m_isActivateMenu(false)
   {
     setClearColor(gf::Color::Black);
@@ -65,88 +64,27 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
-    if (m_game->m_DebutScene.isActive()) {
-        return;
-    }
-    if (m_game->m_ParametersScene.isActive()) {
-        return;
-    }
-    if (m_game->m_FeeScene->isActive()) {
-        return; 
-    }
+    if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
+    m_isActivateInventory = false;
+    playerMoved = false;
 
-    Character &heroInEntity = m_world_entity.hero();
-    gf::Vector2i world_view_size = getWorldView().getSize();
-    
-    if (m_isActivateInventory || m_isActivateMap)
+    if (Controls::isActiveAction("showMap", m_actions))
     {
-      if (Controls::isActiveAction("ToggleInventory", m_actions))
-      {
-        if (m_isActivateInventory)
-        {
-          if(m_game->m_InventoryScene->closureInventory(m_game))
-          {
-            m_isActivateInventory = false;
-          }
-          
-        }
-        else
-        {
-          setWorldViewSize({800, 800});
-          m_isActivateMap = false;
-          m_world_entity.activateMiniMap();
-          m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-          m_game->pushScene(*(m_game->m_InventoryScene));
-          m_isActivateInventory = true;
-        }
-        return;
-      }
-      if (Controls::isActiveAction("showMap", m_actions))
-      {
-        if (m_isActivateMap)
-        {
-          setWorldViewSize({800, 800});
-          m_isActivateMap = false;
-          m_world_entity.activateMiniMap();
-        }
-        else  
-        {
-          if (m_isActivateInventory) {
-            m_game->popScene();
-            m_isActivateInventory = false;
-          }
-          if(m_isActivateItem||m_isActivateInventory)
-          {
-            m_game->popScene();
-            m_isActivateItem = false;
-          }
-          setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
-          m_isActivateMap = true;
-          m_world_entity.activateMiniMap();
-        }
-      }
+      if (m_isActivateMap == 0) m_isActivateMap = 1;
+      else if (m_isActivateMap == 3) m_isActivateMap = 2;
       return;
     }
-
+    
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
-      m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-      m_game->pushScene(*(m_game->m_InventoryScene));
       m_isActivateInventory = true;
       return;
     }
 
-    if (Controls::isActiveAction("showMap", m_actions))
-    {
-      setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
-      m_isActivateMap = true;
-      m_world_entity.activateMiniMap();
-      return;
-    }
+    Character &heroInEntity = m_world_entity.hero();
+    gf::Vector2i world_view_size = getWorldView().getSize();
 
     // Gestion du déplacement et Interaction PNJ
-
-    bool playerMoved = false;
     
     gf::Vector2i targetPos = heroInEntity.getExistence().getPosition();
     bool attemptMove = false;
@@ -302,22 +240,44 @@ namespace rCMI
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
+    if (m_isActivateMap == 1)
+    {
+      setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);
+      setWorldViewCenter(m_world_entity.getMap().getSize() * TileSize / 2);
+      m_world_entity.activateMiniMap();
+      m_isActivateMap = 3;
+      return;
+    }
+    else if (m_isActivateMap == 2)
+    {
+      setWorldViewSize({800, 800});
+      m_world_entity.activateMiniMap();
+      m_isActivateMap = 0;
+      return;
+    }
+    else if (m_isActivateMap == 3) return;
+
+    if (m_isActivateInventory)
+    {
+      m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+      m_game->pushScene(*(m_game->m_InventoryScene));
+      pause();
+      return;
+    }
+    
     m_world_entity.update(time);
+
     gf::Vector2f playerPixelPos = m_world_entity.hero().getPixelPosition();
     gf::Vector2f playerCenter = playerPixelPos + (gf::Vector2f(TileSize, TileSize) / 2.0f);
-
-    gf::Vector2f worldCenter = m_world_entity.getMap().getSize() * TileSize / 2;
-    
-    setWorldViewCenter(m_isActivateMap ? worldCenter : playerCenter);
+    setWorldViewCenter(playerCenter);
 
     if (!m_world_entity.hero().alive())
     {
       m_timeSinceDeath += time;
-      if (m_timeSinceDeath.asSeconds() > 2.0f){
+      if (m_timeSinceDeath.asSeconds() > 1.0f){
         m_game->m_EndMenuScene.setFinalStats(m_world_entity.hero().getStat().score,m_world_entity.hero().getStat().getKills(),m_world_entity.highest_level);
         m_game->replaceScene(m_game->m_EndMenuScene);
       }
-        
     }
 
     updateFieldOfView();

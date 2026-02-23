@@ -6,6 +6,7 @@
 #include <gf/Widget.h>
 #include <gf/Event.h>
 #include <gf/Rect.h>
+#include <gf/Scene.h>
 #include <vector>
 #include <iostream>
 #include <gf/Sprite.h>
@@ -97,7 +98,7 @@ namespace rCMI
     void equipFromBackpack(std::size_t index, RogueCMI *game);
     EquippedSlot *getSlotByType(ItemType type);
     bool addItemToBackpack(Item item, RogueCMI *game);
-    void handleItemClick(gf::Vector2f coords, RogueCMI *game);
+    void handleItemClick(gf::Vector2f coords, RogueCMI *game, gf::Scene *belowScene);
     bool addItemFromChest(int chestIndex, int itemIndex, RogueCMI *game);
     void removeItemFromBackpack(const Item& item, RogueCMI *game);
     void consumeItem(const Item& item, RogueCMI *game);
