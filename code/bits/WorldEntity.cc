@@ -387,7 +387,7 @@ namespace rCMI
     text_kills.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
     text_kills.setColor(gf::Color::Red);
 
-    sword_slot.setTexture(m_game->resources.getTexture("SlotArme.png"));
+    buttonParameters.setTexture(m_game->resources.getTexture("Param_Fond.png"));
   }
 
   void HudEntity::processEvent(gf::Event &event, RogueCMI *game)
@@ -469,19 +469,17 @@ namespace rCMI
     text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);
 
+    Item weapon = m_game->m_InventoryScene.get()->m_inventory.getEquippedItem(ItemType::Weapon);
+    sword_slot.setTexture(m_game->resources.getTexture(weapon.m_texture != nullptr ? "SlotVideEquipement.png" : "SlotArme.png"));
     sword_slot.setPosition({life_lost.getPosition().x, target_vue_size.y - life_lost.getPosition().x});
     sword_slot.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
     sword_slot.setAnchor(gf::Anchor::BottomLeft);
-
-    Item weapon = m_game->m_InventoryScene.get()->m_inventory.getEquippedItem(ItemType::Weapon);
     sword.setTexture(*weapon.m_texture);
     sword.setPosition({life_lost.getPosition().x, target_vue_size.y - life_lost.getPosition().x});
     sword.setScale(life.getSize().y * 5 / sword_slot.getTexture().getSize());
     sword.setAnchor(gf::Anchor::BottomLeft);
 
-    m_buttonParametersTexture = &(m_game->resources.getTexture("Param_Fond.png"));
-    buttonParameters.setTexture(*m_buttonParametersTexture);
-    buttonParameters.setPosition({target_vue_size.x - 50.0f, target_vue_size.y - 50.0f});
+    buttonParameters.setPosition({target_vue_size.x - sword_slot.getPosition().x, sword_slot.getPosition().y});
     buttonParameters.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonParameters.setAnchor(gf::Anchor::BottomRight);
 
