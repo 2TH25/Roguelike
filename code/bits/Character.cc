@@ -353,10 +353,10 @@ namespace rCMI
   }
 
 
-  Character Character::skeleton(gf::Vector2i position, const gf::Texture &tex)
+  Character Character::skeleton(gf::Vector2i position, const gf::Texture &tex, int level)
   {
     Existence ex{position, u'S', gf::Color::White, "Skeleton", true};
-    Stat st(150, 2, 10);
+    Stat st(150 + (level - 1) * 15, 2, 10 + (level - 1) * 2);
     Character c(ex, st, tex);
     c.setComportment(Comportment::hostile());
     
@@ -364,10 +364,10 @@ namespace rCMI
     return c;
   }
 
-  Character Character::zombie(gf::Vector2i position, const gf::Texture &tex)
+  Character Character::zombie(gf::Vector2i position, const gf::Texture &tex, int level)
   {
     Existence ex{position, u'Z', gf::Color::Orange, "Zombie", true};
-    Stat st(100, 3, 7);
+    Stat st(100 + (level - 1) * 10, 3, 7 + (level - 1) * 1);
     Character c(ex, st, tex);
     c.setComportment(Comportment::hostile());
 
@@ -375,10 +375,10 @@ namespace rCMI
     return c;
   }
 
-  Character Character::slime(gf::Vector2i position, const gf::Texture &tex)
+  Character Character::slime(gf::Vector2i position, const gf::Texture &tex, int level)
   {
     Existence ex{position, u's', gf::Color::Green, "Slime", true};
-    Stat st(50, 0, 3);
+    Stat st(50 + (level - 1) * 5, 0, 3 + (level - 1) * 1);
     Character c(ex, st, tex);
     c.setComportment(Comportment::hostile());
 

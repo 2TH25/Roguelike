@@ -79,9 +79,9 @@ namespace rCMI
 
     static Character hero(gf::Vector2i position, const gf::Texture &tex);
     static Character pnj(gf::Vector2i position, const gf::Texture &tex);
-    static Character skeleton(gf::Vector2i position, const gf::Texture &tex);
-    static Character zombie(gf::Vector2i position, const gf::Texture &tex);
-    static Character slime(gf::Vector2i position, const gf::Texture &tex);
+    static Character skeleton(gf::Vector2i position, const gf::Texture &tex, int level = 1);
+    static Character zombie(gf::Vector2i position, const gf::Texture &tex, int level = 1);
+    static Character slime(gf::Vector2i position, const gf::Texture &tex, int level = 1);
 
   private:
     Existence existence;

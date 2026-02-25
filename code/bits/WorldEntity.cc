@@ -173,6 +173,7 @@ namespace rCMI
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dist_type(1, 100);
+    std::vector<gf::Vector2i> allFloorPositions;
 
     for (auto *leaf : leaves)
     {
@@ -213,6 +214,7 @@ namespace rCMI
         for (int y = room.min.y + 1; y < room.max.y; ++y)
         {
           floorPositions.push_back({x, y});
+          allFloorPositions.push_back({x, y});
         }
       }
       std::shuffle(floorPositions.begin(), floorPositions.end(), gen);
@@ -274,15 +276,15 @@ namespace rCMI
 
             if (nombre_aleatoire <= 60)
             {
-              mob = Character::slime(pos_aleatoire, textureMonstres);
+              mob = Character::slime(pos_aleatoire, textureMonstres, highest_level);
             }
             else if (nombre_aleatoire <= 85)
             {
-              mob = Character::zombie(pos_aleatoire, textureMonstres);
+              mob = Character::zombie(pos_aleatoire, textureMonstres, highest_level);
             }
             else
             {
-              mob = Character::skeleton(pos_aleatoire, textureMonstres);
+              mob = Character::skeleton(pos_aleatoire, textureMonstres, highest_level);
             }
 
             mob.setHomeRoom(room);
@@ -290,6 +292,34 @@ namespace rCMI
           }
         }
       }
+    }
+    int level_bonus = highest_level - 1;
+    if (level_bonus > 0)
+    {
+      std::shuffle(allFloorPositions.begin(), allFloorPositions.end(), gen);
+      int tileIndex = 0;
+      const gf::Texture &textureMonstres = m_game->resources.getTexture("SetTextureMonstre.png");
+
+      auto spawnExtraMobs = [&](int count, int type) {
+        for (int i = 0; i < count; ++i) {
+          while (tileIndex < allFloorPositions.size()) {
+            gf::Vector2i pos = allFloorPositions[tileIndex++];
+            if (isWalkable(pos) && !target_character_at(pos).has_value()) {
+              Character mob;
+              if (type == 0) mob = Character::skeleton(pos, textureMonstres, highest_level);
+              else if (type == 1) mob = Character::zombie(pos, textureMonstres, highest_level);
+              else mob = Character::slime(pos, textureMonstres, highest_level);
+              
+              characters.push_back(mob);
+              break; 
+            }
+          }
+        }
+      };
+
+      spawnExtraMobs(level_bonus * 1, 0); // +1 Squelette par niveau passé
+      spawnExtraMobs(level_bonus * 2, 1); // +2 Zombies par niveau passé
+      spawnExtraMobs(level_bonus * 2, 2); // +2 Slimes par niveau passé
     }
   }
 
