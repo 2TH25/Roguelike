@@ -19,7 +19,7 @@ namespace rCMI
     m_statsText.setColor(gf::Color::Black);
     m_statsText.setAnchor(gf::Anchor::Center);
 
-    m_background.setTexture(game->resources.getTexture("BackgroundInventory.png"));
+    m_background.setTexture(game->resources.getTexture("backgroundItem.png"));
 
     
 

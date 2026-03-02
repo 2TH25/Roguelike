@@ -25,8 +25,11 @@ namespace rCMI
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
 
-    for (gf::Action *action : m_actions)
+    for (gf::Action *action : m_actions){
       addAction(*action);
+    }
+    addWorldEntity(m_world_entity);
+    addHudEntity(m_hud);
   }
 
   void WorldScene::generateMap(gf::Vector2i size)
@@ -45,8 +48,6 @@ namespace rCMI
     for (auto &character : m_world_entity.getCharacters())
       character.setDeadTexture(textureMort);
 
-    addWorldEntity(m_world_entity);
-    addHudEntity(m_hud);
   }
 
   void WorldScene::doProcessEvent(gf::Event &event)
@@ -216,9 +217,12 @@ namespace rCMI
       {
         if (m_world_entity.highest_level >= 1) 
         {
-          heroInEntity.getStat().score += 1000; 
+          for (auto* action : m_actions) {
+            action->reset(); 
+          }
+          
           m_game->replaceScene(m_game->m_VictoryScene);
-          return;
+          return; 
         }
         m_world_entity.nextLevel();
         gf::Vector2i TileVect({TileSize, TileSize});
@@ -320,10 +324,11 @@ namespace rCMI
   void WorldScene::reset() {
     m_timeSinceDeath = gf::Time::Zero;
     m_isActivateInventory = false;
-    m_isActivateMap = false;
+    m_isActivateMap = 0;
     m_wasMovementActiveLastFrame = false;
     m_world_entity.reset(); 
     
     generateMap(MapSize); 
   }
+
 }

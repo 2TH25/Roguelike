@@ -6,10 +6,10 @@ namespace rCMI {
     DebutScene::DebutScene(RogueCMI *game)
     : gf::Scene(gf::Vector2f(1200, 800))
     , m_game(game)
-    , m_titre("BIENVENUE", game->resources.getFont(PATH_FONT), 60)
-    , m_message("Votre aventure dans le donjon commence !", game->resources.getFont(PATH_FONT), 30)
-    , m_infoCommandes("Pour les commandes detaillées,\ncliquez sur l'icone des paramètres, qui se trouve en bas à droite.\n Et bien voilà. Il ne me reste qu'à vous souhaiter beaucoup de courage, et un bon jeu !", game->resources.getFont(PATH_FONT), 22)
-    , m_boutonOk("OK", game->resources.getFont(PATH_FONT))
+    , m_titre("Le Donjon du CMI", game->resources.getFont(PATH_FONT), 50)
+    , m_message("Votre quête commence ici : obtenir votre Licence !\n\nChaque niveau de ce donjon impitoyable represente un semestre.\nIl vous faudra survivre a 6 semestres afin d'esperer obtenir votre diplome\n.", game->resources.getFont(PATH_FONT), 26)
+    , m_infoCommandes("Pour les commandes detaillees,\ncliquez sur l'icone des parametres en bas a droite.\n\nArmez-vous de courage et de perseverance,\ncar cette quete sera longue et ardue. Bonne chance !", game->resources.getFont(PATH_FONT), 22)
+    , m_boutonOk("C'EST PARTI !", game->resources.getFont(PATH_FONT))
     {
         setClearColor(gf::Color::Transparent);
 
@@ -71,22 +71,21 @@ namespace rCMI {
         float centerX = panelPos.x + (panelSize.x / 2.0f);    
         float textMaxWidth = panelSize.x * 0.90f;
 
-        // --- Textes (restent centrés) ---
         m_titre.setAnchor(gf::Anchor::Center);
-        m_titre.setPosition({centerX, panelPos.y + (panelSize.y * 0.15f)});
+        m_titre.setPosition({centerX, panelPos.y + (panelSize.y * 0.13f)});
         
         m_message.setParagraphWidth(textMaxWidth); 
         m_message.setAlignment(gf::Alignment::Center);
         m_message.setAnchor(gf::Anchor::Center);
-        m_message.setPosition({centerX, panelPos.y + (panelSize.y * 0.35f)});
+        m_message.setPosition({centerX, panelPos.y + (panelSize.y * 0.38f)});
         
         m_infoCommandes.setParagraphWidth(textMaxWidth);
         m_infoCommandes.setAlignment(gf::Alignment::Center);
         m_infoCommandes.setAnchor(gf::Anchor::Center);
-        m_infoCommandes.setPosition({centerX, panelPos.y + (panelSize.y * 0.60f)});
+        m_infoCommandes.setPosition({centerX, panelPos.y + (panelSize.y * 0.65f)});
         
 
-        float margin = 100.0f;
+        float margin = 155.0f;
         gf::Vector2f boutonPos = { 
             panelPos.x + panelSize.x - margin, 
             panelPos.y + panelSize.y - margin 

@@ -299,7 +299,7 @@ namespace rCMI
     Existence ex{position, u'@', gf::Color::Blue, "Hero", true};
     Stat st(100, 0, 15);
     Character c(ex, st, tex);
-    float duration = 0.5f;
+    float duration = 0.6f;
     float nbTilesFLine = 4;
 
     gf::Vector2f texture_size = tex.getSize();

@@ -166,7 +166,7 @@ namespace rCMI
 
     characters.clear();
     m_chestManager.m_chests.clear();
-    characters.reserve(100);
+    characters.reserve(1000);
     std::vector<BSPTree *> leaves;
     generator.getRoot().getRooms(leaves);
 
@@ -321,6 +321,11 @@ namespace rCMI
       spawnExtraMobs(level_bonus * 2, 1); // +2 Zombies par niveau passé
       spawnExtraMobs(level_bonus * 2, 2); // +2 Slimes par niveau passé
     }
+    for (auto& character : characters) {
+        if (character.alive()) {
+            character.playAnimation("Default");
+        }
+    }
   }
 
   struct VectorCompare
@@ -444,6 +449,7 @@ namespace rCMI
             }
         }
     }
+    
 }
 
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
