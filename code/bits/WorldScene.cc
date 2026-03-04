@@ -231,12 +231,12 @@ namespace rCMI
 
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
-        if (m_world_entity.highest_level >= 6) 
+        if (m_world_entity.highest_level >= 1) 
         {
           for (auto* action : m_actions) {
             action->reset(); 
           }
-          
+          m_game->m_VictoryScene.setFinalScore(m_world_entity.hero().getStat().score);
           m_game->replaceScene(m_game->m_VictoryScene);
           return; 
         }
@@ -356,7 +356,6 @@ namespace rCMI
     for (gf::Action *action : m_actions) {
         action->reset();
     }
-
     m_world_entity.reset(); 
     generateMap(MapSize); 
   }

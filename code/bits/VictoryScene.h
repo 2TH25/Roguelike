@@ -14,24 +14,20 @@ namespace rCMI {
     class VictoryScene : public gf::Scene {
     public:
         VictoryScene(RogueCMI *game);
-        
-        // Nouvelle fonction avec tes 3 paramètres
-        void setFinalStats(int score, int kills, int highest_level);
+        void setFinalScore(int score);
 
-    private:
-        void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
-        void doProcessEvent(gf::Event &event) override;
+	private:
+		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
+		void doProcessEvent(gf::Event &event) override;
 
-        RogueCMI *m_game = nullptr;
-        gf::Font &font;
-        gf::WidgetContainer widgets;
-        
-        gf::TextButtonWidget m_quit;
-        // Le bouton m_continue a été retiré selon ton nouveau design
-        
-        gf::Text m_title;
-        gf::Text m_messageText;
-        gf::Text m_statsText; // Remplacement de m_scoreText
+		RogueCMI *m_game = nullptr;
+		gf::Font &font;
+		gf::WidgetContainer widgets;
+		gf::TextButtonWidget m_quit;
+		gf::TextButtonWidget m_continue;
+		gf::Text m_title;
+    	gf::Text m_messageText;
+        gf::Text m_scoreText;
         gf::RectangleShape m_background;
     };
 }

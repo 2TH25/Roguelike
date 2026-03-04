@@ -43,6 +43,7 @@ namespace rCMI
 
     createButtons(m_saves, [&]()
                   { m_game->m_WorldScene.reset();
+                    m_game->m_InventoryScene->m_inventory.reset(m_game);
                     m_game->replaceScene(m_game->m_WorldScene);
                     m_game->pushScene(m_game->m_DebutScene);
                   });
