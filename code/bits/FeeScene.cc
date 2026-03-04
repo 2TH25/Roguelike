@@ -67,10 +67,10 @@ namespace rCMI {
         if (!world.m_feeVisitee) {
             discours = {
                 "Bonjour jeune voyageur !",
-                "Je suis la fée du plateau et je serais là pour te venir en aide. \n ",
+                "Je suis la fée et je suis là pour te venir en aide. \n ",
                 "Fais attention aux monstres qui rodent...\n Ils sont puissants et surtout ils ne veulent pas que \ntu atteignes la fin du donjon.",
                 "Bonne chance dans ton aventure ! \n Voici un petit cadeau pour t'aider.",
-                "Tu as reçu une potion de soin ! Utilise-la judicieusement."
+                "Tu as reçu une potion de soin et une épée en bois !\n Utilise-les judicieusement."
             };
 
             Item starterPotion;

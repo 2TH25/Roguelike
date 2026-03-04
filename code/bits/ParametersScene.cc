@@ -18,7 +18,7 @@ namespace rCMI {
         m_titre.setAnchor(gf::Anchor::Center);
 
         m_helpCommandsText.setParagraphWidth(450.0f);
-        helpCommandsString = "- TAB : Inventaire\n- A : Map\n- Foncez sur un ennemi pour l'attaquer au corps à corps\n- Cliquez sur un ennemi pour lui tirer dessus à distance (nécessite un arc et des flèches)";
+        helpCommandsString = "- TAB : Inventaire\n- A : Map\n- Foncez sur un ennemi pour l'attaquer au corps à corps\n- Cliquez sur un ennemi pour lui tirer dessus à distance (nécessite un arc et des flèches)\n- Gain XP : Ouvrir l'inventaire pour améliorer une stat\n";
         m_helpCommandsText.setString(helpCommandsString);
         m_helpCommandsText.setAlignment(gf::Alignment::Center);
         m_helpCommandsText.setAnchor(gf::Anchor::Center);
