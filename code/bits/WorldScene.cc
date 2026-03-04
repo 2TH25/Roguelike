@@ -258,6 +258,12 @@ namespace rCMI
     }
   }
 
+  void WorldScene::doShow()
+  {
+      m_wasMovementActiveLastFrame = false;
+      playerMoved = false;
+  }
+
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
     if (m_isActivateMap == 1)
@@ -341,6 +347,8 @@ namespace rCMI
     m_timeSinceDeath = gf::Time::Zero;
     m_isActivateInventory = false;
     m_isActivateMap = 0;
+    playerMoved = false; 
+    m_isActivateChest = false; 
     m_wasMovementActiveLastFrame = false;
 
     m_inputLock = true;

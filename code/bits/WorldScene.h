@@ -24,6 +24,7 @@ namespace rCMI
     bool m_isActivateItem;
 
   private:
+    void doShow() override;
     void doHandleActions(gf::Window &window) override;
     void doUpdate(gf::Time time) override;
 
