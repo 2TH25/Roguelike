@@ -17,6 +17,7 @@ namespace rCMI
     HudEntity m_hud;
     WorldScene(RogueCMI *game);
     bool m_isActivateChest = false;
+    void requestInputLock() { m_freshStart = true; }
     void generateMap(gf::Vector2i size);
     void reset();
 
@@ -41,6 +42,7 @@ namespace rCMI
 
     gf::Time m_timeSinceDeath;
     bool m_inputLock = false;
+    bool m_freshStart = false;
     
     int m_isActivateMap;
     bool playerMoved = false;

@@ -67,35 +67,36 @@ namespace rCMI
   {
 
     if (m_inputLock) {
-      bool anyKeyHeld = Controls::isActiveAction("move_up", m_actions)   ||
-                        Controls::isActiveAction("move_down", m_actions)  ||
-                        Controls::isActiveAction("move_right", m_actions) ||
-                        Controls::isActiveAction("move_left", m_actions);
-      if (!anyKeyHeld) {
-          m_inputLock = false;
-      }
-      return; 
+        bool anyKeyHeld = Controls::isActiveAction("move_up", m_actions)   ||
+                          Controls::isActiveAction("move_down", m_actions)  ||
+                          Controls::isActiveAction("move_right", m_actions) ||
+                          Controls::isActiveAction("move_left", m_actions);
+        if (!anyKeyHeld) {
+            m_inputLock = false;
+        }
+        return;
     }
-
-    if (m_isActivateMap == 3) return; 
-    if (m_game->m_FeeScene->isActive()) return;
 
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
     m_isActivateInventory = false;
     playerMoved = false;
 
+    // Les toggles UI fonctionnent toujours
     if (Controls::isActiveAction("showMap", m_actions))
     {
-      if (m_isActivateMap == 0) m_isActivateMap = 1;
-      else if (m_isActivateMap == 3) m_isActivateMap = 2;
-      return;
+        if (m_isActivateMap == 0) m_isActivateMap = 1;
+        else if (m_isActivateMap == 3) m_isActivateMap = 2;
+        return;
     }
-    
+
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
-      m_isActivateInventory = true;
-      return;
+        m_isActivateInventory = true;
+        return;
     }
+
+    if (m_isActivateMap == 3) return; 
+    if (m_game->m_FeeScene->isActive()) return;
 
     Character &heroInEntity = m_world_entity.hero();
     gf::Vector2i world_view_size = getWorldView().getSize();
@@ -261,7 +262,10 @@ namespace rCMI
   {
       m_wasMovementActiveLastFrame = false;
       playerMoved = false;
-      m_inputLock = true;
+      if (m_freshStart) {        // lock uniquement après un vrai reset
+        m_inputLock = true;
+        m_freshStart = false;
+    }
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
@@ -344,18 +348,15 @@ namespace rCMI
   }
 
   void WorldScene::reset() {
-    m_timeSinceDeath = gf::Time::Zero;
-    m_isActivateInventory = false;
-    m_isActivateMap = 0;
-    playerMoved = false; 
-    m_isActivateChest = false; 
-    m_wasMovementActiveLastFrame = false;
-
-    for (gf::Action *action : m_actions) {
-        action->reset();
-    }
-    m_world_entity.reset(); 
-    generateMap(MapSize); 
+      m_timeSinceDeath = gf::Time::Zero;
+      m_isActivateInventory = false;
+      m_isActivateMap = 0;
+      playerMoved = false;
+      m_isActivateChest = false;
+      m_wasMovementActiveLastFrame = false;
+      m_freshStart = true; 
+      m_world_entity.reset();
+      generateMap(MapSize);
   }
 
 }

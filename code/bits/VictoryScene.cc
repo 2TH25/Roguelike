@@ -45,6 +45,7 @@ namespace rCMI
     };
 
     createButtons(m_continue, [&]() { 
+      m_game->m_WorldScene.requestInputLock();
       m_game->replaceScene(m_game->m_WorldScene);
       m_game->m_WorldScene.m_world_entity.nextLevel();
     });
