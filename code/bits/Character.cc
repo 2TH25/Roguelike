@@ -209,8 +209,9 @@ namespace rCMI
 
     if (stat.getHealth() <= 0)
     {
-      return true;
       die();
+      return true;
+      
     }
 
     return false;

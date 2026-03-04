@@ -97,10 +97,16 @@ namespace rCMI
 
   void WorldEntity::EnemyTurns()
   {
+  
     for (std::size_t i = 1; i < characters.size(); ++i){
+      if (!hero().alive())
+            return;
+            
       characters[i].doMove(*this);
     }
+
     m_turnCount++;
+
     if (m_turnCount >= 30) {
       if (hero().getStat().getHealth() < hero().getStat().getMaxHealth()) {
         hero().heal(5);
