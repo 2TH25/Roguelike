@@ -215,7 +215,7 @@ namespace rCMI
 
       if (m_world_entity.isStairs(heroInEntity.getExistence().getPosition()))
       {
-        if (m_world_entity.highest_level >= 1) 
+        if (m_world_entity.highest_level >= 6) 
         {
           for (auto* action : m_actions) {
             action->reset(); 
