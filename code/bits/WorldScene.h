@@ -39,6 +39,7 @@ namespace rCMI
     gf::Action *m_fireAction = nullptr;
 
     gf::Time m_timeSinceDeath;
+    bool m_inputLock = false;
     
     int m_isActivateMap;
     bool playerMoved = false;

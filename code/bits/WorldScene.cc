@@ -24,7 +24,7 @@ namespace rCMI
   {
     setClearColor(gf::Color::Black);
     setWorldViewSize(view_size);
-
+    
     for (gf::Action *action : m_actions){
       addAction(*action);
     }
@@ -65,6 +65,22 @@ namespace rCMI
 
   void WorldScene::doHandleActions([[maybe_unused]] gf::Window &window)
   {
+
+    if (m_inputLock) {
+      bool anInputIsActive = Controls::isActiveAction("move_up", m_actions) ||
+                            Controls::isActiveAction("move_down", m_actions) ||
+                            Controls::isActiveAction("move_right", m_actions) ||
+                            Controls::isActiveAction("move_left", m_actions);
+      
+      if (!anInputIsActive) {
+        m_inputLock = false;
+      } else {
+        for (auto* action : m_actions) { action->reset(); }
+        return; 
+      }
+    }
+    
+
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
     m_isActivateInventory = false;
     playerMoved = false;
@@ -326,8 +342,14 @@ namespace rCMI
     m_isActivateInventory = false;
     m_isActivateMap = 0;
     m_wasMovementActiveLastFrame = false;
+
+    m_inputLock = true;
+
+    for (gf::Action *action : m_actions) {
+        action->reset();
+    }
+
     m_world_entity.reset(); 
-    
     generateMap(MapSize); 
   }
 
