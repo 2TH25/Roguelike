@@ -75,7 +75,10 @@ namespace rCMI
           m_inputLock = false;
       }
       return; 
-  }
+    }
+
+    if (m_isActivateMap == 3) return; 
+    if (m_game->m_FeeScene->isActive()) return;
 
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
     m_isActivateInventory = false;
