@@ -67,19 +67,15 @@ namespace rCMI
   {
 
     if (m_inputLock) {
-      bool anInputIsActive = Controls::isActiveAction("move_up", m_actions) ||
-                            Controls::isActiveAction("move_down", m_actions) ||
-                            Controls::isActiveAction("move_right", m_actions) ||
-                            Controls::isActiveAction("move_left", m_actions);
-      
-      if (!anInputIsActive) {
-        m_inputLock = false;
-      } else {
-        for (auto* action : m_actions) { action->reset(); }
-        return; 
+      bool anyKeyHeld = Controls::isActiveAction("move_up", m_actions)   ||
+                        Controls::isActiveAction("move_down", m_actions)  ||
+                        Controls::isActiveAction("move_right", m_actions) ||
+                        Controls::isActiveAction("move_left", m_actions);
+      if (!anyKeyHeld) {
+          m_inputLock = false;
       }
-    }
-    
+      return; 
+  }
 
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
     m_isActivateInventory = false;
@@ -262,6 +258,7 @@ namespace rCMI
   {
       m_wasMovementActiveLastFrame = false;
       playerMoved = false;
+      m_inputLock = true;
   }
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
@@ -350,8 +347,6 @@ namespace rCMI
     playerMoved = false; 
     m_isActivateChest = false; 
     m_wasMovementActiveLastFrame = false;
-
-    m_inputLock = true;
 
     for (gf::Action *action : m_actions) {
         action->reset();
