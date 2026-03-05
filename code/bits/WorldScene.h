@@ -23,6 +23,7 @@ namespace rCMI
 
     bool m_isActivateInventory;
     bool m_isActivateItem;
+    int m_isActivateMap;
 
   private:
     void doShow() override;
@@ -44,7 +45,6 @@ namespace rCMI
     bool m_inputLock = false;
     bool m_freshStart = false;
     
-    int m_isActivateMap;
     bool playerMoved = false;
     bool m_wasMovementActiveLastFrame = false;
     

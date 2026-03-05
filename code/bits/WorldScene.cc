@@ -78,15 +78,16 @@ namespace rCMI
     // Les toggles UI fonctionnent toujours
     if (Controls::isActiveAction("showMap", m_actions))
     {
-        if (m_isActivateMap == 0) m_isActivateMap = 1;
-        else if (m_isActivateMap == 3) m_isActivateMap = 2;
-        return;
+      if (m_isActivateMap == 0) m_isActivateMap = 1;
+      else if (m_isActivateMap == 3) m_isActivateMap = 2;
+      return;
     }
 
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
-        m_isActivateInventory = true;
-        return;
+      if (m_isActivateMap == 3) m_isActivateMap = 2;
+      m_isActivateInventory = true;
+      return;
     }
 
     if (m_isActivateMap == 3) return; 
@@ -270,14 +271,12 @@ namespace rCMI
       setWorldViewCenter(m_world_entity.getMap().getSize() * TileSize / 2);
       m_world_entity.activateMiniMap();
       m_isActivateMap = 3;
-      return;
     }
     else if (m_isActivateMap == 2)
     {
       setWorldViewSize({800, 800});
       m_world_entity.activateMiniMap();
       m_isActivateMap = 0;
-      return;
     }
     else if (m_isActivateMap == 3) return;
 
