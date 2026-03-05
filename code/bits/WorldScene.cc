@@ -67,14 +67,8 @@ namespace rCMI
   {
 
     if (m_inputLock) {
-        bool anyKeyHeld = Controls::isActiveAction("move_up", m_actions)   ||
-                          Controls::isActiveAction("move_down", m_actions)  ||
-                          Controls::isActiveAction("move_right", m_actions) ||
-                          Controls::isActiveAction("move_left", m_actions);
-        if (!anyKeyHeld) {
-            m_inputLock = false;
-        }
-        return;
+      Controls::resetActions(m_actions);
+      m_inputLock = false;
     }
 
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;

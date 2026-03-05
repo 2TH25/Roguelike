@@ -37,6 +37,7 @@ namespace rCMI
   {
   public:
     static bool isActiveAction(std::string name, std::vector<gf::Action *> actions);
+    static void resetActions(std::vector<gf::Action *> actions);
     static std::map<std::string, std::set<gf::Keycode>> getControls();
 
   private:
