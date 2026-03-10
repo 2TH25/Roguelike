@@ -15,27 +15,6 @@ namespace rCMI
     if (!save_actions.empty())
       return save_actions;
 
-    // std::ifstream file("../data/RogueCMI/controle.json");
-    // if (!file.is_open()) {
-    //   std::cerr << "Impossible d'ouvrir le fichier JSON\n";
-    //   exit(1);
-    // }
-    // json j;
-    // file >> j;
-
-    // for (const auto& [action, touches_json] : j.items())
-    // {
-    //   save_actions[action] = {};
-    //   for (const auto& t : touches_json)
-    //   {
-    //     std::string t_string = t.get<std::string>();
-    //     char* t_copy = new char[t_string.size()];
-    //     std::strcpy(t_copy, t_string.c_str());
-
-    //     save_actions[action].insert(t_copy);
-    //   }
-    // }
-
     save_actions["move_up"] = {gf::Keycode::Z, gf::Keycode::Up};
     save_actions["move_down"] = {gf::Keycode::S, gf::Keycode::Down};
     save_actions["move_left"] = {gf::Keycode::Q, gf::Keycode::Left};
@@ -47,21 +26,6 @@ namespace rCMI
     return save_actions;
   }
 
-  // bool Controls::setControls(std::string name, std::set<const char *> new_keys, std::vector<gf::Action *> actions)
-  // {
-  //   if (save_actions.empty() || save_actions.count(name) == 0)
-  //     return false;
-
-  //   auto it = std::find_if(actions.begin(), actions.end(), [&name](const gf::Action *action)
-  //                          { return action->getName() == name; });
-
-  //   if (it == actions.end())
-  //     return false;
-
-  //   save_actions.at(name) = new_keys;
-
-  // }
-
   bool Controls::isActiveAction(std::string name, std::vector<gf::Action *> actions)
   {
     auto it = std::find_if(actions.begin(), actions.end(), [&name](const gf::Action *action)
@@ -71,5 +35,16 @@ namespace rCMI
       return false;
 
     return (*it)->isActive();
+  }
+
+  void Controls::resetActions(std::vector<gf::Action *> actions)
+  {
+    for (auto a : actions)
+      if (a->isContinuous())
+      {
+        a->setInstantaneous();
+        a->reset();
+        a->setContinuous();
+      }
   }
 }

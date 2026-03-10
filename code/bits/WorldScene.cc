@@ -69,14 +69,8 @@ namespace rCMI
   {
 
     if (m_inputLock) {
-        bool anyKeyHeld = Controls::isActiveAction("move_up", m_actions)   ||
-                          Controls::isActiveAction("move_down", m_actions)  ||
-                          Controls::isActiveAction("move_right", m_actions) ||
-                          Controls::isActiveAction("move_left", m_actions);
-        if (!anyKeyHeld) {
-            m_inputLock = false;
-        }
-        return;
+      Controls::resetActions(m_actions);
+      m_inputLock = false;
     }
 
     if (m_isActivateMap == 1 || m_isActivateMap == 2) m_isActivateMap = 0;
@@ -86,9 +80,9 @@ namespace rCMI
     // Les toggles UI fonctionnent toujours
     if (Controls::isActiveAction("showMap", m_actions))
     {
-        if (m_isActivateMap == 0) m_isActivateMap = 1;
-        else if (m_isActivateMap == 3) m_isActivateMap = 2;
-        return;
+      if (m_isActivateMap == 0) m_isActivateMap = 1;
+      else if (m_isActivateMap == 3) m_isActivateMap = 2;
+      return;
     }
 
     if(m_isActivateDebut) return;
@@ -96,8 +90,9 @@ namespace rCMI
 
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
-        m_isActivateInventory = true;
-        return;
+      if (m_isActivateMap == 3) m_isActivateMap = 2;
+      m_isActivateInventory = true;
+      return;
     }
 
     if (m_isActivateMap == 3) return; 
@@ -281,14 +276,12 @@ namespace rCMI
       setWorldViewCenter(m_world_entity.getMap().getSize() * TileSize / 2);
       m_world_entity.activateMiniMap();
       m_isActivateMap = 3;
-      return;
     }
     else if (m_isActivateMap == 2)
     {
       setWorldViewSize({800, 800});
       m_world_entity.activateMiniMap();
       m_isActivateMap = 0;
-      return;
     }
     else if (m_isActivateMap == 3) return;
 

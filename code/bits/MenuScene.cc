@@ -12,8 +12,7 @@ namespace rCMI
         down("down"), select("select"),
         font(m_game->resources.getFont(PATH_FONT)),
         m_saves("jouer", font),
-        m_quit("quitter", font),
-        m_test("test zone", font)
+        m_quit("quitter", font)
   {
     setClearColor(gf::Color::Black);
 
@@ -51,12 +50,6 @@ namespace rCMI
 
     createButtons(m_quit, [&]()
                   { m_game->popAllScenes(); });
-
-    // createButtons(m_test, [&]()
-    //               { m_game->m_WorldScene.generateMap(TestMapSize);
-    //                 m_game->replaceScene(m_game->m_WorldScene);
-    //                 m_game->pushScene(m_game->m_DebutScene);
-    //               });
   }
 
   void MenuScene::doHandleActions([[maybe_unused]] gf::Window &window)
@@ -77,7 +70,6 @@ namespace rCMI
       widgets.pointTo(m_game->computeWindowToGameCoordinates(event.mouseCursor.coords, getHudView()));
   }
 
-  // TODO: marche mais à changer
   void MenuScene::doRender(gf::RenderTarget &target, const gf::RenderStates &states)
   {
     float size = 0.05f, space = 0.2f;
@@ -98,12 +90,6 @@ namespace rCMI
     m_quit.setPosition(coords.getRelativePoint({0.5f, 0.525f}));
     m_quit.setParagraphWidth(width);
     m_quit.setPadding(padding);
-
-    // m_test.setCharacterSize(r_size);
-    // m_test.setAnchor(gf::Anchor::Center);
-    // m_test.setPosition(coords.getRelativePoint({0.5f, 0.625f}));
-    // m_test.setParagraphWidth(width);
-    // m_test.setPadding(padding);
 
     widgets.render(target, states);
   }
