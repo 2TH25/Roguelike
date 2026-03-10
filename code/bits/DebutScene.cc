@@ -46,6 +46,7 @@ namespace rCMI {
             gf::Vector2f mouseCoords = event.mouseButton.coords;
 
             if (!m_boutonOk.isDisabled() && m_boutonOk.contains(mouseCoords)) {
+                m_game->m_WorldScene.m_isActivateDebut = false;
                 m_game->popScene();
                 return;
             }
@@ -53,6 +54,7 @@ namespace rCMI {
         
         if (event.type == gf::EventType::KeyPressed && 
            (event.key.keycode == gf::Keycode::Return || event.key.keycode == gf::Keycode::Escape)) {
+            m_game->m_WorldScene.m_isActivateDebut = false;
             m_game->popScene();
         }
     }

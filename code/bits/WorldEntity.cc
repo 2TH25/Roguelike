@@ -449,8 +449,10 @@ namespace rCMI
 
         if (buttonRect.contains(mouseCoords)) {
             if (game->m_ParametersScene.isActive()) {
+              m_game->m_WorldScene.m_isActivateParameters = false;
                 game->popScene();
             } else {
+              m_game->m_WorldScene.m_isActivateParameters = true;
                 game->pushScene(game->m_ParametersScene);
             }
         }

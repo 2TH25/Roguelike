@@ -45,6 +45,7 @@ namespace rCMI
                   { m_game->m_WorldScene.reset();
                     m_game->m_InventoryScene->m_inventory.reset(m_game);
                     m_game->replaceScene(m_game->m_WorldScene);
+                    m_game->m_WorldScene.m_isActivateDebut = true;
                     m_game->pushScene(m_game->m_DebutScene);
                   });
 

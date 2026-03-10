@@ -23,6 +23,8 @@ namespace rCMI
 
     bool m_isActivateInventory;
     bool m_isActivateItem;
+    bool m_isActivateDebut;
+    bool m_isActivateParameters;
 
   private:
     void doShow() override;

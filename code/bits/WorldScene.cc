@@ -19,6 +19,8 @@ namespace rCMI
         m_actions(getActions()),
         m_timeSinceDeath(gf::Time::Zero),
         m_isActivateInventory(false),
+        m_isActivateParameters(false),
+        m_isActivateDebut(false),
         m_isActivateMap(0)
   // m_isActivateMenu(false)
   {
@@ -88,6 +90,9 @@ namespace rCMI
         else if (m_isActivateMap == 3) m_isActivateMap = 2;
         return;
     }
+
+    if(m_isActivateDebut) return;
+    if(m_isActivateParameters) return;
 
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
