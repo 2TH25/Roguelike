@@ -29,28 +29,6 @@ namespace rCMI
     items.push_back(dropped);
   }
 
-  int ItemManager::isItemOnTile(RogueCMI *game) {
-    gf::Vector2f heroGridPos = game->m_WorldScene.m_world_entity.hero().getExistence().getPosition();
-    for (int i = 0; i < items.size(); i++)
-    {
-        gf::Vector2i itemGridPos = {
-            static_cast<int>(items[i].sprite.getPosition().x / TileSize),
-            static_cast<int>(items[i].sprite.getPosition().y / TileSize)
-        };
-
-        if (static_cast<int>(heroGridPos.x) == itemGridPos.x && 
-            static_cast<int>(heroGridPos.y) == itemGridPos.y)
-        {
-          return i;
-        }
-    }
-    return -1;
-    
-  }
-
-
-
-
 
   void ItemManager::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
