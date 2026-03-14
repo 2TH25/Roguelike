@@ -84,6 +84,7 @@ namespace rCMI {
 
         m_message.setParagraphWidth(textMaxWidth);
         m_message.setAlignment(gf::Alignment::Center);
+        m_message.setLineSpacing(1.1f);
         m_message.setAnchor(gf::Anchor::Center);
         m_message.setPosition({ centerX, panelPos.y + panelSize.y * 0.40f });
         target.draw(m_message, states);
@@ -91,7 +92,7 @@ namespace rCMI {
         m_infoCommandes.setParagraphWidth(textMaxWidth);
         m_infoCommandes.setAlignment(gf::Alignment::Center);
         m_infoCommandes.setAnchor(gf::Anchor::Center);
-        m_infoCommandes.setPosition({ centerX, panelPos.y + panelSize.y * 0.65f });
+        m_infoCommandes.setPosition({ centerX, panelPos.y + panelSize.y * 0.68f });
         target.draw(m_infoCommandes, states);
 
         gf::Vector2f boutonPos = { centerX, panelPos.y + panelSize.y * 0.87f };
