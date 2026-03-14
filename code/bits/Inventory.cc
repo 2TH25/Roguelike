@@ -9,8 +9,8 @@ namespace rCMI
 {
 
 	Inventory::Inventory(RogueCMI *game)
-			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 20),
-			m_skillpoints("Points de compétences : 0\n", game->resources.getFont(PATH_FONT), 20),
+			: m_statsWidget("Stats\n", game->resources.getFont(PATH_FONT), 10),
+			m_skillpoints("Points de compétences : 0\n", game->resources.getFont(PATH_FONT), 10),
 				m_emptySlotTexture(&(game->resources.getTexture("SlotVide.png"))),
 				m_equippedSlotTexture(&(game->resources.getTexture("SlotVideEquipement.png"))),
 				m_plusTexture(&(game->resources.getTexture("AjoutCompetence.png")))
@@ -18,7 +18,7 @@ namespace rCMI
 
 		m_stackTexts.clear(); // Sécurité
 		for (std::size_t i = 0; i < MaxBackpackSize; ++i) {
-			gf::Text text("", game->resources.getFont(PATH_FONT), 15);
+			gf::Text text("", game->resources.getFont(PATH_FONT), 10);
 			text.setColor(gf::Color::White);
 			text.setOutlineColor(gf::Color::Black);
 			text.setOutlineThickness(1.0f);
@@ -99,7 +99,7 @@ namespace rCMI
 			m_itemSprites[i].setColor(gf::Color::Transparent);
 		}
 
-		float btnScale = 0.1f;
+		float btnScale = 0.10f;
 		float statsX = 1000.0f;
 		float statsY = 280.0f;
 		float lineHeight = 30.0f;
@@ -114,6 +114,8 @@ namespace rCMI
 		setupBtn(m_plusPowerBtn, 0.0f);
 		setupBtn(m_plusHealthBtn, lineHeight);
 		setupBtn(m_plusDefBtn, lineHeight * 2);
+
+		m_statsWidget.setLineSpacing(2.0f);
 
 		updateStatsText();
 	}
@@ -274,14 +276,14 @@ namespace rCMI
 		int total_pv    = m_stats.getHealth() ;
 		int max_pv      = m_stats.getMaxHealth() ;
 
-		std::string str = "Force : " + std::to_string(total_force) + " (+" + std::to_string(bonus_force) + ")\n" +
-						"Sante : " + std::to_string(total_pv) + " / " + std::to_string(max_pv) + " (+" + std::to_string(bonus_sante) + ")\n" +
+		std::string str = "Force : " + std::to_string(total_force) + " (+" + std::to_string(bonus_force) + ")\n\n" +
+						"Sante : " + std::to_string(total_pv) + " / " + std::to_string(max_pv) + " (+" + std::to_string(bonus_sante) + ")\n\n" + 
 						"Defense : " + std::to_string(total_def) + " (+" + std::to_string(bonus_defense) + ")";
 		
 		m_statsWidget.setString(str);
 
 		int pts = m_stats.getSkillPoints(); 
-    	m_skillpoints.setString("Points de compétences : " + std::to_string(pts));
+    	m_skillpoints.setString("Points de compétences:" + std::to_string(pts));
 
 		if (pts > 0) {
 			m_plusPowerBtn.setColor(gf::Color::White);
@@ -322,7 +324,7 @@ namespace rCMI
 		
 		float colLeft = 0.15f;
 		float colMid  = 0.43f;
-		float colRight = 0.55f;
+		float colRight = 0.52f;
 
 		float y_first = 0.17f;
 		float y_second = 0.32f;
@@ -378,16 +380,16 @@ namespace rCMI
 			}
 		}
 
-		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_skillpoints.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.25f});
+		m_skillpoints.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.025f));
+		m_skillpoints.setPosition({invPos.x + invSize.x * 0.60f, invPos.y + invSize.y * 0.25f});
 
 	
-		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.035f));
-		m_statsWidget.setPosition({invPos.x + invSize.x * 0.65f, invPos.y + invSize.y * 0.35f});
+		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.025f));
+		m_statsWidget.setPosition({invPos.x + invSize.x * 0.60f, invPos.y + invSize.y * 0.35f});
 
-		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.22f);
+		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.28f);
 		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.00000005f) - 20.0f;
-		float spacingY = invSize.y * 0.048f;
+		float spacingY = invSize.y * 0.047f;
 
 		m_plusPowerBtn.setPosition({buttonsX, firstButtonY});
 		m_plusHealthBtn.setPosition({buttonsX, firstButtonY + spacingY});

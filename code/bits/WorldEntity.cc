@@ -429,6 +429,8 @@ namespace rCMI
     text_kills.setColor(gf::Color::Red);
 
     buttonParameters.setTexture(m_game->resources.getTexture("Param_Fond.png"));
+    buttonInventory.setTexture(m_game->resources.getTexture("SlotSac.png"));
+    buttonMinimap.setTexture(m_game->resources.getTexture("SlotMinimap.png"));
   }
 
   void HudEntity::processEvent(gf::Event &event, RogueCMI *game)
@@ -437,17 +439,35 @@ namespace rCMI
         
         gf::Vector2f mouseCoords = game->getRenderer().mapPixelToCoords(event.mouseButton.coords);
 
-        gf::Vector2f pos = buttonParameters.getPosition();
-        gf::RectF localBounds = buttonParameters.getLocalBounds();
+        gf::Vector2f posP = buttonParameters.getPosition();
+        gf::RectF localBoundsP = buttonParameters.getLocalBounds();
+        gf::Vector2f posI = buttonInventory.getPosition();
+        gf::RectF localBoundsI = buttonInventory.getLocalBounds();
+        gf::Vector2f posM = buttonMinimap.getPosition();
+        gf::RectF localBoundsM = buttonMinimap.getLocalBounds();
         
-        float width = (localBounds.max.x - localBounds.min.x) * buttonParameters.getScale().x;
-        float height = (localBounds.max.y - localBounds.min.y) * buttonParameters.getScale().y;
+        float widthP = (localBoundsP.max.x - localBoundsP.min.x) * buttonParameters.getScale().x;
+        float heightP = (localBoundsP.max.y - localBoundsP.min.y) * buttonParameters.getScale().y;
 
-        gf::RectF buttonRect;
-        buttonRect.min = { pos.x - width, pos.y - height };
-        buttonRect.max = pos;
+        float widthI = (localBoundsI.max.x - localBoundsI.min.x) * buttonInventory.getScale().x;
+        float heightI = (localBoundsI.max.y - localBoundsI.min.y) * buttonInventory.getScale().y;
 
-        if (buttonRect.contains(mouseCoords)) {
+        float widthM = (localBoundsM.max.x - localBoundsM.min.x) * buttonMinimap.getScale().x;
+        float heightM = (localBoundsM.max.y - localBoundsM.min.y) * buttonMinimap.getScale().y;
+
+        gf::RectF buttonRectP;
+        gf::RectF buttonRectI;
+        gf::RectF buttonRectM;
+        buttonRectP.min = { posP.x - widthP, posP.y - heightP };
+        buttonRectP.max = posP;
+
+        buttonRectI.min = { posI.x - widthI, posI.y - heightI };
+        buttonRectI.max = posI;
+
+        buttonRectM.min = { posM.x - widthM, posM.y - heightM };
+        buttonRectM.max = posM;
+
+        if (buttonRectP.contains(mouseCoords)) {
             if (game->m_ParametersScene.isActive()) {
               m_game->m_WorldScene.m_isActivateParameters = false;
                 game->popScene();
@@ -456,6 +476,26 @@ namespace rCMI
                 game->pushScene(game->m_ParametersScene);
             }
         }
+
+        else if (buttonRectI.contains(mouseCoords)) {
+            if (game->m_InventoryScene->isActive()) {
+              m_game->m_WorldScene.m_isActivateInventory = false;
+                game->popScene();
+            } else {
+              m_game->m_WorldScene.m_isActivateInventory = true;
+                game->pushScene(*game->m_InventoryScene);
+            }
+        }
+
+        // else if (buttonRectM.contains(mouseCoords)) {
+        //     if (game->m_Scene.isActive()) {
+        //       m_game->m_WorldScene.m_isActivateParameters = false;
+        //         game->popScene();
+        //     } else {
+        //       m_game->m_WorldScene.m_isActivateParameters = true;
+        //         game->pushScene(game->m_ParametersScene);
+        //     }
+        // }
     }
     
 }
@@ -527,6 +567,14 @@ namespace rCMI
     buttonParameters.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonParameters.setAnchor(gf::Anchor::BottomRight);
 
+    buttonInventory.setPosition({target_vue_size.x - sword_slot.getPosition().x, sword_slot.getPosition().y - 100.0f});
+    buttonInventory.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
+    buttonInventory.setAnchor(gf::Anchor::BottomRight);
+
+    buttonMinimap.setPosition({target_vue_size.x - sword_slot.getPosition().x, sword_slot.getPosition().y - 200.0f});
+    buttonMinimap.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
+    buttonMinimap.setAnchor(gf::Anchor::BottomRight);
+
     life_lost.draw(target, states);
     life.draw(target, states);
     text_life.draw(target, states);
@@ -544,6 +592,8 @@ namespace rCMI
     sword.draw(target, states);
 
     buttonParameters.draw(target,states);
+    buttonInventory.draw(target,states);
+    buttonMinimap.draw(target,states);
   }
 
   void WorldEntity::reset()

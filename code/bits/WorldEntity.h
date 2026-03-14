@@ -97,6 +97,12 @@ namespace rCMI
     gf::Texture *m_buttonParametersTexture;
     gf::Sprite buttonParameters;
 
+    gf::Texture *m_buttonInventoryTexture;
+    gf::Sprite buttonInventory;
+
+    gf::Texture *m_buttonMinimapTexture;
+    gf::Sprite buttonMinimap;
+
     bool parametersOpened = false;
   };
 };
