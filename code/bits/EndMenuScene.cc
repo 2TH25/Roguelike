@@ -105,7 +105,8 @@ namespace rCMI
     target.draw(m_title, states);
 
     m_statsText.setCharacterSize(r_size);
-    m_statsText.setParagraphWidth(panelSize.x * 0.85f);
+    m_statsText.setLineSpacing(1.2);
+    m_statsText.setParagraphWidth(panelSize.x * 0.90f);
     m_statsText.setAlignment(gf::Alignment::Left);
     m_statsText.setAnchor(gf::Anchor::Center);
     m_statsText.setPosition({ centerX, panelPos.y + panelSize.y * 0.50f });
