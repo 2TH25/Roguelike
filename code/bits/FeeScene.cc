@@ -87,7 +87,7 @@ namespace rCMI {
                          "Cette épée de mauvaise facture sera le point de départ de votre valeureuse aventure...",
                          Stat(0, 0, 2));
             
-            m_game->m_InventoryScene->m_inventory.setEquippedItem(newItem.m_type, &newItem, m_game);
+            m_game->m_InventoryScene->m_inventory.addItemToBackpack(newItem, m_game);
             m_game->m_FeeScene->setDialogue(discours);
 
             world.m_feeVisitee = true;

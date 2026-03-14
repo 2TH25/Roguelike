@@ -26,7 +26,9 @@ namespace rCMI
 		RogueCMI *m_game = nullptr;
 		gf::Font &font;
 		gf::Action esc;
+		gf::Action map;
 		bool escActive;
+		bool mapActive;
 	};
 }
 
