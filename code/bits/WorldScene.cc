@@ -77,6 +77,9 @@ namespace rCMI
     m_isActivateInventory = false;
     playerMoved = false;
 
+    if(m_isActivateDebut) return;
+    if(m_isActivateParameters) return;
+
     // Les toggles UI fonctionnent toujours
     if (Controls::isActiveAction("showMap", m_actions))
     {
@@ -84,9 +87,6 @@ namespace rCMI
       else if (m_isActivateMap == 3) m_isActivateMap = 2;
       return;
     }
-
-    if(m_isActivateDebut) return;
-    if(m_isActivateParameters) return;
 
     if (Controls::isActiveAction("ToggleInventory", m_actions))
     {
@@ -270,6 +270,9 @@ namespace rCMI
 
   void WorldScene::doUpdate([[maybe_unused]] gf::Time time)
   {
+    if(m_isActivateDebut) return;
+    if(m_isActivateParameters) return;
+
     if (m_isActivateMap == 1)
     {
       setWorldViewSize((m_world_entity.getMap().getSize() + 2) * TileSize);

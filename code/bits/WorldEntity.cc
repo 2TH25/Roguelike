@@ -23,7 +23,7 @@ namespace rCMI
         m_game(game),
         m_map(game),
         m_feeVisitee(false)
-        
+
   {
   }
 
@@ -57,13 +57,14 @@ namespace rCMI
   std::optional<std::size_t> WorldEntity::target_character_at(gf::Vector2i target)
   {
     for (std::size_t i = 0; i < characters.size(); ++i)
-      if (characters[i].getExistence().getPosition() == target && characters[i].alive()){
-        if (characters[i].getExistence().getName() == "PNJ" && m_feeVisitee) {
-            continue; 
+      if (characters[i].getExistence().getPosition() == target && characters[i].alive())
+      {
+        if (characters[i].getExistence().getName() == "PNJ" && m_feeVisitee)
+        {
+          continue;
         }
         return i;
       }
-        
 
     return std::nullopt;
   }
@@ -84,7 +85,7 @@ namespace rCMI
   {
     m_chestManager.clear();
     highest_level++;
-    hero().getStat().score+=500;
+    hero().getStat().score += 500;
     generate_dungeon(m_map.getSize() * 1.2);
     std::cout << "Niveau suivant atteint !" << std::endl;
   }
@@ -97,18 +98,21 @@ namespace rCMI
 
   void WorldEntity::EnemyTurns()
   {
-  
-    for (std::size_t i = 1; i < characters.size(); ++i){
+
+    for (std::size_t i = 1; i < characters.size(); ++i)
+    {
       if (!hero().alive())
-            return;
-            
+        return;
+
       characters[i].doMove(*this);
     }
 
     m_turnCount++;
 
-    if (m_turnCount >= 30) {
-      if (hero().getStat().getHealth() < hero().getStat().getMaxHealth()) {
+    if (m_turnCount >= 30)
+    {
+      if (hero().getStat().getHealth() < hero().getStat().getMaxHealth())
+      {
         hero().heal(5);
         std::cout << "Le heros s'est repose : +5 PV !" << std::endl;
       }
@@ -135,21 +139,26 @@ namespace rCMI
     }
   }
 
-  bool WorldEntity::isAnyMonsterVisible() {
-    auto heroPos = hero().getExistence().getPosition(); 
-    for (auto &monster : characters) { 
-        if (monster.getExistence().getName() == "Hero" || monster.getExistence().getName() == "PNJ") {
-          continue;
-        } 
-        if (!monster.alive()) {
-          continue; 
-        }
-       
-        if (m_map.isInFieldOfVision(monster.getExistence().getPosition())) { 
-            return true;
-        }
+  bool WorldEntity::isAnyMonsterVisible()
+  {
+    auto heroPos = hero().getExistence().getPosition();
+    for (auto &monster : characters)
+    {
+      if (monster.getExistence().getName() == "Hero" || monster.getExistence().getName() == "PNJ")
+      {
+        continue;
+      }
+      if (!monster.alive())
+      {
+        continue;
+      }
+
+      if (m_map.isInFieldOfVision(monster.getExistence().getPosition()))
+      {
+        return true;
+      }
     }
-    return false; 
+    return false;
   }
 
   void WorldEntity::generate_dungeon(gf::Vector2i Map_size)
@@ -198,12 +207,12 @@ namespace rCMI
         characters.push_back(hero);
         characters.back().playAnimation("Default");
 
-        if (highest_level == 1) {
-            gf::Vector2i pnjPos = center + gf::Vector2i(1, 1);
-            const gf::Texture &texPNJ = m_game->resources.getTexture("Fée.png"); 
-            characters.push_back(Character::pnj(pnjPos, texPNJ));
+        if (highest_level == 1)
+        {
+          gf::Vector2i pnjPos = center + gf::Vector2i(1, 1);
+          const gf::Texture &texPNJ = m_game->resources.getTexture("Fée.png");
+          characters.push_back(Character::pnj(pnjPos, texPNJ));
         }
-        
 
         break;
       }
@@ -230,11 +239,23 @@ namespace rCMI
         std::cout << "Génération d'une salle aux trésors en " << room.min.x << "," << room.min.y << std::endl;
         int roll = rand() % 100;
         int chestCount = 0;
-        if(roll<40) {chestCount=1;}
-        else if(roll<70) {chestCount=2;}
-        else if(roll<90) {chestCount=3;}
-        else {chestCount=4;}
-        
+        if (roll < 40)
+        {
+          chestCount = 1;
+        }
+        else if (roll < 70)
+        {
+          chestCount = 2;
+        }
+        else if (roll < 90)
+        {
+          chestCount = 3;
+        }
+        else
+        {
+          chestCount = 4;
+        }
+
         for (int i = 0; i < chestCount && i < floorPositions.size(); ++i)
         {
           m_chestManager.spawnChest(floorPositions[i], m_game);
@@ -306,18 +327,25 @@ namespace rCMI
       int tileIndex = 0;
       const gf::Texture &textureMonstres = m_game->resources.getTexture("SetTextureMonstre.png");
 
-      auto spawnExtraMobs = [&](int count, int type) {
-        for (int i = 0; i < count; ++i) {
-          while (tileIndex < allFloorPositions.size()) {
+      auto spawnExtraMobs = [&](int count, int type)
+      {
+        for (int i = 0; i < count; ++i)
+        {
+          while (tileIndex < allFloorPositions.size())
+          {
             gf::Vector2i pos = allFloorPositions[tileIndex++];
-            if (isWalkable(pos) && !target_character_at(pos).has_value()) {
+            if (isWalkable(pos) && !target_character_at(pos).has_value())
+            {
               Character mob;
-              if (type == 0) mob = Character::skeleton(pos, textureMonstres, highest_level);
-              else if (type == 1) mob = Character::zombie(pos, textureMonstres, highest_level);
-              else mob = Character::slime(pos, textureMonstres, highest_level);
-              
+              if (type == 0)
+                mob = Character::skeleton(pos, textureMonstres, highest_level);
+              else if (type == 1)
+                mob = Character::zombie(pos, textureMonstres, highest_level);
+              else
+                mob = Character::slime(pos, textureMonstres, highest_level);
+
               characters.push_back(mob);
-              break; 
+              break;
             }
           }
         }
@@ -327,10 +355,12 @@ namespace rCMI
       spawnExtraMobs(level_bonus * 2, 1); // +2 Zombies par niveau passé
       spawnExtraMobs(level_bonus * 2, 2); // +2 Slimes par niveau passé
     }
-    for (auto& character : characters) {
-        if (character.alive()) {
-            character.playAnimation("Default");
-        }
+    for (auto &character : characters)
+    {
+      if (character.alive())
+      {
+        character.playAnimation("Default");
+      }
     }
   }
 
@@ -434,72 +464,89 @@ namespace rCMI
   }
 
   void HudEntity::processEvent(gf::Event &event, RogueCMI *game)
-{
-    if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
-        
-        gf::Vector2f mouseCoords = game->getRenderer().mapPixelToCoords(event.mouseButton.coords);
+  {
+    if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left)
+    {
 
-        gf::Vector2f posP = buttonParameters.getPosition();
-        gf::RectF localBoundsP = buttonParameters.getLocalBounds();
-        gf::Vector2f posI = buttonInventory.getPosition();
-        gf::RectF localBoundsI = buttonInventory.getLocalBounds();
-        gf::Vector2f posM = buttonMinimap.getPosition();
-        gf::RectF localBoundsM = buttonMinimap.getLocalBounds();
-        
-        float widthP = (localBoundsP.max.x - localBoundsP.min.x) * buttonParameters.getScale().x;
-        float heightP = (localBoundsP.max.y - localBoundsP.min.y) * buttonParameters.getScale().y;
+      gf::Vector2f mouseCoords = game->getRenderer().mapPixelToCoords(event.mouseButton.coords);
 
-        float widthI = (localBoundsI.max.x - localBoundsI.min.x) * buttonInventory.getScale().x;
-        float heightI = (localBoundsI.max.y - localBoundsI.min.y) * buttonInventory.getScale().y;
+      gf::Vector2f posP = buttonParameters.getPosition();
+      gf::RectF localBoundsP = buttonParameters.getLocalBounds();
+      gf::Vector2f posI = buttonInventory.getPosition();
+      gf::RectF localBoundsI = buttonInventory.getLocalBounds();
+      gf::Vector2f posM = buttonMinimap.getPosition();
+      gf::RectF localBoundsM = buttonMinimap.getLocalBounds();
 
-        float widthM = (localBoundsM.max.x - localBoundsM.min.x) * buttonMinimap.getScale().x;
-        float heightM = (localBoundsM.max.y - localBoundsM.min.y) * buttonMinimap.getScale().y;
+      float widthP = (localBoundsP.max.x - localBoundsP.min.x) * buttonParameters.getScale().x;
+      float heightP = (localBoundsP.max.y - localBoundsP.min.y) * buttonParameters.getScale().y;
 
-        gf::RectF buttonRectP;
-        gf::RectF buttonRectI;
-        gf::RectF buttonRectM;
-        buttonRectP.min = { posP.x - widthP, posP.y - heightP };
-        buttonRectP.max = posP;
+      float widthI = (localBoundsI.max.x - localBoundsI.min.x) * buttonInventory.getScale().x;
+      float heightI = (localBoundsI.max.y - localBoundsI.min.y) * buttonInventory.getScale().y;
 
-        buttonRectI.min = { posI.x - widthI, posI.y - heightI };
-        buttonRectI.max = posI;
+      float widthM = (localBoundsM.max.x - localBoundsM.min.x) * buttonMinimap.getScale().x;
+      float heightM = (localBoundsM.max.y - localBoundsM.min.y) * buttonMinimap.getScale().y;
 
-        buttonRectM.min = { posM.x - widthM, posM.y - heightM };
-        buttonRectM.max = posM;
+      gf::RectF buttonRectP;
+      gf::RectF buttonRectI;
+      gf::RectF buttonRectM;
+      buttonRectP.min = {posP.x - widthP, posP.y - heightP};
+      buttonRectP.max = posP;
 
-        if (buttonRectP.contains(mouseCoords)) {
-            if (game->m_ParametersScene.isActive()) {
-              m_game->m_WorldScene.m_isActivateParameters = false;
-                game->popScene();
-            } else {
-              m_game->m_WorldScene.m_isActivateParameters = true;
-                game->pushScene(game->m_ParametersScene);
-            }
+      buttonRectI.min = {posI.x - widthI, posI.y - heightI};
+      buttonRectI.max = posI;
+
+      buttonRectM.min = {posM.x - widthM, posM.y - heightM};
+      buttonRectM.max = posM;
+
+      gf::Time time_0;
+
+      if (buttonRectP.contains(mouseCoords))
+      {
+        if (game->m_ParametersScene.isActive())
+        {
+          game->m_WorldScene.m_isActivateParameters = false;
+          game->popScene();
         }
-
-        else if (buttonRectI.contains(mouseCoords)) {
-            if (game->m_InventoryScene->isActive()) {
-              game->popScene();
-            } else {
-              m_game->m_WorldScene.m_isActivateInventory = true;
-              m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
-              m_game->pushScene(*(m_game->m_InventoryScene));
-              m_game->m_WorldScene.pause();
-            }
+        else if (!game->m_ItemScene.isActive())
+        {
+          game->m_WorldScene.m_isActivateParameters = true;
+          game->pushScene(game->m_ParametersScene);
         }
-
-        // else if (buttonRectM.contains(mouseCoords)) {
-        //     if (game->m_Scene.isActive()) {
-        //       m_game->m_WorldScene.m_isActivateParameters = false;
-        //         game->popScene();
-        //     } else {
-        //       m_game->m_WorldScene.m_isActivateParameters = true;
-        //         game->pushScene(game->m_ParametersScene);
-        //     }
-        // }
+      }
+      else if (buttonRectI.contains(mouseCoords))
+      {
+        if (game->m_InventoryScene->isActive())
+        {
+          game->popScene();
+        }
+        else
+        {
+          game->m_WorldScene.m_isActivateInventory = true;
+          if (game->m_WorldScene.m_isActivateMap == 3)
+            game->m_WorldScene.m_isActivateMap = 2;
+          game->m_WorldScene.update(time_0);
+        }
+      }
+      else if (buttonRectM.contains(mouseCoords))
+      {
+        if (game->m_WorldScene.m_isActivateMap == 3)
+        {
+          game->m_WorldScene.m_isActivateMap = 2;
+          game->m_WorldScene.update(time_0);
+        }
+        else
+        {
+          if (game->m_InventoryScene->isActive())
+          {
+            game->popScene();
+            game->m_WorldScene.resume();
+          }
+          game->m_WorldScene.m_isActivateMap = 1;
+          game->m_WorldScene.update(time_0);
+        }
+      }
     }
-    
-}
+  }
 
   void HudEntity::render(gf::RenderTarget &target, const gf::RenderStates &states)
   {
@@ -592,9 +639,9 @@ namespace rCMI
     sword_slot.draw(target, states);
     sword.draw(target, states);
 
-    buttonParameters.draw(target,states);
-    buttonInventory.draw(target,states);
-    buttonMinimap.draw(target,states);
+    buttonParameters.draw(target, states);
+    buttonInventory.draw(target, states);
+    buttonMinimap.draw(target, states);
   }
 
   void WorldEntity::reset()
