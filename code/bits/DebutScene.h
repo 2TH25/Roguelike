@@ -4,9 +4,9 @@
 #include <gf/Scene.h>
 #include <gf/Text.h>
 #include <gf/Widgets.h>
+#include <gf/WidgetContainer.h>
 #include <gf/Shapes.h>
-#include <vector>
-#include <string>
+
 namespace rCMI {
     class RogueCMI;
 
@@ -23,9 +23,8 @@ namespace rCMI {
         gf::Text m_titre;
         gf::Text m_message;
         gf::Text m_infoCommandes;
-        
-        gf::TextWidget m_boutonOk;
-        gf::RectangleShape m_boutonBackground;
+        gf::TextButtonWidget m_boutonOk;
+        gf::WidgetContainer m_widgets;
     };
 }
 

@@ -18,8 +18,8 @@ namespace rCMI
         m_game(game), up("up"),
         down("down"), select("select"),
         font(m_game->resources.getFont(PATH_FONT)),
-        m_saves("jouer", font),
-        m_quit("quitter", font),
+        m_saves("JOUER", font),
+        m_quit("QUITTER", font),
         m_backgroundTexture(m_game->resources.getTexture("Menu.png")),
         m_background(m_backgroundTexture)
   {

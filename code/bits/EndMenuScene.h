@@ -6,6 +6,7 @@
 #include <gf/WidgetContainer.h>
 #include <gf/Widgets.h>
 #include <gf/Text.h>
+#include <gf/Shapes.h>
 
 namespace rCMI
 {
@@ -20,14 +21,13 @@ namespace rCMI
 	private:
 		void doRender(gf::RenderTarget &target, const gf::RenderStates &states) override;
 		void doProcessEvent(gf::Event &event) override;
-		
 
 		RogueCMI *m_game = nullptr;
 		gf::Font &font;
 		gf::WidgetContainer widgets;
 		gf::TextButtonWidget m_quit;
 		gf::Text m_title;
-    	gf::Text m_statsText;
+		gf::Text m_statsText;
 		gf::RectangleShape m_background;
 	};
 }
