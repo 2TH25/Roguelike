@@ -85,7 +85,7 @@ namespace rCMI
     const gf::Vector2f vSize = target.getView().getSize();
     gf::Coordinates coords(target);
 
-    gf::Vector2f panelSize = { vSize.x * 0.46f, vSize.y * 0.80f };
+    gf::Vector2f panelSize = { vSize.x * 0.55f, vSize.y * 0.85f };
     gf::Vector2f panelPos  = (vSize - panelSize) / 2.0f;
     float centerX    = panelPos.x + panelSize.x / 2.0f;
     float textMaxW   = panelSize.x * 0.85f;

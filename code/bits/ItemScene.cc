@@ -46,20 +46,20 @@ namespace rCMI {
      ItemScene::ItemScene(RogueCMI *game)
       : gf::Scene(gf::Vector2f(1200, 800))
       , m_game(game)
-      , m_nameText("", game->resources.getFont(PATH_FONT), 30)
-      , m_typeText("", game->resources.getFont(PATH_FONT), 20)
-      , m_rarityText("", game->resources.getFont(PATH_FONT), 20)
-      , m_descText("", game->resources.getFont(PATH_FONT), 18)
-      , m_statsText("", game->resources.getFont(PATH_FONT), 18)
-      , m_buttonEquip("Equiper", game->resources.getFont(PATH_FONT))
-      , m_buttonUnequip("Desequiper", game->resources.getFont(PATH_FONT))
-      , m_buttonThrow("Jeter", game->resources.getFont(PATH_FONT))
-      , m_buttonConsume("Consommer", game->resources.getFont(PATH_FONT))
-      , m_buttonPickup("Ramasser", game->resources.getFont(PATH_FONT))
+      , m_nameText("", game->resources.getFont(PATH_FONT), 23)
+      , m_typeText("", game->resources.getFont(PATH_FONT), 17)
+      , m_rarityText("", game->resources.getFont(PATH_FONT), 17)
+      , m_descText("", game->resources.getFont(PATH_FONT), 15)
+      , m_statsText("", game->resources.getFont(PATH_FONT), 15)
+      , m_buttonEquip("Équiper", game->resources.getFont(PATH_FONT),25)
+      , m_buttonUnequip("Desequiper", game->resources.getFont(PATH_FONT),25)
+      , m_buttonThrow("Jeter", game->resources.getFont(PATH_FONT),25)
+      , m_buttonConsume("Consommer", game->resources.getFont(PATH_FONT),25)
+      , m_buttonPickup("Ramasser", game->resources.getFont(PATH_FONT),25)
     {
         setClearColor(gf::Color::Transparent);
 
-        m_background.setSize({450.0f, 500.0f});
+        m_background.setSize({450.0f, 550.0f});
         m_background.setTexture(game->resources.getTexture("backgroundItem.png"));
         m_background.setAnchor(gf::Anchor::Center);
         m_background.setPosition({600.0f, 400.0f});
@@ -67,6 +67,7 @@ namespace rCMI {
         m_background.setOutlineThickness(2.0f);
 		
 
+        m_nameText.setParagraphWidth(350.0f);
         m_typeText.setColor(gf::Color::Black);
         m_descText.setParagraphWidth(350.0f);
         m_descText.setAlignment(gf::Alignment::Center);
@@ -136,9 +137,9 @@ namespace rCMI {
         m_descText.setPosition({600.0f, 420.0f});
 
         std::string statsStr = "";
-        if (item.m_stat.getPower() > 0) statsStr += "Atk: +" + std::to_string(item.m_stat.getPower()) + " ";
-        if (item.m_stat.getHealth() > 0) statsStr += "Hp: +" + std::to_string(item.m_stat.getHealth()) + " ";
-        if (item.m_stat.getDefense() > 0) statsStr += "Def: +" + std::to_string(item.m_stat.getDefense()) + " ";
+        if (item.m_stat.getPower() > 0) statsStr += "Atk:+" + std::to_string(item.m_stat.getPower()) + " ";
+        if (item.m_stat.getHealth() > 0) statsStr += "Hp:+" + std::to_string(item.m_stat.getHealth()) + " ";
+        if (item.m_stat.getDefense() > 0) statsStr += "Def:+" + std::to_string(item.m_stat.getDefense()) + " ";
         m_statsText.setString(statsStr);
         if (statsStr.empty()) {
             m_statsText.setPosition({-1000.0f, -1000.0f}); 
@@ -182,14 +183,14 @@ namespace rCMI {
                 m_buttonConsume.setSelected();
                 m_buttonThrow.setSelected();
                 
-                m_buttonConsume.setPosition({centerX - 120, btnY});
+                m_buttonConsume.setPosition({centerX - 170, btnY});
                 m_buttonThrow.setPosition({centerX + 80, btnY});
             } 
             else {
                 if (m_isEquipped) {
                     m_buttonUnequip.setSelected();
                     m_buttonThrow.setSelected();
-                    m_buttonUnequip.setPosition({centerX - 150, btnY});
+                    m_buttonUnequip.setPosition({centerX - 180, btnY});
                     m_buttonThrow.setPosition({centerX + 80, btnY});
                 } else {
                     m_buttonEquip.setSelected();

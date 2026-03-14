@@ -387,7 +387,7 @@ namespace rCMI
 		m_statsWidget.setCharacterSize(static_cast<unsigned int>(invSize.y * 0.025f));
 		m_statsWidget.setPosition({invPos.x + invSize.x * 0.60f, invPos.y + invSize.y * 0.35f});
 
-		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.28f);
+		float buttonsX = m_statsWidget.getPosition().x + (invSize.x * 0.30f);
 		float firstButtonY = m_statsWidget.getPosition().y + (invSize.y * 0.00000005f) - 20.0f;
 		float spacingY = invSize.y * 0.047f;
 
