@@ -5,6 +5,8 @@
 #include <gf/Font.h>
 #include <gf/WidgetContainer.h>
 #include <gf/Widgets.h>
+#include <gf/Sprite.h>
+#include <gf/Texture.h>
 
 namespace rCMI
 {
@@ -28,6 +30,9 @@ namespace rCMI
 		gf::WidgetContainer widgets;
 		gf::TextButtonWidget m_saves;
 		gf::TextButtonWidget m_quit;
+
+		gf::Texture &m_backgroundTexture;
+		gf::Sprite   m_background;
 	};
 }
 
