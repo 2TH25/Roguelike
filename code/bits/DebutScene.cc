@@ -62,6 +62,10 @@ namespace rCMI {
         float centerX = panelPos.x + panelSize.x / 2.0f;
         float textMaxWidth = panelSize.x * 0.85f;
 
+        gf::Coordinates coords(target);
+        float size = 0.025f;
+        int r_size = coords.getRelativeCharacterSize(size);
+
         // --- Panneau de fond ---
         m_background.setSize(panelSize);
         m_background.setPosition(panelPos);
@@ -78,10 +82,12 @@ namespace rCMI {
         separator.setPosition({ centerX, panelPos.y + panelSize.y * 0.22f });
         target.draw(separator, states);
 
+        m_titre.setCharacterSize(static_cast<unsigned int>(r_size * 2.0f));
         m_titre.setAnchor(gf::Anchor::Center);
         m_titre.setPosition({ centerX, panelPos.y + panelSize.y * 0.13f });
         target.draw(m_titre, states);
 
+        m_message.setCharacterSize(r_size);
         m_message.setParagraphWidth(textMaxWidth);
         m_message.setAlignment(gf::Alignment::Center);
         m_message.setLineSpacing(1.1f);
@@ -89,6 +95,7 @@ namespace rCMI {
         m_message.setPosition({ centerX, panelPos.y + panelSize.y * 0.40f });
         target.draw(m_message, states);
 
+        m_infoCommandes.setCharacterSize(r_size);
         m_infoCommandes.setParagraphWidth(textMaxWidth);
         m_infoCommandes.setAlignment(gf::Alignment::Center);
         m_infoCommandes.setAnchor(gf::Anchor::Center);
@@ -96,9 +103,10 @@ namespace rCMI {
         target.draw(m_infoCommandes, states);
 
         gf::Vector2f boutonPos = { centerX, panelPos.y + panelSize.y * 0.87f };
+        m_boutonOk.setCharacterSize(static_cast<unsigned int>(r_size * 1.5f));
         m_boutonOk.setAnchor(gf::Anchor::Center);
         m_boutonOk.setPosition(boutonPos);
-        m_boutonOk.setParagraphWidth(textMaxWidth * 0.55f);
+        m_boutonOk.setParagraphWidth(textMaxWidth * 0.55f );
         m_boutonOk.setPadding(12.0f);
         m_widgets.render(target, states);
     }
