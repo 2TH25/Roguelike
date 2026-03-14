@@ -479,11 +479,12 @@ namespace rCMI
 
         else if (buttonRectI.contains(mouseCoords)) {
             if (game->m_InventoryScene->isActive()) {
-              m_game->m_WorldScene.m_isActivateInventory = false;
-                game->popScene();
+              game->popScene();
             } else {
               m_game->m_WorldScene.m_isActivateInventory = true;
-                game->pushScene(*game->m_InventoryScene);
+              m_game->m_InventoryScene->m_inventory.updateInventory(m_game);
+              m_game->pushScene(*(m_game->m_InventoryScene));
+              m_game->m_WorldScene.pause();
             }
         }
 
