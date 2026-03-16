@@ -605,11 +605,11 @@ namespace rCMI
     text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);
 
-    player_level_image.setPosition({player_kills_image.getPosition().x - 2 * target_vue_size.x / 30, player_kills_image.getPosition().y});
+    player_level_image.setPosition({player_kills_image.getPosition().x - 3 * target_vue_size.x / 25, player_kills_image.getPosition().y});
     player_level_image.setScale(life.getSize().y * 2.5 / player_kills_image.getTexture().getSize());
     player_level_image.setAnchor(gf::Anchor::Center);
 
-    text_level.setString(std::to_string(m_game->m_WorldScene.m_world_entity.highest_level));
+    text_level.setString("Étage " + std::to_string(m_game->m_WorldScene.m_world_entity.highest_level));
     text_level.setCharacterSize(life_lost.getSize().y);
     text_level.setPosition({player_level_image.getPosition().x + target_vue_size.x * 3 / 100, player_level_image.getPosition().y});
     text_level.setAnchor(gf::Anchor::CenterLeft);
