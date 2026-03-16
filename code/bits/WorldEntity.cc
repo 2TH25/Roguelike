@@ -458,6 +458,10 @@ namespace rCMI
     text_kills.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
     text_kills.setColor(gf::Color::Red);
 
+    player_level_image.setTexture(m_game->resources.getTexture("Stairs.png"));
+    text_level.setFont(m_game->resources.getFont("Overpass-Bold.ttf"));
+    text_level.setColor(gf::Color::Green);
+
     buttonParameters.setTexture(m_game->resources.getTexture("Param_Fond.png"));
     buttonInventory.setTexture(m_game->resources.getTexture("SlotSac.png"));
     buttonMinimap.setTexture(m_game->resources.getTexture("SlotMinimap.png"));
@@ -601,6 +605,15 @@ namespace rCMI
     text_kills.setPosition({target_vue_size.x * 96 / 100, player_kills_image.getPosition().y});
     text_kills.setAnchor(gf::Anchor::CenterLeft);
 
+    player_level_image.setPosition({player_kills_image.getPosition().x - 2 * target_vue_size.x / 30, player_kills_image.getPosition().y});
+    player_level_image.setScale(life.getSize().y * 2.5 / player_kills_image.getTexture().getSize());
+    player_level_image.setAnchor(gf::Anchor::Center);
+
+    text_level.setString(std::to_string(m_game->m_WorldScene.m_world_entity.highest_level));
+    text_level.setCharacterSize(life_lost.getSize().y);
+    text_level.setPosition({player_level_image.getPosition().x + target_vue_size.x * 3 / 100, player_level_image.getPosition().y});
+    text_level.setAnchor(gf::Anchor::CenterLeft);
+
     Item weapon = m_game->m_InventoryScene.get()->m_inventory.getEquippedItem(ItemType::Weapon);
     sword_slot.setTexture(m_game->resources.getTexture(weapon.m_texture != nullptr ? "SlotVideEquipement.png" : "SlotArme.png"));
     sword_slot.setPosition({life_lost.getPosition().x, target_vue_size.y - life_lost.getPosition().x});
@@ -635,6 +648,9 @@ namespace rCMI
 
     player_kills_image.draw(target, states);
     text_kills.draw(target, states);
+
+    player_level_image.draw(target, states);
+    text_level.draw(target, states);
 
     sword_slot.draw(target, states);
     sword.draw(target, states);

@@ -306,7 +306,7 @@ namespace rCMI
     {
       m_timeSinceDeath += time;
       if (m_timeSinceDeath.asSeconds() > 1.0f){
-        m_game->m_EndMenuScene.setFinalStats(m_world_entity.hero().getStat().score,m_world_entity.hero().getStat().getKills(),m_world_entity.highest_level);
+        m_game->m_EndMenuScene.setFinalStats(m_world_entity.hero().getStat().score, m_world_entity.hero().getStat().getKills(), m_world_entity.highest_level);
         m_game->replaceScene(m_game->m_EndMenuScene);
       }
     }
