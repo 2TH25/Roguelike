@@ -615,11 +615,11 @@ namespace rCMI
     buttonParameters.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonParameters.setAnchor(gf::Anchor::BottomRight);
 
-    buttonInventory.setPosition({target_vue_size.x - sword_slot.getPosition().x, sword_slot.getPosition().y - 100.0f});
+    buttonInventory.setPosition({buttonParameters.getPosition().x, buttonParameters.getPosition().y - target_vue_size.y / 10});
     buttonInventory.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonInventory.setAnchor(gf::Anchor::BottomRight);
 
-    buttonMinimap.setPosition({target_vue_size.x - sword_slot.getPosition().x, sword_slot.getPosition().y - 200.0f});
+    buttonMinimap.setPosition({buttonInventory.getPosition().x, buttonInventory.getPosition().y - target_vue_size.y / 10});
     buttonMinimap.setScale(life.getSize().y * 3 / sword_slot.getTexture().getSize());
     buttonMinimap.setAnchor(gf::Anchor::BottomRight);
 

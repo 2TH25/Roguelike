@@ -48,8 +48,7 @@ namespace rCMI
     createButtons(m_quit, [&]()
     {
       m_game->m_WorldScene.reset();
-      m_game->popAllScenes();
-      m_game->pushScene(m_game->m_MenuScene);
+      m_game->replaceScene(m_game->m_MenuScene);
     });
   }
 
