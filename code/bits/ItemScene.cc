@@ -46,16 +46,16 @@ namespace rCMI {
      ItemScene::ItemScene(RogueCMI *game)
       : gf::Scene(gf::Vector2f(1200, 800))
       , m_game(game)
-      , m_nameText("", game->resources.getFont(PATH_FONT), 23)
-      , m_typeText("", game->resources.getFont(PATH_FONT), 17)
-      , m_rarityText("", game->resources.getFont(PATH_FONT), 17)
-      , m_descText("", game->resources.getFont(PATH_FONT), 15)
-      , m_statsText("", game->resources.getFont(PATH_FONT), 15)
-      , m_buttonEquip("Équiper", game->resources.getFont(PATH_FONT),25)
-      , m_buttonUnequip("Desequiper", game->resources.getFont(PATH_FONT),25)
-      , m_buttonThrow("Jeter", game->resources.getFont(PATH_FONT),25)
-      , m_buttonConsume("Consommer", game->resources.getFont(PATH_FONT),25)
-      , m_buttonPickup("Ramasser", game->resources.getFont(PATH_FONT),25)
+      , m_nameText("", game->resources.getFont(PATH_FONT), 18)
+      , m_typeText("", game->resources.getFont(PATH_FONT), 14)
+      , m_rarityText("", game->resources.getFont(PATH_FONT), 14)
+      , m_descText("", game->resources.getFont(PATH_FONT), 13)
+      , m_statsText("", game->resources.getFont(PATH_FONT), 13)
+      , m_buttonEquip("Équiper", game->resources.getFont(PATH_FONT), 15)
+      , m_buttonUnequip("Desequiper", game->resources.getFont(PATH_FONT), 15)
+      , m_buttonThrow("Jeter", game->resources.getFont(PATH_FONT), 15)
+      , m_buttonConsume("Consommer", game->resources.getFont(PATH_FONT), 15)
+      , m_buttonPickup("Ramasser", game->resources.getFont(PATH_FONT), 15)
     {
         setClearColor(gf::Color::Transparent);
 
@@ -68,22 +68,39 @@ namespace rCMI {
 		
 
         m_nameText.setParagraphWidth(350.0f);
+        m_nameText.setLineSpacing(1.5f);
         m_typeText.setColor(gf::Color::Black);
         m_descText.setParagraphWidth(350.0f);
         m_descText.setAlignment(gf::Alignment::Center);
+        m_descText.setLineSpacing(1.5f);
+        m_statsText.setLineSpacing(1.5f);
         
 
-        m_buttonEquip.setCallback([this]() { onEquip(); });
-        m_buttonUnequip.setCallback([this]() { onUnequip(); });
-        m_buttonConsume.setCallback([this]() { onConsume(); });
-        m_buttonThrow.setCallback([this]() { onThrow(); });
-        m_buttonPickup.setCallback([this]() { onEquip(); });
+        static constexpr gf::Color4f ButtonDefaultBg   = { 0.05f, 0.05f, 0.05f, 0.75f };
+        static constexpr gf::Color4f ButtonDefaultTxt  = { 0.85f, 0.80f, 0.70f, 1.00f };
+        static constexpr gf::Color4f ButtonSelectedBg  = { 0.55f, 0.38f, 0.10f, 0.92f };
+        static constexpr gf::Color4f ButtonSelectedTxt = { 1.00f, 0.92f, 0.60f, 1.00f };
+        static constexpr gf::Color4f ButtonDisabledBg  = { 0.00f, 0.00f, 0.00f, 0.00f };
+        static constexpr gf::Color4f ButtonDisabledTxt = { 0.00f, 0.00f, 0.00f, 0.00f };
 
-        m_widgets.addWidget(m_buttonEquip);
-        m_widgets.addWidget(m_buttonUnequip);
-        m_widgets.addWidget(m_buttonConsume);
-        m_widgets.addWidget(m_buttonThrow);
-        m_widgets.addWidget(m_buttonPickup);
+        auto styleButton = [&](gf::TextButtonWidget &btn, auto callback) {
+            btn.setDefaultTextColor(ButtonDefaultTxt);
+            btn.setDefaultBackgroundColor(ButtonDefaultBg);
+            btn.setSelectedTextColor(ButtonSelectedTxt);
+            btn.setSelectedBackgroundColor(ButtonSelectedBg);
+            btn.setDisabledTextColor(ButtonDisabledTxt);
+            btn.setDisabledBackgroundColor(ButtonDisabledBg);
+            btn.setAnchor(gf::Anchor::Center);
+            btn.setAlignment(gf::Alignment::Center);
+            btn.setCallback(callback);
+            m_widgets.addWidget(btn);
+        };
+
+        styleButton(m_buttonEquip,   [this]() { onEquip(); });
+        styleButton(m_buttonUnequip, [this]() { onUnequip(); });
+        styleButton(m_buttonConsume, [this]() { onConsume(); });
+        styleButton(m_buttonThrow,   [this]() { onThrow(); });
+        styleButton(m_buttonPickup,  [this]() { onEquip(); });
     }
 
 
@@ -166,40 +183,53 @@ namespace rCMI {
         m_buttonThrow.setDisabled();
         m_buttonPickup.setDisabled();
 
-        float btnY = 580.0f;
+        float btnY    = 580.0f;
         float centerX = 600.0f;
+        float btnW    = 140.0f;
+        float padding = 10.0f;
 
-        if (m_currentChestIndex != -1) { // dans un coffre
-            m_buttonPickup.setSelected(); // On active Pickup
-            m_buttonPickup.setPosition({600.0f, btnY});
-        } else { // pas dans un coffre
-
+        if (m_currentChestIndex != -1) {
+            m_buttonPickup.setDefault();
+            m_buttonPickup.setPosition({centerX, btnY});
+            m_buttonPickup.setParagraphWidth(btnW);
+            m_buttonPickup.setPadding(padding);
+        } else {
             if (m_currentItem.m_type == ItemType::Arrow) {
-                m_buttonThrow.setSelected();
-                m_buttonThrow.setPosition({centerX, btnY}); 
-            }
-
-            else if (m_currentItem.m_type == ItemType::Consumable) {
-                m_buttonConsume.setSelected();
-                m_buttonThrow.setSelected();
-                
-                m_buttonConsume.setPosition({centerX - 170, btnY});
-                m_buttonThrow.setPosition({centerX + 80, btnY});
-            } 
-            else {
+                m_buttonThrow.setDefault();
+                m_buttonThrow.setPosition({centerX, btnY});
+                m_buttonThrow.setParagraphWidth(btnW);
+                m_buttonThrow.setPadding(padding);
+            } else if (m_currentItem.m_type == ItemType::Consumable) {
+                m_buttonConsume.setDefault();
+                m_buttonThrow.setDefault();
+                m_buttonConsume.setPosition({centerX - 90.0f, btnY});
+                m_buttonConsume.setParagraphWidth(btnW);
+                m_buttonConsume.setPadding(padding);
+                m_buttonThrow.setPosition({centerX + 90.0f, btnY});
+                m_buttonThrow.setParagraphWidth(btnW);
+                m_buttonThrow.setPadding(padding);
+            } else {
                 if (m_isEquipped) {
-                    m_buttonUnequip.setSelected();
-                    m_buttonThrow.setSelected();
-                    m_buttonUnequip.setPosition({centerX - 180, btnY});
-                    m_buttonThrow.setPosition({centerX + 80, btnY});
+                    m_buttonUnequip.setDefault();
+                    m_buttonThrow.setDefault();
+                    m_buttonUnequip.setPosition({centerX - 90.0f, btnY});
+                    m_buttonUnequip.setParagraphWidth(btnW);
+                    m_buttonUnequip.setPadding(padding);
+                    m_buttonThrow.setPosition({centerX + 90.0f, btnY});
+                    m_buttonThrow.setParagraphWidth(btnW);
+                    m_buttonThrow.setPadding(padding);
                 } else {
-                    m_buttonEquip.setSelected();
-                    m_buttonThrow.setSelected();
-                    m_buttonEquip.setPosition({centerX - 150, btnY});
-                    m_buttonThrow.setPosition({centerX + 80, btnY});
+                    m_buttonEquip.setDefault();
+                    m_buttonThrow.setDefault();
+                    m_buttonEquip.setPosition({centerX - 90.0f, btnY});
+                    m_buttonEquip.setParagraphWidth(btnW);
+                    m_buttonEquip.setPadding(padding);
+                    m_buttonThrow.setPosition({centerX + 90.0f, btnY});
+                    m_buttonThrow.setParagraphWidth(btnW);
+                    m_buttonThrow.setPadding(padding);
                 }
             }
-        }        
+        }
     }
 
     void ItemScene::centerText(gf::Text& text, float y) {
@@ -254,41 +284,22 @@ namespace rCMI {
 
 
     void ItemScene::doProcessEvent(gf::Event &event) {
-        if(!isActive()) {
-            return;
-        }
+        if (!isActive()) return;
+
+        if (event.type == gf::EventType::MouseMoved)
+            m_widgets.pointTo(event.mouseCursor.coords);
 
         if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Left) {
             gf::Vector2f mouseCoords = event.mouseButton.coords;
-
             gf::Vector2f localMousePos = gf::transform(m_background.getInverseTransform(), mouseCoords);
             if (!m_background.getLocalBounds().contains(localMousePos)) {
                 m_game->popScene();
                 return;
             }
-
-            if (!m_buttonEquip.isDisabled() && m_buttonEquip.contains(mouseCoords)) {
-                onEquip();
-                return;
-            }
-            if (!m_buttonUnequip.isDisabled() && m_buttonUnequip.contains(mouseCoords)) {
-                onUnequip();
-                return;
-            }
-            if (!m_buttonConsume.isDisabled() && m_buttonConsume.contains(mouseCoords)) {
-                onConsume();
-                return;
-            }
-            if (!m_buttonThrow.isDisabled() && m_buttonThrow.contains(mouseCoords)) {
-                onThrow();
-                return;
-            }
-            if (!m_buttonPickup.isDisabled() && m_buttonPickup.contains(mouseCoords)) {
-                onEquip();
-                return;
-            }
+            m_widgets.triggerAction();
+            return;
         }
-        
+
         if (event.type == gf::EventType::MouseButtonPressed && event.mouseButton.button == gf::MouseButton::Right) {
             m_game->popScene();
             return;
@@ -313,11 +324,7 @@ namespace rCMI {
         target.draw(m_rarityText, states);
         target.draw(m_descText, states);
         target.draw(m_statsText, states);
-        
-        if (!m_buttonEquip.isDisabled()) m_buttonEquip.draw(target, states);
-        if (!m_buttonUnequip.isDisabled()) m_buttonUnequip.draw(target, states);
-        if (!m_buttonConsume.isDisabled()) m_buttonConsume.draw(target, states);
-        if (!m_buttonThrow.isDisabled()) m_buttonThrow.draw(target, states);
-        if (!m_buttonPickup.isDisabled()) m_buttonPickup.draw(target, states);
+
+        m_widgets.render(target, states);
     }
 }

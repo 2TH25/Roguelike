@@ -19,8 +19,8 @@ namespace rCMI
       : gf::Scene(view_size),
         m_game(game),
         font(m_game->resources.getFont(PATH_FONT)),
-        m_title("FÉLICITATIONS !", font),
-        m_messageText("Bravo ! Tu as atteint la fin du donjon !\nTu as reussi a finir ces 6 semestres\net a obtenir ton diplome de licence !\n\nGrand bravo a toi ! Voici ton score :", font),
+        m_title("Félicitations !", font),
+        m_messageText("Bravo ! Tu as atteint la fin du donjon !\nTu as réussi a finir ces 6 semestres\net a obtenir ton diplôme de licence !\n\nGrand bravo à toi ! Voici ton score :", font),
         m_scoreText("", font),
         m_quit("Retourner au menu", font),
         m_continue("Continuer l'aventure", font)
@@ -67,7 +67,7 @@ namespace rCMI
 
   void VictoryScene::setFinalScore(int score)
   {
-    m_scoreText.setString(std::to_string(score) + "  POINTS");
+    m_scoreText.setString(std::to_string(score) + "  Points");
   }
 
   void VictoryScene::doProcessEvent(gf::Event &event)

@@ -16,9 +16,9 @@ namespace rCMI {
     : gf::Scene(gf::Vector2f(1200, 800))
     , m_game(game)
     , m_titre("Le Donjon du CMI", game->resources.getFont(PATH_FONT), 50)
-    , m_message("Votre quête commence ici : obtenir votre Licence !\n\nChaque niveau de ce donjon impitoyable represente un semestre.\nIl vous faudra survivre a 6 semestres afin d'esperer obtenir votre diplome.", game->resources.getFont(PATH_FONT), 26)
-    , m_infoCommandes("Pour les commandes detaillees,\ncliquez sur l'icone des parametres en bas a droite.\n\nArmez-vous de courage et de perseverance,\ncar cette quete sera longue et ardue. Bonne chance !", game->resources.getFont(PATH_FONT), 22)
-    , m_boutonOk("C'EST PARTI !", game->resources.getFont(PATH_FONT),30)
+    , m_message("Votre quête commence ici : obtenir votre Licence !\n\nChaque niveau de ce donjon impitoyable représente un semestre.\nIl vous faudra survivre à 6 semestres afin d'espérer obtenir votre diplôme.", game->resources.getFont(PATH_FONT), 26)
+    , m_infoCommandes("Pour les commandes détaillées,\ncliquez sur l'icone des paramètres en bas à droite.\n\nArmez-vous de courage et de persévérance,\ncar cette quête sera longue et ardue. Bonne chance !", game->resources.getFont(PATH_FONT), 22)
+    , m_boutonOk("C'est parti !", game->resources.getFont(PATH_FONT),30)
     {
         setClearColor(gf::Color::Transparent);
 

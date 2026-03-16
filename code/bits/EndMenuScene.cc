@@ -19,7 +19,7 @@ namespace rCMI
       : gf::Scene(view_size),
         m_game(game),
         font(m_game->resources.getFont(PATH_FONT)),
-        m_title("PARTIE TERMINÉE", font),
+        m_title("Partie Terminée", font),
         m_statsText("", font),
         m_quit("Retourner au menu", font)
   {

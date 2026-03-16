@@ -12,23 +12,27 @@ namespace rCMI {
     {
         setClearColor(gf::Color::Transparent); 
 
-        m_box.setSize({1000, 200});
-        m_box.setOutlineColor(gf::Color::Rose);
-        m_box.setOutlineThickness(2);
+        m_box.setSize({960.0f, 180.0f});
+        m_box.setColor(gf::Color::fromRgba32(0x0A0A0FDD));
+        m_box.setOutlineColor(gf::Color::fromRgba32(0x8C6118FF)); // bordure dorée
+        m_box.setOutlineThickness(2.5f);
         m_box.setAnchor(gf::Anchor::BottomCenter);
-        m_box.setPosition({600, 750});
+        m_box.setPosition({600.0f, 770.0f});
 
         m_text.setFont(m_game->resources.getFont(PATH_FONT));
-        m_text.setCharacterSize(30);
+        m_text.setCharacterSize(18);
+        m_text.setColor(gf::Color::fromRgba32(0xD9CCBEFF)); // parchemin
         m_text.setAnchor(gf::Anchor::TopLeft);
-        m_text.setPosition({120, 580});
-        m_text.setParagraphWidth(960);
+        m_text.setPosition({125.0f, 620.0f});
+        m_text.setParagraphWidth(920.0f);
+        m_text.setLineSpacing(1.6f);
 
         m_clickHint.setFont(m_game->resources.getFont(PATH_FONT));
         m_clickHint.setString("(Cliquez pour continuer)");
-        m_clickHint.setCharacterSize(15);
+        m_clickHint.setCharacterSize(13);
+        m_clickHint.setColor(gf::Color::fromRgba32(0x8C6118FF)); // doré discret
         m_clickHint.setAnchor(gf::Anchor::BottomRight);
-        m_clickHint.setPosition({1080, 740});
+        m_clickHint.setPosition({1075.0f, 765.0f});
     }
 
     void FeeScene::setDialogue(const std::vector<std::string>& lines) {
