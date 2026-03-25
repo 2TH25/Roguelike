@@ -86,7 +86,7 @@ namespace rCMI {
             starterPotion.m_texture = &m_game->resources.getTexture("ItemSoin.png");
             m_game->m_InventoryScene->m_inventory.addItemToBackpack(starterPotion, m_game);
 
-            Item newItem("Epee de base", "EpeeBase", ItemType::Weapon, Item::Rarity::Common,
+            Item newItem("Épée de base", "EpeeBase", ItemType::Weapon, Item::Rarity::Common,
                          m_game->resources.getTexture("EpeeBase.png"),
                          "Cette épée de mauvaise facture sera le point de départ de votre valeureuse aventure...",
                          Stat(0, 0, 2));

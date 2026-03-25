@@ -184,9 +184,10 @@ namespace rCMI {
         m_buttonPickup.setDisabled();
 
         float btnY    = 580.0f;
-        float centerX = 600.0f;
+        float centerX = 580.0f;
         float btnW    = 140.0f;
         float padding = 10.0f;
+        float offset = (btnW / 2.0f) + padding;
 
         if (m_currentChestIndex != -1) {
             m_buttonPickup.setDefault();
@@ -212,19 +213,19 @@ namespace rCMI {
                 if (m_isEquipped) {
                     m_buttonUnequip.setDefault();
                     m_buttonThrow.setDefault();
-                    m_buttonUnequip.setPosition({centerX - 90.0f, btnY});
+                    m_buttonUnequip.setPosition({centerX - offset, btnY});
                     m_buttonUnequip.setParagraphWidth(btnW);
                     m_buttonUnequip.setPadding(padding);
-                    m_buttonThrow.setPosition({centerX + 90.0f, btnY});
+                    m_buttonThrow.setPosition({centerX + offset, btnY});
                     m_buttonThrow.setParagraphWidth(btnW);
                     m_buttonThrow.setPadding(padding);
                 } else {
                     m_buttonEquip.setDefault();
                     m_buttonThrow.setDefault();
-                    m_buttonEquip.setPosition({centerX - 90.0f, btnY});
+                    m_buttonEquip.setPosition({centerX - offset, btnY});
                     m_buttonEquip.setParagraphWidth(btnW);
                     m_buttonEquip.setPadding(padding);
-                    m_buttonThrow.setPosition({centerX + 90.0f, btnY});
+                    m_buttonThrow.setPosition({centerX + offset, btnY});        
                     m_buttonThrow.setParagraphWidth(btnW);
                     m_buttonThrow.setPadding(padding);
                 }
