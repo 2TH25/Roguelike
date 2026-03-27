@@ -1,0 +1,104 @@
+\documentclass[a4paper, 11pt]{report}
+\usepackage[T1]{fontenc} % Character français
+\usepackage[utf8]{inputenc}
+\usepackage[english,french]{babel} 
+\usepackage{graphicx} % Pour les images
+\usepackage{float}
+\usepackage{multicol} % Pour faire des multi colonnes
+\usepackage[export]{adjustbox} % Pour la clé 'valign'  (aligner verticalement)
+ % Pour qu'il y est des liens sur la table des matières
+\usepackage{caption} % Utiliser plus de fonction sur caption (caption* pour ne pas afficher FIGURE-1)
+\usepackage{lipsum} % Pour générer du texte pour voir comment ca rend
+\usepackage{ragged2e} % Pour justifier le texte
+\usepackage{ulem}
+\usepackage[margin=3.2cm]{geometry}
+\usepackage{forest}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[section]{placeins}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancybox}
+\usepackage{fancyhdr}
+\usepackage{subcaption}
+
+
+% Configuration de fancyhdr
+\pagestyle{fancy}
+\fancyhf{} % Efface tous les en-têtes et pieds de page précédents
+\fancyhead[C]{Rapport Méthodes Agiles} % Texte centré en haut de la page
+\fancyfoot[L]{2026} % Texte en bas à gauche du pied de page
+\fancyfoot[R]{\thepage} % Numéro de page en bas à droite du pied de page
+
+\renewcommand{\headrulewidth}{0.4pt} % Épaisseur de la ligne de séparation de l'en-tête
+\renewcommand{\footrulewidth}{0.4pt} % Épaisseur de la ligne de séparation du pied depage
+\setlength{\headheight}{13.59999pt}
+% Appliquer le style d'en-tête fancy aux pages de début de chapitre
+
+\fancypagestyle{plain}{
+  \fancyhf{} % Effacer tous
+  \fancyhead[C]{Rapport Méthodes Agiles} % Texte centré en haut de la page
+  \fancyfoot[L]{L3 Informatique} % Texte en bas à gauche du pied de page
+  \fancyfoot[C]{BENALI - GAILLARD - GIRARDCLOS} % Texte au centre du pied de page
+  \fancyfoot[R]{\thepage} % Numéro de page en bas à droite du pied de page
+  \renewcommand{\headrulewidth}{0.4pt} % Épaisseur de la ligne de séparation de l'en-tête
+  \renewcommand{\footrulewidth}{0.4pt} % Épaisseur de la ligne de séparation du pied de page
+}
+
+\usepackage[colorlinks=true,linkcolor=black]{hyperref}
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{-1.5cm}
+
+    % Logos en haut
+    \begin{minipage}[c]{0.40\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{IMAGES/logo_univ.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[c]{0.45\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{IMAGES/logo_dep.png}
+    \end{minipage}
+
+    \vspace{1.2cm}
+
+    % Titre principal
+    {\huge Rapport sur les Méthodes Agiles\\[0.4cm]}
+    {\LARGE \textbf{Licence Informatique - 3ème Année}\\[0.3cm]}
+    {\huge 2025-2026}
+
+    \vspace{1.2cm}
+
+    % Auteurs
+    {\large \textbf{Samia BENALI \quad Kilian GAILLARD \quad Matthéo GIRARDCLOS}}
+
+    \vspace{1.2cm}
+
+    % Titre du projet encadré
+    \shadowbox{\huge \textbf{RogueLike - RogueCMI}}
+
+    \vspace{1.5cm}
+    % Logo du projet centré
+    \makebox[1.2\textwidth][c]{
+        \includegraphics[width=1.3\textwidth]{IMAGES/Logo_RogueCMI.png}
+}
+    \vfill
+
+    % Tuteur en bas à gauche
+    \begin{flushleft}
+        \textbf{Tuteur Académique :} Julien BERNARD
+    \end{flushleft}
+
+\end{titlepage}
+
+\tableofcontents
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+
+
+\end{document}
